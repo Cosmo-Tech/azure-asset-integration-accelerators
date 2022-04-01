@@ -1,0 +1,17 @@
+{
+    "name": "4-HumanResources-Runtime1",
+    "properties": {
+        "type": "Managed",
+        "typeProperties": {
+            "computeProperties": {
+                "location": "AutoResolve",
+                "dataFlowProperties": {
+                    "computeType": "General",
+                    "coreCount": 16,
+                    "timeToLive": 15,
+                    "cleanup": false
+                }
+            }
+        }
+    }
+}

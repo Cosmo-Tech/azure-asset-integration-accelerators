@@ -1,0 +1,101 @@
+{
+    "name": "3-511-MissColumnValueAvailableQuantityByYear",
+    "properties": {
+        "folder": {
+            "name": "3-Budgets/Update/ErrorDetectorPipelines"
+        },
+        "activities": [
+            {
+                "name": "3-511_LookUp",
+                "type": "Lookup",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": "3-511-MissColumnValueAvailableQuantityByYear.csv",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "dataset": {
+                        "referenceName": "3_511",
+                        "type": "DatasetReference"
+                    },
+                    "firstRowOnly": true
+                }
+            },
+            {
+                "name": "3-511_ErrorManagement",
+                "type": "IfCondition",
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@contains(activity('3-511_LookUp').output, 'firstRow')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "3-511_Fail",
+                            "type": "Fail",
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "Missing Mandatory Columns Value in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnValueAvailableQuantityByYear.csv for details",
+                                "errorCode": "3-511"
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": [
+                        {
+                            "name": "3-511_Delete",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "3_511",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false,
+                                    "wildcardFileName": "3-511-MissColumnValueAvailableQuantityByYear.csv"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "dependsOn": [
+                    {
+                        "activity": "3-511_LookUp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,60 @@
+{
+    "name": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentComponentsEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsEquipmentComponentsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentSourceRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentTargetRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_420",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentSourceRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusEquipmentComponentSourceEquipmentComponentTargetExistenceCheckInEquipmentComponentsEquipmentComponentsStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentComponentsEquipmentComponents\nReadDeleteEquipmentComponentsEquipmentComponents split(isNull(EquipmentComponentSource),\n\tisNull(EquipmentComponentTarget),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentComponentSource, MissingEquipmentComponentTarget)\nCheckMandatoryData@MissingEquipmentComponentSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-421-MissColumnEquipmentComponentSource.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentSourceRows\nCheckMandatoryData@MissingEquipmentComponentTarget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-421-MissColumnEquipmentComponentTarget.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentTargetRows\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsEquipmentComponentsStatus\nReadDeleteEquipmentComponentsEquipmentComponents, EquipmentComponentsEquipmentComponentsStatus exists(ReadDeleteEquipmentComponentsEquipmentComponents@EquipmentComponentSource == EquipmentComponentsEquipmentComponentsStatus@EquipmentComponentSource && ReadDeleteEquipmentComponentsEquipmentComponents@EquipmentComponentTarget == EquipmentComponentsEquipmentComponentsStatus@EquipmentComponentTarget,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusEquipmentComponentSourceEquipmentComponentTargetExistenceCheckInEquipmentComponentsEquipmentComponentsStatus\nStatusEquipmentComponentSourceEquipmentComponentTargetExistenceCheckInEquipmentComponentsEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-420-NotExistingEquipmentComponentSource.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentSourceRows"
+        }
+    }
+}

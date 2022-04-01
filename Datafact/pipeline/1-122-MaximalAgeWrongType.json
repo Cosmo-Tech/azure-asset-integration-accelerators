@@ -1,0 +1,101 @@
+{
+    "name": "1-122-MaximalAgeWrongType",
+    "properties": {
+        "folder": {
+            "name": "1-AssetPortfolio/Create/ErrorDetectorPipelines"
+        },
+        "activities": [
+            {
+                "name": "1-122_LookUp",
+                "type": "Lookup",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": "1-122-MaximalAgeWrongType.csv",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "firstRowOnly": true
+                }
+            },
+            {
+                "name": "1-122_ErrorManagement",
+                "type": "IfCondition",
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@contains(activity('1-122_LookUp').output, 'firstRow')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "1-122_Fail",
+                            "type": "Fail",
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "Incorrect type for MaximalAge in asset-integration-accelerator-input/AssetPortfolio/Create/AgingFamilies.csv. See 1-122-MaximalAgeWrongType.csv for details",
+                                "errorCode": "1-122"
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": [
+                        {
+                            "name": "1-122_Delete",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "1_122",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false,
+                                    "wildcardFileName": "1-122-MaximalAgeWrongType.csv"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "dependsOn": [
+                    {
+                        "activity": "1-122_LookUp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

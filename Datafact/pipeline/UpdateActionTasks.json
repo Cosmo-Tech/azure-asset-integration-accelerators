@@ -1,0 +1,225 @@
+{
+    "name": "UpdateActionTasks",
+    "properties": {
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Update"
+        },
+        "activities": [
+            {
+                "name": "UpdateActionTasks_CheckData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "UpdateActionTasks_CheckData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "12-ActivitiesManagementHumanResources-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                }
+            },
+            {
+                "name": "12-510-NotExistingName",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-510-NotExistingName",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "12-511-MissColumnName",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-511-MissColumnName",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "12-512-ActionDurationPercentageWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-512-ActionDurationPercentageWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "12-513-ActionDurationPercentageInvalidRange",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-513-ActionDurationPercentageInvalidRange",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "12-512-WorkforceFTEWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-512-WorkforceFTEWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "12-513-WorkforceFTEInvalidRange",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "12-513-WorkforceFTEInvalidRange",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "UpdateActionTasks_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "UpdateActionTasks_TransformData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "UpdateActionTasks_TransformData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "12-ActivitiesManagementHumanResources-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                },
+                "dependsOn": [
+                    {
+                        "activity": "12-510-NotExistingName",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "12-511-MissColumnName",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "12-512-ActionDurationPercentageWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "12-513-ActionDurationPercentageInvalidRange",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "12-512-WorkforceFTEWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "12-513-WorkforceFTEInvalidRange",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

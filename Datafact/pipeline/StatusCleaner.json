@@ -1,0 +1,37 @@
+{
+    "name": "StatusCleaner",
+    "properties": {
+        "folder": {
+            "name": ""
+        },
+        "activities": [
+            {
+                "name": "DeleteTemporaryStatus",
+                "type": "Delete",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataset": {
+                        "referenceName": "TempInput_Global",
+                        "type": "DatasetReference"
+                    },
+                    "enableLogging": false,
+                    "storeSettings": {
+                        "type": "AzureBlobStorageReadSettings",
+                        "recursive": true,
+                        "enablePartitionDiscovery": false
+                    }
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

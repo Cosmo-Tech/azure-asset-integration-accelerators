@@ -1,0 +1,101 @@
+{
+    "name": "2-131-MissColumnValueBudgetCategories",
+    "properties": {
+        "folder": {
+            "name": "2-ActivitiesManagement/Create/ErrorDetectorPipelines"
+        },
+        "activities": [
+            {
+                "name": "2-131_LookUp",
+                "type": "Lookup",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": "2-131-MissColumnValueBudgetCategories.csv",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "dataset": {
+                        "referenceName": "2_131",
+                        "type": "DatasetReference"
+                    },
+                    "firstRowOnly": true
+                }
+            },
+            {
+                "name": "2-131_ErrorManagement",
+                "type": "IfCondition",
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@contains(activity('2-131_LookUp').output, 'firstRow')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "2-131_Fail",
+                            "type": "Fail",
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. Open 2-131-MissColumnValueBudgetCategories.csv for details",
+                                "errorCode": "2-131"
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": [
+                        {
+                            "name": "2-131_Delete",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "2_131",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false,
+                                    "wildcardFileName": "2-131-MissColumnValueBudgetCategories.csv"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "dependsOn": [
+                    {
+                        "activity": "2-131_LookUp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

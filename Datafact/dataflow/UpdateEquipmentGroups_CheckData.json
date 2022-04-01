@@ -1,0 +1,148 @@
+{
+    "name": "UpdateEquipmentGroups_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateEquipmentGroups"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentGroupsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateEquipmentGroupsMapBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups_MapHRCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateEquipmentGroupsMapHRCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_520",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_522",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteQuantityWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_520",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentGroupRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRowsHRCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsHRCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsHRCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_520",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentGroupRowsHRCategories"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInEquipmentGroupsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullQuantity"
+                },
+                {
+                    "name": "QuantityTypeCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesMandatoryCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesExistenceCheck"
+                },
+                {
+                    "name": "MapHRCategoriesMandatoryCheck"
+                },
+                {
+                    "name": "MapHRCategoriesExistenceCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tQuantity as string,\n\t\tRatingLevel as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateEquipmentGroups\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nReadUpdateEquipmentGroups, EquipmentGroupsStatus exists(ReadUpdateEquipmentGroups@Name == EquipmentGroupsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInEquipmentGroupsStatus\nExistingNameInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-520-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateEquipmentGroups split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateEquipmentGroups filter(not(isNull(Quantity))) ~> NonNullQuantity\nNonNullQuantity split(not(isFloat(Quantity)),\n\tdisjoint: false) ~> QuantityTypeCheck@(QuantityWrongType)\nQuantityTypeCheck@QuantityWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-522-QuantityWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteQuantityWrongTypeRows\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateEquipmentGroupsMapBudgetCategories\nUpdateEquipmentGroupsMapBudgetCategories split(isNull(EquipmentGroup),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingEquipmentGroup, MissingIndex, MissingValue)\nMapBudgetCategoriesMandatoryCheck@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnEquipmentGroupBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nUpdateEquipmentGroupsMapBudgetCategories, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-520-NotExistingEquipmentGroupBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRowsBudgetCategories\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateEquipmentGroupsMapHRCategories\nUpdateEquipmentGroupsMapHRCategories split(isNull(EquipmentGroup),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapHRCategoriesMandatoryCheck@(MissingEquipmentGroup, MissingIndex, MissingValue)\nMapHRCategoriesMandatoryCheck@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnEquipmentGroupHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRowsHRCategories\nMapHRCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnIndexHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsHRCategories\nMapHRCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-521-MissColumnValueHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsHRCategories\nUpdateEquipmentGroupsMapHRCategories, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapHRCategoriesExistenceCheck\nMapHRCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-520-NotExistingEquipmentGroupHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRowsHRCategories"
+        }
+    }
+}

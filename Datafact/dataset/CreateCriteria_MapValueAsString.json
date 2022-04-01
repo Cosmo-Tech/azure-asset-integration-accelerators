@@ -1,0 +1,41 @@
+{
+    "name": "CreateCriteria_MapValueAsString",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "Criteria_MapValueAsString.csv",
+                "folderPath": "ActivitiesManagement/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Criterion",
+                "type": "String"
+            },
+            {
+                "name": "Index",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,27 @@
+{
+    "name": "2_233",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Error"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "folderPath": "2-233",
+                "container": "asset-integration-accelerator-error"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

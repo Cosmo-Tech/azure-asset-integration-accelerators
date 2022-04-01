@@ -1,0 +1,53 @@
+{
+    "name": "DeleteSustainmentActions_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSustainmentActions",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSustainmentActions"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_330",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_331",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInSustainmentActionsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActions\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nReadDeleteSustainmentActions, SustainmentActionsStatus exists(ReadDeleteSustainmentActions@Name == SustainmentActionsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInSustainmentActionsStatus\nExistingNameInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-330-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadDeleteSustainmentActions split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-331-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+        }
+    }
+}

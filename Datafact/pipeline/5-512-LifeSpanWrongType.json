@@ -1,0 +1,101 @@
+{
+    "name": "5-512-LifeSpanWrongType",
+    "properties": {
+        "folder": {
+            "name": "5-Finance/Update/ErrorDetectorPipelines"
+        },
+        "activities": [
+            {
+                "name": "5-512_LookUp",
+                "type": "Lookup",
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "wildcardFileName": "5-512-LifeSpanWrongType.csv",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "dataset": {
+                        "referenceName": "5_512",
+                        "type": "DatasetReference"
+                    },
+                    "firstRowOnly": true
+                }
+            },
+            {
+                "name": "5-512_ErrorManagement",
+                "type": "IfCondition",
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@contains(activity('5-512_LookUp').output, 'firstRow')",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "5-512_Fail",
+                            "type": "Fail",
+                            "userProperties": [],
+                            "typeProperties": {
+                                "message": "Incorrect type for LifeSpan in asset-integration-accelerator-input/Finance/Update/AgingFamilies.csv. See 5-512-LifeSpanWrongType.csv for details",
+                                "errorCode": "5-512"
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": [
+                        {
+                            "name": "5-512_Delete",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "5_512",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false,
+                                    "wildcardFileName": "5-512-LifeSpanWrongType.csv"
+                                }
+                            }
+                        }
+                    ]
+                },
+                "dependsOn": [
+                    {
+                        "activity": "5-512_LookUp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

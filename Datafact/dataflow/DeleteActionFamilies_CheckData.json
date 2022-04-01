@@ -1,0 +1,53 @@
+{
+    "name": "DeleteActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_310",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_311",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nReadDeleteActionFamilies, ActionFamiliesStatus exists(ReadDeleteActionFamilies@Name == ActionFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInActionFamiliesStatus\nExistingNameInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-310-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadDeleteActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-311-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+        }
+    }
+}

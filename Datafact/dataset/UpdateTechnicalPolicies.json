@@ -1,0 +1,65 @@
+{
+    "name": "UpdateTechnicalPolicies",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "TechnicalPolicies.csv",
+                "folderPath": "ActivitiesManagement/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "AssetClass",
+                "type": "String"
+            },
+            {
+                "name": "CriteriaFormula",
+                "type": "String"
+            },
+            {
+                "name": "EnablePendingActionRemoval",
+                "type": "String"
+            },
+            {
+                "name": "IsInactive",
+                "type": "String"
+            },
+            {
+                "name": "Type",
+                "type": "String"
+            },
+            {
+                "name": "YearEnd",
+                "type": "String"
+            },
+            {
+                "name": "YearStart",
+                "type": "String"
+            },
+            {
+                "name": "NbRepAction1",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

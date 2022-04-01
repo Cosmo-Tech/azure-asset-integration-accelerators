@@ -1,0 +1,147 @@
+{
+    "name": "DeleteActionFamiliesSubActionFamilies",
+    "properties": {
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "activities": [
+            {
+                "name": "DeleteActionFamiliesSubActionFamilies_CheckData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "DeleteActionFamiliesSubActionFamilies_CheckData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "11-AssetPortfolioActivitiesManagement-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                }
+            },
+            {
+                "name": "11-411-MissColumnActionFamily",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "11-411-MissColumnActionFamily",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "DeleteActionFamiliesSubActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "11-411-MissColumnSubActionFamily",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "11-411-MissColumnSubActionFamily",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "DeleteActionFamiliesSubActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "11-410-NotExistingActionFamily",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "11-410-NotExistingActionFamily",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "DeleteActionFamiliesSubActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "DeleteActionFamiliesSubActionFamilies_TransformData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "DeleteActionFamiliesSubActionFamilies_TransformData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "11-AssetPortfolioActivitiesManagement-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                },
+                "dependsOn": [
+                    {
+                        "activity": "11-411-MissColumnActionFamily",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "11-411-MissColumnSubActionFamily",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "11-410-NotExistingActionFamily",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

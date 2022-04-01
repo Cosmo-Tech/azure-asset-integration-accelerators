@@ -1,0 +1,59 @@
+{
+    "name": "CreateSustainmentActionsActionFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActionsActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSustainmentActionsActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSustainmentActionsActionFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActionsActionFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsActionFamilies\nReadCreateSustainmentActionsActionFamilies select(mapColumn(\n\t\t{$sourceId} = SustainmentAction,\n\t\t{$targetId} = ActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'has_type_ActionFamily',\n\t{$relationshipDelete} = 'false',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActionsActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsActionFamiliesStatusEditor\nReadCreateSustainmentActionsActionFamilies select(mapColumn(\n\t\tSustainmentAction,\n\t\tActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor union(byName: true)~> StatusUpdateSustainmentActionsActionFamiliesStatusEditor\nStatusUpdateSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+        }
+    }
+}

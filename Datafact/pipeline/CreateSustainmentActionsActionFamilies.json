@@ -1,0 +1,199 @@
+{
+    "name": "CreateSustainmentActionsActionFamilies",
+    "properties": {
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "activities": [
+            {
+                "name": "CreateSustainmentActionsActionFamilies_CheckData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "2-ActivitiesManagement-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                }
+            },
+            {
+                "name": "2-210-NotExistingSustainmentAction",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "2-210-NotExistingSustainmentAction",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "2-210-NotExistingActionFamily",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "2-210-NotExistingActionFamily",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "2-211-MissColumnSustainmentAction",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "2-211-MissColumnSustainmentAction",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "2-211-MissColumnActionFamily",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "2-211-MissColumnActionFamily",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "2-210-AlreadyExistSustainmentAction",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "2-210-AlreadyExistSustainmentAction",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateSustainmentActionsActionFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CreateSustainmentActionsActionFamilies_TransformData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "CreateSustainmentActionsActionFamilies_TransformData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "2-ActivitiesManagement-Runtime1",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                },
+                "dependsOn": [
+                    {
+                        "activity": "2-210-NotExistingSustainmentAction",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "2-210-NotExistingActionFamily",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "2-211-MissColumnSustainmentAction",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "2-211-MissColumnActionFamily",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "2-210-AlreadyExistSustainmentAction",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

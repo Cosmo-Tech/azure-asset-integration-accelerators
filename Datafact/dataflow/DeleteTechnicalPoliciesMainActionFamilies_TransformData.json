@@ -1,0 +1,59 @@
+{
+    "name": "DeleteTechnicalPoliciesMainActionFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTechnicalPoliciesMainActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPoliciesMainActionFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_TechnicalPoliciesMainActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesMainActionFamilies\nReadDeleteTechnicalPoliciesMainActionFamilies select(mapColumn(\n\t\t{$sourceId} = TechnicalPolicy,\n\t\t{$targetId} = ActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_Action1',\n\t{$relationshipDelete} = 'true',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPoliciesMainActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteTechnicalPoliciesMainActionFamilies select(mapColumn(\n\t\tTechnicalPolicy,\n\t\tActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor exists(ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor@TechnicalPolicy == StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor@TechnicalPolicy && ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor@ActionFamily == StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "name": "DeleteSustainmentActions",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "SustainmentActions.csv",
+                "folderPath": "ActivitiesManagement/Delete",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

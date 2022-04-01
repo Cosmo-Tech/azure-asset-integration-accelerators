@@ -1,0 +1,58 @@
+{
+    "name": "UpdateSustainmentActions_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSustainmentActions",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateSustainmentActions"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSustainmentActions_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapBudgetCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSustainmentActions_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapBudgetCategoriesKeyIndex"
+                },
+                {
+                    "name": "BudgetCategoriesCleaning"
+                },
+                {
+                    "name": "BudgetCategoriesUnion"
+                },
+                {
+                    "name": "BudgetCategoriesSelect"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tActivityPlanName as string,\n\t\tPlannedDate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateSustainmentActions\nReadUpdateSustainmentActions select(mapColumn(\n\t\t{$id} = Name,\n\t\tActivityPlanName,\n\t\tPlannedDate),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SustainmentAction;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tSustainmentAction as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadMapBudgetCategories aggregate(groupBy(SustainmentAction),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nModelDefinition, BudgetCategoriesCleaning join({$id} == SustainmentAction,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{ActivityPlanName},\n\t\t{PlannedDate},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActions.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo"
+        }
+    }
+}

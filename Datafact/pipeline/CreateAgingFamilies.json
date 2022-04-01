@@ -1,0 +1,1031 @@
+{
+    "name": "CreateAgingFamilies",
+    "properties": {
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "activities": [
+            {
+                "name": "CreateAgingFamilies_CheckData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "CreateAgingFamilies_CheckData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "1-AssetPortfolio-Runtime2",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                }
+            },
+            {
+                "name": "1-120-NotUniqueName",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-120-NotUniqueName",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-120-AlreadyExistName",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-120-AlreadyExistName",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnName",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnName",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-123-AgingMethodologyInvalidRange",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-123-AgingMethodologyInvalidRange",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-MinimalAgeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-MinimalAgeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-MaximalAgeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-MaximalAgeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-FailureRateAtMinimalAgeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-FailureRateAtMinimalAgeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-FailureRateAtMaximalAgeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-FailureRateAtMaximalAgeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-ExternalFailureRatePerYearWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-ExternalFailureRatePerYearWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-123-ExternalFailureRatePerYearInvalidRange",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-123-ExternalFailureRatePerYearInvalidRange",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-IsQuantityDiscreteWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-IsQuantityDiscreteWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-GFlagWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-GFlagWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-AgingFailureDelayWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-AgingFailureDelayWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnAgingFamilyFamilyPairHillParameters",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnAgingFamilyFamilyPairHillParameters",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnAgentAgingFamilyFamilyPairHillParameter",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnAgentAgingFamilyFamilyPairHillParameters",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnHillParametersFamilyPairHillParameters",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnHillParametersFamilyPairHillParameters",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnValueFamilyPairHillParameters",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnValueFamilyPairHillParameters",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-120-NotExistingAgingFamilyFamilyPairHillParameters",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-120-NotExistingAgingFamilyFamilyPairHillParameters",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-123-HillParametersFamilyPairHillParametersInvalidRang",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-123-HillParametersFamilyPairHillParametersInvalidRange",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-AmplitudeHillWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-AmplitudeHillWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-OffsetHillWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-OffsetHillWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-SlopeHillWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-SlopeHillWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-IsFailureTransmittedWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-IsFailureTransmittedWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-IsCouplingActiveWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-IsCouplingActiveWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-IsAgingAfterDeathWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-IsAgingAfterDeathWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-MaintenanceIfOutOfOrderWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-MaintenanceIfOutOfOrderWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-ShapeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-ShapeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-ScaleWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-ScaleWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-ExpectedLifeWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-ExpectedLifeWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-FinancialCostOfFailureWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-FinancialCostOfFailureWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-EnvironmentalCostOfFailureWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-EnvironmentalCostOfFailureWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-NetworkCostOfFailureWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-NetworkCostOfFailureWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnAgingFamilyMapReferenceCostOfFailure",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnAgingFamilyMapReferenceCostOfFailure",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnHealthIndexMapReferenceCostOfFailure",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnHealthIndexMapReferenceCostOfFailure",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-121-MissColumnValueMapReferenceCostOfFailure",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-121-MissColumnValueMapReferenceCostOfFailure",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-120-NotExistingAgingFamilyMapReferenceCostOfFailure",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-120-NotExistingAgingFamilyMapReferenceCostOfFailure",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "1-122-MapReferenceCostOfFailureValueWrongType",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "1-122-MapReferenceCostOfFailureValueWrongType",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CreateAgingFamilies_CheckData",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CreateAgingFamilies_TransformData",
+                "type": "ExecuteDataFlow",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "CreateAgingFamilies_TransformData",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "integrationRuntime": {
+                        "referenceName": "1-AssetPortfolio-Runtime2",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "traceLevel": "Fine"
+                },
+                "dependsOn": [
+                    {
+                        "activity": "1-120-NotUniqueName",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-120-AlreadyExistName",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnName",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-123-AgingMethodologyInvalidRange",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-MinimalAgeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-MaximalAgeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-FailureRateAtMinimalAgeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-FailureRateAtMaximalAgeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-ExternalFailureRatePerYearWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-123-ExternalFailureRatePerYearInvalidRange",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-IsQuantityDiscreteWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-GFlagWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-AgingFailureDelayWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnAgingFamilyFamilyPairHillParameters",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnAgentAgingFamilyFamilyPairHillParameter",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnHillParametersFamilyPairHillParameters",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnValueFamilyPairHillParameters",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-120-NotExistingAgingFamilyFamilyPairHillParameters",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-123-HillParametersFamilyPairHillParametersInvalidRang",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-AmplitudeHillWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-OffsetHillWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-SlopeHillWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-IsFailureTransmittedWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-IsCouplingActiveWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-IsAgingAfterDeathWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-MaintenanceIfOutOfOrderWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-ShapeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-ScaleWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-ExpectedLifeWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-FinancialCostOfFailureWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-EnvironmentalCostOfFailureWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-NetworkCostOfFailureWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnAgingFamilyMapReferenceCostOfFailure",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnHealthIndexMapReferenceCostOfFailure",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-121-MissColumnValueMapReferenceCostOfFailure",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-120-NotExistingAgingFamilyMapReferenceCostOfFailure",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "1-122-MapReferenceCostOfFailureValueWrongType",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,41 @@
+{
+    "name": "UpdateEquipmentComponents_MapCustomDataNumber",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentComponents_MapCustomData_Number.csv",
+                "folderPath": "AssetPortfolio/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "EquipmentComponent",
+                "type": "String"
+            },
+            {
+                "name": "CustomData",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

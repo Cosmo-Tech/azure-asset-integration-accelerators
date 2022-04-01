@@ -1,0 +1,99 @@
+{
+    "name": "DeleteSustainmentActions_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSustainmentActions",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSustainmentActions"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSustainmentActionsStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSustainmentActionsActionFamiliesStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSustainmentActions_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSustainmentActionsStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SustainmentActionsEquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionSustainmentActionsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSustainmentActionsStatusEditor"
+                },
+                {
+                    "name": "StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActions\nReadDeleteSustainmentActions select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SustainmentAction;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActions.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsStatusEditor\nReadTempStatusSustainmentActionsStatusEditor, StatusColumnSelectionSustainmentActionsStatusEditor exists(ReadTempStatusSustainmentActionsStatusEditor@Name == StatusColumnSelectionSustainmentActionsStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsStatusEditor\nStatusUpdateSustainmentActionsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActions_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsActionFamiliesStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor exists(Name == SustainmentAction,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsActionFamiliesStatusEditor\nStatusUpdateSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor\nReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor, StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor exists(Name == SustainmentAction,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor\nStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsEquipmentGroups_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+        }
+    }
+}

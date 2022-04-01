@@ -1,0 +1,102 @@
+{
+    "name": "UpdateSubActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSubActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateSubActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SubActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTypeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactModeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactOnEquipmentWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactOnEquipmentInvalidRangeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInSubActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnumType"
+                },
+                {
+                    "name": "TypeEnumCheck"
+                },
+                {
+                    "name": "NonNullEnumImpactMode"
+                },
+                {
+                    "name": "ImpactModeEnumCheck"
+                },
+                {
+                    "name": "NonNullImpactOnEquipment"
+                },
+                {
+                    "name": "ImpactOnEquipmentTypeCheck"
+                },
+                {
+                    "name": "ImpactOnEquipmentRangeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tType as string,\n\t\tImpactMode as string,\n\t\tImpactOnEquipment as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nReadUpdateSubActionFamilies, SubActionFamiliesStatus exists(ReadUpdateSubActionFamilies@Name == SubActionFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInSubActionFamiliesStatus\nExistingNameInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateSubActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateSubActionFamilies filter(not(isNull(Type))) ~> NonNullEnumType\nNonNullEnumType filter(not(in(['NoAction', 'Repairs', 'Replacement', 'Inspection', 'Activation', 'Deactivation', 'RepairsWithoutInspection'], Type))) ~> TypeEnumCheck\nTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-513-TypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTypeInvalidRangeRows\nReadUpdateSubActionFamilies filter(not(isNull(ImpactMode))) ~> NonNullEnumImpactMode\nNonNullEnumImpactMode filter(not(in(['ApparentAgeBased'], ImpactMode))) ~> ImpactModeEnumCheck\nImpactModeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-513-ImpactModeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactModeInvalidRangeRows\nReadUpdateSubActionFamilies filter(not(isNull(ImpactOnEquipment))) ~> NonNullImpactOnEquipment\nNonNullImpactOnEquipment split(not(isFloat(ImpactOnEquipment)),\n\tdisjoint: false) ~> ImpactOnEquipmentTypeCheck@(ImpactOnEquipmentWrongType, ImpactOnEquipmentCorrectType)\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-512-ImpactOnEquipmentWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentWrongTypeRows\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentCorrectType filter(or(toFloat(ImpactOnEquipment) < 0.0, toFloat(ImpactOnEquipment) > 1.0)) ~> ImpactOnEquipmentRangeCheck\nImpactOnEquipmentRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-513-ImpactOnEquipmentInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentInvalidRangeRows"
+        }
+    }
+}

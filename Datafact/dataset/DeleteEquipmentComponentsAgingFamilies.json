@@ -1,0 +1,37 @@
+{
+    "name": "DeleteEquipmentComponentsAgingFamilies",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentComponentsAgingFamilies.csv",
+                "folderPath": "AssetPortfolio/Delete",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "EquipmentComponent",
+                "type": "String"
+            },
+            {
+                "name": "AgingFamily",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

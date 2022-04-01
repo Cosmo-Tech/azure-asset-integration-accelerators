@@ -1,0 +1,94 @@
+{
+    "name": "CreateEquipmentGroupsEquipmentComponents_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentGroupsEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateEquipmentGroupsEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentGroupsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentGroupsEquipmentComponentsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_241",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_241",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingEquipmentGroupRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingEquipmentGroupInEquipmentGroupsStatus"
+                },
+                {
+                    "name": "ExistingEquipmentComponentInEquipmentComponentsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroupsEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentGroupInEquipmentGroupsStatus\nExistingEquipmentGroupInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-NotExistingEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentInEquipmentComponentsStatus\nExistingEquipmentComponentInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-NotExistingEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRows\nReadCreateEquipmentGroupsEquipmentComponents split(isNull(EquipmentGroup),\n\tisNull(EquipmentComponent),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentGroup, MissingEquipmentComponent)\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-241-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-241-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsEquipmentComponentsStatus\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentGroupsEquipmentComponentsStatus exists(ReadCreateEquipmentGroupsEquipmentComponents@EquipmentGroup == EquipmentGroupsEquipmentComponentsStatus@EquipmentGroup && ReadCreateEquipmentGroupsEquipmentComponents@EquipmentComponent == EquipmentGroupsEquipmentComponentsStatus@EquipmentComponent,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus\nStatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-AlreadyExistEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingEquipmentGroupRows"
+        }
+    }
+}

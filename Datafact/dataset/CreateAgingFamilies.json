@@ -1,0 +1,105 @@
+{
+    "name": "CreateAgingFamilies",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "AgingFamilies.csv",
+                "folderPath": "AssetPortfolio/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "AgingMethodology",
+                "type": "String"
+            },
+            {
+                "name": "MinimalAge",
+                "type": "String"
+            },
+            {
+                "name": "MaximalAge",
+                "type": "String"
+            },
+            {
+                "name": "FailureRateAtMinimalAge",
+                "type": "String"
+            },
+            {
+                "name": "FailureRateAtMaximalAge",
+                "type": "String"
+            },
+            {
+                "name": "ExternalFailureRatePerYear",
+                "type": "String"
+            },
+            {
+                "name": "IsQuantityDiscrete",
+                "type": "String"
+            },
+            {
+                "name": "GFlag",
+                "type": "String"
+            },
+            {
+                "name": "AgingFailureDelay",
+                "type": "String"
+            },
+            {
+                "name": "IsAgingAfterDeath",
+                "type": "String"
+            },
+            {
+                "name": "MaintenanceIfOutOfOrder",
+                "type": "String"
+            },
+            {
+                "name": "Shape",
+                "type": "String"
+            },
+            {
+                "name": "Scale",
+                "type": "String"
+            },
+            {
+                "name": "ExpectedLife",
+                "type": "String"
+            },
+            {
+                "name": "FinancialCostOfFailure",
+                "type": "String"
+            },
+            {
+                "name": "EnvironmentalCostOfFailure",
+                "type": "String"
+            },
+            {
+                "name": "NetworkCostOfFailure",
+                "type": "String"
+            },
+            {
+                "name": "ExtraNL",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

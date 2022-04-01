@@ -1,0 +1,60 @@
+{
+    "name": "DeleteTechnicalPoliciesCriteria_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPoliciesCriteria",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTechnicalPoliciesCriteria"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesCriteriaStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_441",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_441",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCriterionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_440",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesCriteria\nReadDeleteTechnicalPoliciesCriteria split(isNull(TechnicalPolicy),\n\tisNull(Criterion),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingCriterion)\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-441-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-441-MissColumnCriterion.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesCriteriaStatus\nReadDeleteTechnicalPoliciesCriteria, TechnicalPoliciesCriteriaStatus exists(ReadDeleteTechnicalPoliciesCriteria@TechnicalPolicy == TechnicalPoliciesCriteriaStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesCriteria@Criterion == TechnicalPoliciesCriteriaStatus@Criterion,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus\nStatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-440-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+        }
+    }
+}

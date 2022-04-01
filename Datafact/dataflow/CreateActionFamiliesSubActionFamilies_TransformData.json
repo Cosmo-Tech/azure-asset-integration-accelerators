@@ -1,0 +1,59 @@
+{
+    "name": "CreateActionFamiliesSubActionFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamiliesSubActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateActionFamiliesSubActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesSubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamiliesSubActionFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_ActionFamiliesSubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesSubActionFamilies\nReadCreateActionFamiliesSubActionFamilies select(mapColumn(\n\t\t{$sourceId} = ActionFamily,\n\t\t{$targetId} = SubActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_SubActionFamily',\n\t{$relationshipDelete} = 'false',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamiliesSubActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor\nReadCreateActionFamiliesSubActionFamilies select(mapColumn(\n\t\tActionFamily,\n\t\tSubActionFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor\nReadTempStatusActionFamiliesSubActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor union(byName: true)~> StatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nStatusUpdateActionFamiliesSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesSubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+        }
+    }
+}

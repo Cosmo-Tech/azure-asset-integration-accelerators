@@ -1,0 +1,53 @@
+{
+    "name": "CreateCriteria",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "Criteria.csv",
+                "folderPath": "ActivitiesManagement/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "EquipmentComponentAttribute",
+                "type": "String"
+            },
+            {
+                "name": "Operator",
+                "type": "String"
+            },
+            {
+                "name": "Threshold",
+                "type": "String"
+            },
+            {
+                "name": "ReferenceAttribute",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

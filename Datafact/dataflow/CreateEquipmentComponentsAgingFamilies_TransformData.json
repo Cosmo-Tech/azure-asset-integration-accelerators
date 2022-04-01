@@ -1,0 +1,59 @@
+{
+    "name": "CreateEquipmentComponentsAgingFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponentsAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateEquipmentComponentsAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponentsAgingFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsAgingFamilies\nReadCreateEquipmentComponentsAgingFamilies select(mapColumn(\n\t\t{$sourceId} = EquipmentComponent,\n\t\t{$targetId} = AgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'AgingLaw',\n\t{$relationshipDelete} = 'false',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponentsAgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor\nReadCreateEquipmentComponentsAgingFamilies select(mapColumn(\n\t\tEquipmentComponent,\n\t\tAgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor\nReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor, StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor union(byName: true)~> StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor\nStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponents_AgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+        }
+    }
+}

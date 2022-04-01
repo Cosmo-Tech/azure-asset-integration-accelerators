@@ -1,0 +1,45 @@
+{
+    "name": "UpdateEquipmentGroups",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentGroups.csv",
+                "folderPath": "AssetPortfolioActivitiesManagement/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "AssetClass",
+                "type": "String"
+            },
+            {
+                "name": "Quantity",
+                "type": "String"
+            },
+            {
+                "name": "RatingLevel",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

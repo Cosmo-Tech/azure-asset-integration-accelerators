@@ -1,0 +1,60 @@
+{
+    "name": "DeleteActionFamiliesActionTasks_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteActionFamiliesActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteActionFamiliesActionTasks"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesActionTasksStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "12_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionTaskRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_410",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusActionFamilyActionTaskExistenceCheckInActionFamiliesActionTasksStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionFamiliesActionTasks\nReadDeleteActionFamiliesActionTasks split(isNull(ActionFamily),\n\tisNull(ActionTask),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingActionFamily, MissingActionTask)\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-411-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nCheckMandatoryData@MissingActionTask sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-411-MissColumnActionTask.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionTaskRows\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesActionTasksStatus\nReadDeleteActionFamiliesActionTasks, ActionFamiliesActionTasksStatus exists(ReadDeleteActionFamiliesActionTasks@ActionFamily == ActionFamiliesActionTasksStatus@ActionFamily && ReadDeleteActionFamiliesActionTasks@ActionTask == ActionFamiliesActionTasksStatus@ActionTask,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusActionFamilyActionTaskExistenceCheckInActionFamiliesActionTasksStatus\nStatusActionFamilyActionTaskExistenceCheckInActionFamiliesActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-410-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "name": "DeleteEquipmentComponentsEquipmentComponents",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentComponentsEquipmentComponents.csv",
+                "folderPath": "AssetPortfolio/Delete",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "EquipmentComponentSource",
+                "type": "String"
+            },
+            {
+                "name": "EquipmentComponentTarget",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

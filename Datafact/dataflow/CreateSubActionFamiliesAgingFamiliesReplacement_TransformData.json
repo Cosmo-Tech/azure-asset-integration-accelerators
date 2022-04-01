@@ -1,0 +1,59 @@
+{
+    "name": "CreateSubActionFamiliesAgingFamiliesReplacement_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamiliesAgingFamiliesReplacement",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSubActionFamiliesAgingFamiliesReplacement"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesAgingFamiliesReplacementStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamiliesAgingFamiliesReplacement_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SubActionFamiliesAgingFamiliesReplacementStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesReplacement\nReadCreateSubActionFamiliesAgingFamiliesReplacement select(mapColumn(\n\t\t{$sourceId} = SubActionFamily,\n\t\t{$targetId} = AgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'replace_with_RetrofitAgingFamily',\n\t{$relationshipDelete} = 'false',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SuBActionFamiliesAgingFamiliesReplacement.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadCreateSubActionFamiliesAgingFamiliesReplacement select(mapColumn(\n\t\tSubActionFamily,\n\t\tAgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor union(byName: true)~> StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor\nStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesReplacement_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "name": "CreateAgingFamilies_MapMapReferenceCostOfFailure",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "AgingFamilies_MapReferenceCostOfFailure.csv",
+                "folderPath": "AssetPortfolio/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "AgingFamily",
+                "type": "String"
+            },
+            {
+                "name": "HealthIndex",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

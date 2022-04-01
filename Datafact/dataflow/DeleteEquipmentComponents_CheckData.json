@@ -1,0 +1,53 @@
+{
+    "name": "DeleteEquipmentComponents_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_310",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_311",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInEquipmentComponentsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nReadDeleteEquipmentComponents, EquipmentComponentsStatus exists(ReadDeleteEquipmentComponents@Name == EquipmentComponentsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInEquipmentComponentsStatus\nExistingNameInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-310-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadDeleteEquipmentComponents split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-311-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+        }
+    }
+}

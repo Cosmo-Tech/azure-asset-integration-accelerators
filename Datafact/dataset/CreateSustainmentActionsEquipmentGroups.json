@@ -1,0 +1,37 @@
+{
+    "name": "CreateSustainmentActionsEquipmentGroups",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "SustainmentActionsEquipmentGroups.csv",
+                "folderPath": "AssetPortfolioActivitiesManagement/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "SustainmentAction",
+                "type": "String"
+            },
+            {
+                "name": "EquipmentGroup",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

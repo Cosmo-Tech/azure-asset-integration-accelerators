@@ -1,0 +1,28 @@
+{
+    "name": "InputDeleteTechnicalPoliciesMainActionFamilies_temp",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "tmp_TechnicalPoliciesMainActionFamilies.v1.csv",
+                "folderPath": "ActivitiesManagement/Delete",
+                "container": "asset-integration-accelerator-temp"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

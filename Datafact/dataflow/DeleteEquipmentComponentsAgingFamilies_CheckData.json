@@ -1,0 +1,60 @@
+{
+    "name": "DeleteEquipmentComponentsAgingFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentComponentsAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsAgingFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_410",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusEquipmentComponentAgingFamilyExistenceCheckInEquipmentComponentsAgingFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentComponentsAgingFamilies\nReadDeleteEquipmentComponentsAgingFamilies split(isNull(EquipmentComponent),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentComponent, MissingAgingFamily)\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-411-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-411-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsAgingFamiliesStatus\nReadDeleteEquipmentComponentsAgingFamilies, EquipmentComponentsAgingFamiliesStatus exists(ReadDeleteEquipmentComponentsAgingFamilies@EquipmentComponent == EquipmentComponentsAgingFamiliesStatus@EquipmentComponent && ReadDeleteEquipmentComponentsAgingFamilies@AgingFamily == EquipmentComponentsAgingFamiliesStatus@AgingFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusEquipmentComponentAgingFamilyExistenceCheckInEquipmentComponentsAgingFamiliesStatus\nStatusEquipmentComponentAgingFamilyExistenceCheckInEquipmentComponentsAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-410-NotExistingEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRows"
+        }
+    }
+}

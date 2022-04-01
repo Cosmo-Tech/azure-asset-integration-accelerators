@@ -1,0 +1,27 @@
+{
+    "name": "ActivitiesManagementHumanResources_CreateInjectorDataset",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorOutput",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "folderPath": "ActivitiesManagementHumanResources/Create",
+                "container": "automatic-import"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

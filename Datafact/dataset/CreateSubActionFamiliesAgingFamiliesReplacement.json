@@ -1,0 +1,37 @@
+{
+    "name": "CreateSubActionFamiliesAgingFamiliesReplacement",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "SuBActionFamiliesAgingFamiliesReplacement.csv",
+                "folderPath": "AssetPortfolioActivitiesManagement/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "SubActionFamily",
+                "type": "String"
+            },
+            {
+                "name": "AgingFamily",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

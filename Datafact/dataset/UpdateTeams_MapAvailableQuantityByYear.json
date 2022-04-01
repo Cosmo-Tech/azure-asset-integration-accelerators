@@ -1,0 +1,41 @@
+{
+    "name": "UpdateTeams_MapAvailableQuantityByYear",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "4-HumanResources/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "Teams_MapAvailableQuantityByYear.csv",
+                "folderPath": "HumanResources/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Team",
+                "type": "String"
+            },
+            {
+                "name": "Year",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

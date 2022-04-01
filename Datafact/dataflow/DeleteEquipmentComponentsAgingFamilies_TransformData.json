@@ -1,0 +1,59 @@
+{
+    "name": "DeleteEquipmentComponentsAgingFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentComponentsAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsAgingFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentComponentsAgingFamilies\nReadDeleteEquipmentComponentsAgingFamilies select(mapColumn(\n\t\t{$sourceId} = EquipmentComponent,\n\t\t{$targetId} = AgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'AgingLaw',\n\t{$relationshipDelete} = 'true',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponentsAgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor\nReadDeleteEquipmentComponentsAgingFamilies select(mapColumn(\n\t\tEquipmentComponent,\n\t\tAgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor\nReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor, StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor exists(ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor@EquipmentComponent == StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor@EquipmentComponent && ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor@AgingFamily == StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor@AgingFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor\nStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponents_AgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+        }
+    }
+}

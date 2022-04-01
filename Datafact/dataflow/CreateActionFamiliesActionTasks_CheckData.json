@@ -1,0 +1,94 @@
+{
+    "name": "CreateActionFamiliesActionTasks_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamiliesActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateActionFamiliesActionTasks"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionTasksStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesActionTasksStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "12_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionTaskRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionTaskRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingActionFamilyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingActionFamilyInActionFamiliesStatus"
+                },
+                {
+                    "name": "ExistingActionTaskInActionTasksStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesActionTasks\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nReadCreateActionFamiliesActionTasks, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionTasksStatus\nReadCreateActionFamiliesActionTasks, ActionTasksStatus exists(ActionTask == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionTaskInActionTasksStatus\nExistingActionTaskInActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-NotExistingActionTask.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionTaskRows\nReadCreateActionFamiliesActionTasks split(isNull(ActionFamily),\n\tisNull(ActionTask),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingActionFamily, MissingActionTask)\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-211-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nCheckMandatoryData@MissingActionTask sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-211-MissColumnActionTask.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionTaskRows\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesActionTasksStatus\nReadCreateActionFamiliesActionTasks, ActionFamiliesActionTasksStatus exists(ReadCreateActionFamiliesActionTasks@ActionFamily == ActionFamiliesActionTasksStatus@ActionFamily && ReadCreateActionFamiliesActionTasks@ActionTask == ActionFamiliesActionTasksStatus@ActionTask,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus\nStatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-AlreadyExistActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingActionFamilyRows"
+        }
+    }
+}

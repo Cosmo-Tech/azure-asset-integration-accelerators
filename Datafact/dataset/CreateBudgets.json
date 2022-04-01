@@ -1,0 +1,49 @@
+{
+    "name": "CreateBudgets",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "3-Budgets/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "Budgets.csv",
+                "folderPath": "Budgets/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "CostType",
+                "type": "String"
+            },
+            {
+                "name": "Constrained",
+                "type": "String"
+            },
+            {
+                "name": "CostRate",
+                "type": "String"
+            },
+            {
+                "name": "Rank",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

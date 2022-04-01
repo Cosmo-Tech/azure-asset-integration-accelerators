@@ -1,0 +1,112 @@
+{
+    "name": "CreateActionFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamilies_MapCostsByRatingLevel",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamilies_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusActionFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateActionFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "MapCostsByRatingLevelKeyUnitPropertySplitByType"
+                },
+                {
+                    "name": "AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat"
+                },
+                {
+                    "name": "MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes"
+                },
+                {
+                    "name": "AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+                },
+                {
+                    "name": "DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+                },
+                {
+                    "name": "AggregateMapCostsByRatingLevelKeyRatingLevel"
+                },
+                {
+                    "name": "CostsByRatingLevelCleaning"
+                },
+                {
+                    "name": "CostsByRatingLevelUnion"
+                },
+                {
+                    "name": "CostsByRatingLevelSelect"
+                },
+                {
+                    "name": "AggregateMapBudgetCategoriesKeyIndex"
+                },
+                {
+                    "name": "BudgetCategoriesCleaning"
+                },
+                {
+                    "name": "BudgetCategoriesUnion"
+                },
+                {
+                    "name": "BudgetCategoriesSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateActionFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamilies\nReadCreateActionFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionFamily;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCostsByRatingLevel\nReadMapCostsByRatingLevel split(in(['SupplierCost','Duration'], UnitProperty),\n\tdisjoint: false) ~> MapCostsByRatingLevelKeyUnitPropertySplitByType@(MapCostsByRatingLevelKeyUnitPropertySplitByfloat)\nMapCostsByRatingLevelKeyUnitPropertySplitByType@MapCostsByRatingLevelKeyUnitPropertySplitByfloat aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = dropRight(dropLeft(toString(keyValues(collect(toString(UnitProperty)), collect(toFloat(Value)))) ,1), 1)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat\nAggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat union(byName: true)~> MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes\nMapCostsByRatingLevelKeyUnitPropertyUnionAllTypes aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = collect(CostsByRatingLevel)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes\nAggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes derive(CostsByRatingLevel = '{' + concatWS(',', CostsByRatingLevel[1]) + '}') ~> DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes\nDeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes aggregate(groupBy(ActionFamily),\n\tCostsByRatingLevel = toString(keyValues(collect(toString(RatingLevel)), collect(toString(CostsByRatingLevel))))) ~> AggregateMapCostsByRatingLevelKeyRatingLevel\nAggregateMapCostsByRatingLevelKeyRatingLevel derive(CostsByRatingLevel = replace(replace(replace(CostsByRatingLevel, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CostsByRatingLevelCleaning\nModelDefinition, CostsByRatingLevelCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> CostsByRatingLevelUnion\nCostsByRatingLevelUnion select(mapColumn(\n\t\t{$id},\n\t\t{AssetClass},\n\t\t{CostsAreCapitalCharges},\n\t\t{IsLocalAction},\n\t\t{NeedsOutage},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCostsByRatingLevel),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CostsByRatingLevelSelect\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadMapBudgetCategories aggregate(groupBy(ActionFamily),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nCostsByRatingLevelSelect, BudgetCategoriesCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{AssetClass},\n\t\t{CostsAreCapitalCharges},\n\t\t{IsLocalAction},\n\t\t{NeedsOutage},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CostsByRatingLevel},\n\t\tBudgetCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesStatusEditor\nReadCreateActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesStatusEditor\nReadTempStatusActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesStatusEditor union(byName: true)~> StatusUpdateActionFamiliesStatusEditor\nStatusUpdateActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesStatusEditor"
+        }
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "name": "UpdateSustainmentActions_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSustainmentActions",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateSustainmentActions"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateSustainmentActions_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateSustainmentActionsMapBudgetCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_530",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_531",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_531",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSustainmentActionRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_531",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_531",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_530",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSustainmentActionRowsBudgetCategories"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInSustainmentActionsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "MapBudgetCategoriesMandatoryCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesExistenceCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tActivityPlanName as string,\n\t\tPlannedDate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateSustainmentActions\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nReadUpdateSustainmentActions, SustainmentActionsStatus exists(ReadUpdateSustainmentActions@Name == SustainmentActionsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInSustainmentActionsStatus\nExistingNameInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-530-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateSustainmentActions split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-531-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nsource(output(\n\t\tSustainmentAction as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateSustainmentActionsMapBudgetCategories\nUpdateSustainmentActionsMapBudgetCategories split(isNull(SustainmentAction),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingSustainmentAction, MissingIndex, MissingValue)\nMapBudgetCategoriesMandatoryCheck@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-531-MissColumnSustainmentActionBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-531-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-531-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nUpdateSustainmentActionsMapBudgetCategories, SustainmentActionsStatus exists(SustainmentAction == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-530-NotExistingSustainmentActionBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRowsBudgetCategories"
+        }
+    }
+}

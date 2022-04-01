@@ -1,0 +1,60 @@
+{
+    "name": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTechnicalPoliciesMainActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesMainActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_420",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesMainActionFamilies\nReadDeleteTechnicalPoliciesMainActionFamilies split(isNull(TechnicalPolicy),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingActionFamily)\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-421-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-421-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesMainActionFamiliesStatus\nReadDeleteTechnicalPoliciesMainActionFamilies, TechnicalPoliciesMainActionFamiliesStatus exists(ReadDeleteTechnicalPoliciesMainActionFamilies@TechnicalPolicy == TechnicalPoliciesMainActionFamiliesStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesMainActionFamilies@ActionFamily == TechnicalPoliciesMainActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus\nStatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-420-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+        }
+    }
+}

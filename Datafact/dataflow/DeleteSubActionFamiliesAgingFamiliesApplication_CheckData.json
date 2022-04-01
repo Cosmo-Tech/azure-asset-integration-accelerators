@@ -1,0 +1,60 @@
+{
+    "name": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSubActionFamiliesAgingFamiliesApplication"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SubActionFamiliesAgingFamiliesApplicationStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSubActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_421",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_420",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSubActionFamilyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSubActionFamilyAgingFamilyExistenceCheckInSubActionFamiliesAgingFamiliesApplicationStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSubActionFamiliesAgingFamiliesApplication\nReadDeleteSubActionFamiliesAgingFamiliesApplication split(isNull(SubActionFamily),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSubActionFamily, MissingAgingFamily)\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-421-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-421-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesAgingFamiliesApplicationStatus\nReadDeleteSubActionFamiliesAgingFamiliesApplication, SubActionFamiliesAgingFamiliesApplicationStatus exists(ReadDeleteSubActionFamiliesAgingFamiliesApplication@SubActionFamily == SubActionFamiliesAgingFamiliesApplicationStatus@SubActionFamily && ReadDeleteSubActionFamiliesAgingFamiliesApplication@AgingFamily == SubActionFamiliesAgingFamiliesApplicationStatus@AgingFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusSubActionFamilyAgingFamilyExistenceCheckInSubActionFamiliesAgingFamiliesApplicationStatus\nStatusSubActionFamilyAgingFamilyExistenceCheckInSubActionFamiliesAgingFamiliesApplicationStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-420-NotExistingSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSubActionFamilyRows"
+        }
+    }
+}

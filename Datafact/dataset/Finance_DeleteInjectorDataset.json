@@ -1,0 +1,27 @@
+{
+    "name": "Finance_DeleteInjectorDataset",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorOutput",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "5-Finance/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "folderPath": "Finance/Delete",
+                "container": "automatic-import"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

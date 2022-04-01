@@ -1,0 +1,59 @@
+{
+    "name": "CreateSubActionFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSubActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSubActionFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionSubActionFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSubActionFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tType as string,\n\t\tImpactMode as string,\n\t\tImpactOnEquipment as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamilies\nReadCreateSubActionFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tType,\n\t\tImpactMode,\n\t\tImpactOnEquipment),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SubActionFamily;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SubActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesStatusEditor\nReadCreateSubActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesStatusEditor\nReadTempStatusSubActionFamiliesStatusEditor, StatusColumnSelectionSubActionFamiliesStatusEditor union(byName: true)~> StatusUpdateSubActionFamiliesStatusEditor\nStatusUpdateSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor"
+        }
+    }
+}

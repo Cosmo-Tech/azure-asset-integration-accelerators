@@ -1,0 +1,223 @@
+{
+    "name": "UpdateActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateActionFamilies_MapCostsByRatingLevel",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateActionFamiliesMapCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateActionFamilies_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateActionFamiliesMapBudgetCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCostsAreCapitalChargesWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRowsCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingRatingLevelRowsCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingUnitPropertyRowsCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRowsCostsByRatingLevel"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteUnitPropertyCostsByRatingLevelInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteSupplierCostWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteDurationWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsLocalActionWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNeedsOutageWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRowsBudgetCategories"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullCostsAreCapitalCharges"
+                },
+                {
+                    "name": "CostsAreCapitalChargesTypeCheck"
+                },
+                {
+                    "name": "MapCostsByRatingLevelMandatoryCheck"
+                },
+                {
+                    "name": "MapCostsByRatingLevelExistenceCheck"
+                },
+                {
+                    "name": "NonNullEnumUnitPropertyCostsByRatingLevel"
+                },
+                {
+                    "name": "UnitPropertyCostsByRatingLevelEnumCheck"
+                },
+                {
+                    "name": "MapCostsByRatingLevelSplitKeyValues"
+                },
+                {
+                    "name": "NonNullSupplierCost"
+                },
+                {
+                    "name": "SupplierCostTypeCheck"
+                },
+                {
+                    "name": "NonNullDuration"
+                },
+                {
+                    "name": "DurationTypeCheck"
+                },
+                {
+                    "name": "NonNullIsLocalAction"
+                },
+                {
+                    "name": "IsLocalActionTypeCheck"
+                },
+                {
+                    "name": "NonNullNeedsOutage"
+                },
+                {
+                    "name": "NeedsOutageTypeCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesMandatoryCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesExistenceCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nReadUpdateActionFamilies, ActionFamiliesStatus exists(ReadUpdateActionFamilies@Name == ActionFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInActionFamiliesStatus\nExistingNameInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateActionFamilies filter(not(isNull(CostsAreCapitalCharges))) ~> NonNullCostsAreCapitalCharges\nNonNullCostsAreCapitalCharges split(not(isBoolean(CostsAreCapitalCharges)),\n\tdisjoint: false) ~> CostsAreCapitalChargesTypeCheck@(CostsAreCapitalChargesWrongType)\nCostsAreCapitalChargesTypeCheck@CostsAreCapitalChargesWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-CostsAreCapitalChargesWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostsAreCapitalChargesWrongTypeRows\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateActionFamiliesMapCostsByRatingLevel\nUpdateActionFamiliesMapCostsByRatingLevel split(isNull(ActionFamily),\n\tisNull(RatingLevel),\n\tisNull(UnitProperty),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCostsByRatingLevelMandatoryCheck@(MissingActionFamily, MissingRatingLevel, MissingUnitProperty, MissingValue)\nMapCostsByRatingLevelMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingRatingLevel sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnRatingLevelCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingRatingLevelRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingUnitProperty sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnUnitPropertyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingUnitPropertyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnValueCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCostsByRatingLevel\nUpdateActionFamiliesMapCostsByRatingLevel, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCostsByRatingLevelExistenceCheck\nMapCostsByRatingLevelExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsCostsByRatingLevel\nUpdateActionFamiliesMapCostsByRatingLevel filter(not(isNull(UnitProperty))) ~> NonNullEnumUnitPropertyCostsByRatingLevel\nNonNullEnumUnitPropertyCostsByRatingLevel filter(not(in(['SupplierCost', 'Duration'], UnitProperty))) ~> UnitPropertyCostsByRatingLevelEnumCheck\nUnitPropertyCostsByRatingLevelEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-513-UnitPropertyCostsByRatingLevelInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteUnitPropertyCostsByRatingLevelInvalidRangeRows\nUpdateActionFamiliesMapCostsByRatingLevel split(UnitProperty == 'SupplierCost',\n\tUnitProperty == 'Duration',\n\tdisjoint: false) ~> MapCostsByRatingLevelSplitKeyValues@(UnitPropertySupplierCost, UnitPropertyDuration)\nMapCostsByRatingLevelSplitKeyValues@UnitPropertySupplierCost filter(not(isNull(Value))) ~> NonNullSupplierCost\nNonNullSupplierCost split(not(isFloat(Value)),\n\tdisjoint: false) ~> SupplierCostTypeCheck@(SupplierCostWrongType)\nSupplierCostTypeCheck@SupplierCostWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-SupplierCostWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSupplierCostWrongTypeRows\nMapCostsByRatingLevelSplitKeyValues@UnitPropertyDuration filter(not(isNull(Value))) ~> NonNullDuration\nNonNullDuration split(not(isFloat(Value)),\n\tdisjoint: false) ~> DurationTypeCheck@(DurationWrongType)\nDurationTypeCheck@DurationWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-DurationWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteDurationWrongTypeRows\nReadUpdateActionFamilies filter(not(isNull(IsLocalAction))) ~> NonNullIsLocalAction\nNonNullIsLocalAction split(not(isBoolean(IsLocalAction)),\n\tdisjoint: false) ~> IsLocalActionTypeCheck@(IsLocalActionWrongType)\nIsLocalActionTypeCheck@IsLocalActionWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-IsLocalActionWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsLocalActionWrongTypeRows\nReadUpdateActionFamilies filter(not(isNull(NeedsOutage))) ~> NonNullNeedsOutage\nNonNullNeedsOutage split(not(isBoolean(NeedsOutage)),\n\tdisjoint: false) ~> NeedsOutageTypeCheck@(NeedsOutageWrongType)\nNeedsOutageTypeCheck@NeedsOutageWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-NeedsOutageWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNeedsOutageWrongTypeRows\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateActionFamiliesMapBudgetCategories\nUpdateActionFamiliesMapBudgetCategories split(isNull(ActionFamily),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingActionFamily, MissingIndex, MissingValue)\nMapBudgetCategoriesMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nUpdateActionFamiliesMapBudgetCategories, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsBudgetCategories"
+        }
+    }
+}

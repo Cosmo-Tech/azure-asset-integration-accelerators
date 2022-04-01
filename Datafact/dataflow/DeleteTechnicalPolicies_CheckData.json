@@ -1,0 +1,53 @@
+{
+    "name": "DeleteTechnicalPolicies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPolicies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTechnicalPolicies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_340",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_341",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInTechnicalPoliciesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPolicies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesStatus\nReadDeleteTechnicalPolicies, TechnicalPoliciesStatus exists(ReadDeleteTechnicalPolicies@Name == TechnicalPoliciesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInTechnicalPoliciesStatus\nExistingNameInTechnicalPoliciesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-340-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadDeleteTechnicalPolicies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-341-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+        }
+    }
+}

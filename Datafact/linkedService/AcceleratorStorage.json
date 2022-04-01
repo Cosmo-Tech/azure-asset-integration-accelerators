@@ -1,0 +1,13 @@
+{
+	"name": "AcceleratorStorage",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "The storage use to stock the input format of the accelerators and the temp file",
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": "",
+			"encryptedCredential": ""
+		}
+	}
+}

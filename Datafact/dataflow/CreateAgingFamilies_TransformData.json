@@ -1,0 +1,118 @@
+{
+    "name": "CreateAgingFamilies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies_MapFamilyPairHillParameters",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies_MapMapReferenceCostOfFailure",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapMapReferenceCostOfFailure"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusAgingFamiliesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateAgingFamiliesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "MapFamilyPairHillParametersKeyHillParametersSplitByType"
+                },
+                {
+                    "name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat"
+                },
+                {
+                    "name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger"
+                },
+                {
+                    "name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean"
+                },
+                {
+                    "name": "MapFamilyPairHillParametersKeyHillParametersUnionAllTypes"
+                },
+                {
+                    "name": "AggregateMapFamilyPairHillParametersKeyHillParametersAllTypes"
+                },
+                {
+                    "name": "DeriveMapFamilyPairHillParametersKeyHillParametersAllTypes"
+                },
+                {
+                    "name": "AggregateMapFamilyPairHillParametersKeyAgentAgingFamily"
+                },
+                {
+                    "name": "FamilyPairHillParametersCleaning"
+                },
+                {
+                    "name": "FamilyPairHillParametersUnion"
+                },
+                {
+                    "name": "FamilyPairHillParametersSelect"
+                },
+                {
+                    "name": "AggregateMapMapReferenceCostOfFailureKeyHealthIndex"
+                },
+                {
+                    "name": "MapReferenceCostOfFailureCleaning"
+                },
+                {
+                    "name": "MapReferenceCostOfFailureUnion"
+                },
+                {
+                    "name": "MapReferenceCostOfFailureSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionAgingFamiliesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateAgingFamiliesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAgingMethodology as string,\n\t\tMinimalAge as string,\n\t\tMaximalAge as string,\n\t\tFailureRateAtMinimalAge as string,\n\t\tFailureRateAtMaximalAge as string,\n\t\tExternalFailureRatePerYear as string,\n\t\tIsQuantityDiscrete as string,\n\t\tGFlag as string,\n\t\tAgingFailureDelay as string,\n\t\tIsAgingAfterDeath as string,\n\t\tMaintenanceIfOutOfOrder as string,\n\t\tShape as string,\n\t\tScale as string,\n\t\tExpectedLife as string,\n\t\tFinancialCostOfFailure as string,\n\t\tEnvironmentalCostOfFailure as string,\n\t\tNetworkCostOfFailure as string,\n\t\tExtraNL as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateAgingFamilies\nReadCreateAgingFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAgingMethodology,\n\t\t{EquipmentAgingLawParameters.MinimalAge} = MinimalAge,\n\t\t{EquipmentAgingLawParameters.MaximalAge} = MaximalAge,\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge} = FailureRateAtMinimalAge,\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge} = FailureRateAtMaximalAge,\n\t\tExternalFailureRatePerYear,\n\t\tIsQuantityDiscrete,\n\t\tGFlag,\n\t\tAgingFailureDelay,\n\t\tIsAgingAfterDeath,\n\t\tMaintenanceIfOutOfOrder,\n\t\t{EquipmentAgingLawParameters.Shape} = Shape,\n\t\t{EquipmentAgingLawParameters.Scale} = Scale,\n\t\tExpectedLife,\n\t\tFinancialCostOfFailure,\n\t\tEnvironmentalCostOfFailure,\n\t\tNetworkCostOfFailure,\n\t\tExtraNL),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:AgingFamily;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tAgingFamily as string,\n\t\tAgentAgingFamily as string,\n\t\tHillParameters as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapFamilyPairHillParameters\nReadMapFamilyPairHillParameters split(in(['AmplitudeHill','OffsetHill'], HillParameters),\n\tin(['SlopeHill'], HillParameters),\n\tin(['IsFailureTransmitted','IsCouplingActive'], HillParameters),\n\tdisjoint: false) ~> MapFamilyPairHillParametersKeyHillParametersSplitByType@(MapFamilyPairHillParametersKeyHillParametersSplitByfloat, MapFamilyPairHillParametersKeyHillParametersSplitByinteger, MapFamilyPairHillParametersKeyHillParametersSplitByboolean)\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByfloat aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toFloat(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByinteger aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toInteger(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByboolean aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toBoolean(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean\nAggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat, AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger, AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean union(byName: true)~> MapFamilyPairHillParametersKeyHillParametersUnionAllTypes\nMapFamilyPairHillParametersKeyHillParametersUnionAllTypes aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = collect(FamilyPairHillParameters)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersAllTypes\nAggregateMapFamilyPairHillParametersKeyHillParametersAllTypes derive(FamilyPairHillParameters = '{' + concatWS(',', FamilyPairHillParameters[1], FamilyPairHillParameters[2], FamilyPairHillParameters[3]) + '}') ~> DeriveMapFamilyPairHillParametersKeyHillParametersAllTypes\nDeriveMapFamilyPairHillParametersKeyHillParametersAllTypes aggregate(groupBy(AgingFamily),\n\tFamilyPairHillParameters = toString(keyValues(collect(toString(AgentAgingFamily)), collect(toString(FamilyPairHillParameters))))) ~> AggregateMapFamilyPairHillParametersKeyAgentAgingFamily\nAggregateMapFamilyPairHillParametersKeyAgentAgingFamily derive(FamilyPairHillParameters = replace(replace(replace(FamilyPairHillParameters, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> FamilyPairHillParametersCleaning\nModelDefinition, FamilyPairHillParametersCleaning join({$id} == AgingFamily,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> FamilyPairHillParametersUnion\nFamilyPairHillParametersUnion select(mapColumn(\n\t\t{$id},\n\t\t{AgingMethodology},\n\t\t{EquipmentAgingLawParameters.MinimalAge},\n\t\t{EquipmentAgingLawParameters.MaximalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge},\n\t\t{ExternalFailureRatePerYear},\n\t\t{IsQuantityDiscrete},\n\t\t{GFlag},\n\t\t{AgingFailureDelay},\n\t\t{IsAgingAfterDeath},\n\t\t{MaintenanceIfOutOfOrder},\n\t\t{EquipmentAgingLawParameters.Shape},\n\t\t{EquipmentAgingLawParameters.Scale},\n\t\t{ExpectedLife},\n\t\t{FinancialCostOfFailure},\n\t\t{EnvironmentalCostOfFailure},\n\t\t{NetworkCostOfFailure},\n\t\t{ExtraNL},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tFamilyPairHillParameters),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FamilyPairHillParametersSelect\nsource(output(\n\t\tAgingFamily as string,\n\t\tHealthIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapMapReferenceCostOfFailure\nReadMapMapReferenceCostOfFailure aggregate(groupBy(AgingFamily),\n\tMapReferenceCostOfFailure = toString(keyValues(collect(toString(HealthIndex)), collect(toFloat(Value))))) ~> AggregateMapMapReferenceCostOfFailureKeyHealthIndex\nAggregateMapMapReferenceCostOfFailureKeyHealthIndex derive(MapReferenceCostOfFailure = replace(replace(replace(MapReferenceCostOfFailure, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> MapReferenceCostOfFailureCleaning\nFamilyPairHillParametersSelect, MapReferenceCostOfFailureCleaning join({$id} == AgingFamily,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> MapReferenceCostOfFailureUnion\nMapReferenceCostOfFailureUnion select(mapColumn(\n\t\t{$id},\n\t\t{AgingMethodology},\n\t\t{EquipmentAgingLawParameters.MinimalAge},\n\t\t{EquipmentAgingLawParameters.MaximalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge},\n\t\t{ExternalFailureRatePerYear},\n\t\t{IsQuantityDiscrete},\n\t\t{GFlag},\n\t\t{AgingFailureDelay},\n\t\t{IsAgingAfterDeath},\n\t\t{MaintenanceIfOutOfOrder},\n\t\t{EquipmentAgingLawParameters.Shape},\n\t\t{EquipmentAgingLawParameters.Scale},\n\t\t{ExpectedLife},\n\t\t{FinancialCostOfFailure},\n\t\t{EnvironmentalCostOfFailure},\n\t\t{NetworkCostOfFailure},\n\t\t{ExtraNL},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{FamilyPairHillParameters},\n\t\tMapReferenceCostOfFailure),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MapReferenceCostOfFailureSelect\nMapReferenceCostOfFailureSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_AgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusAgingFamiliesStatusEditor\nReadCreateAgingFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionAgingFamiliesStatusEditor\nReadTempStatusAgingFamiliesStatusEditor, StatusColumnSelectionAgingFamiliesStatusEditor union(byName: true)~> StatusUpdateAgingFamiliesStatusEditor\nStatusUpdateAgingFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['AgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateAgingFamiliesStatusEditor"
+        }
+    }
+}

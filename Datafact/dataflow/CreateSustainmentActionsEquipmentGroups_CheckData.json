@@ -1,0 +1,94 @@
+{
+    "name": "CreateSustainmentActionsEquipmentGroups_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActionsEquipmentGroups",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSustainmentActionsEquipmentGroups"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentGroupsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsEquipmentGroupsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_250",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_250",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_251",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_251",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_250",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingSustainmentActionRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingSustainmentActionInSustainmentActionsStatus"
+                },
+                {
+                    "name": "ExistingEquipmentGroupInEquipmentGroupsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsEquipmentGroups\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nReadCreateSustainmentActionsEquipmentGroups, SustainmentActionsStatus exists(SustainmentAction == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSustainmentActionInSustainmentActionsStatus\nExistingSustainmentActionInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nReadCreateSustainmentActionsEquipmentGroups, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentGroupInEquipmentGroupsStatus\nExistingEquipmentGroupInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-NotExistingEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRows\nReadCreateSustainmentActionsEquipmentGroups split(isNull(SustainmentAction),\n\tisNull(EquipmentGroup),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingEquipmentGroup)\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-251-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-251-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsEquipmentGroupsStatus\nReadCreateSustainmentActionsEquipmentGroups, SustainmentActionsEquipmentGroupsStatus exists(ReadCreateSustainmentActionsEquipmentGroups@SustainmentAction == SustainmentActionsEquipmentGroupsStatus@SustainmentAction && ReadCreateSustainmentActionsEquipmentGroups@EquipmentGroup == SustainmentActionsEquipmentGroupsStatus@EquipmentGroup,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus\nStatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-AlreadyExistSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSustainmentActionRows"
+        }
+    }
+}

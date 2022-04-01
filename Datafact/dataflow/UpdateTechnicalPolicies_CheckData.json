@@ -1,0 +1,182 @@
+{
+    "name": "UpdateTechnicalPolicies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTechnicalPolicies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateTechnicalPolicies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTechnicalPolicies_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateTechnicalPoliciesMapBudgetCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_540",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_541",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_542",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEnablePendingActionRemovalWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_542",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsInactiveWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_543",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTypeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_542",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteYearEndWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_542",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteYearStartWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_541",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_541",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_541",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_540",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRowsBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_542",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNbRepAction1WrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_543",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNbRepAction1InvalidRangeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInTechnicalPoliciesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnablePendingActionRemoval"
+                },
+                {
+                    "name": "EnablePendingActionRemovalTypeCheck"
+                },
+                {
+                    "name": "NonNullIsInactive"
+                },
+                {
+                    "name": "IsInactiveTypeCheck"
+                },
+                {
+                    "name": "NonNullEnumType"
+                },
+                {
+                    "name": "TypeEnumCheck"
+                },
+                {
+                    "name": "NonNullYearEnd"
+                },
+                {
+                    "name": "YearEndTypeCheck"
+                },
+                {
+                    "name": "NonNullYearStart"
+                },
+                {
+                    "name": "YearStartTypeCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesMandatoryCheck"
+                },
+                {
+                    "name": "MapBudgetCategoriesExistenceCheck"
+                },
+                {
+                    "name": "NonNullNbRepAction1"
+                },
+                {
+                    "name": "NbRepAction1TypeCheck"
+                },
+                {
+                    "name": "NbRepAction1RangeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCriteriaFormula as string,\n\t\tEnablePendingActionRemoval as string,\n\t\tIsInactive as string,\n\t\tType as string,\n\t\tYearEnd as string,\n\t\tYearStart as string,\n\t\tNbRepAction1 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateTechnicalPolicies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesStatus\nReadUpdateTechnicalPolicies, TechnicalPoliciesStatus exists(ReadUpdateTechnicalPolicies@Name == TechnicalPoliciesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInTechnicalPoliciesStatus\nExistingNameInTechnicalPoliciesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-540-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateTechnicalPolicies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-541-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateTechnicalPolicies filter(not(isNull(EnablePendingActionRemoval))) ~> NonNullEnablePendingActionRemoval\nNonNullEnablePendingActionRemoval split(not(isBoolean(EnablePendingActionRemoval)),\n\tdisjoint: false) ~> EnablePendingActionRemovalTypeCheck@(EnablePendingActionRemovalWrongType)\nEnablePendingActionRemovalTypeCheck@EnablePendingActionRemovalWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-542-EnablePendingActionRemovalWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnablePendingActionRemovalWrongTypeRows\nReadUpdateTechnicalPolicies filter(not(isNull(IsInactive))) ~> NonNullIsInactive\nNonNullIsInactive split(not(isBoolean(IsInactive)),\n\tdisjoint: false) ~> IsInactiveTypeCheck@(IsInactiveWrongType)\nIsInactiveTypeCheck@IsInactiveWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-542-IsInactiveWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsInactiveWrongTypeRows\nReadUpdateTechnicalPolicies filter(not(isNull(Type))) ~> NonNullEnumType\nNonNullEnumType filter(not(in(['ConditionBased', 'Curative', 'Imposed', 'Predetermined', 'Renewal'], Type))) ~> TypeEnumCheck\nTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-543-TypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTypeInvalidRangeRows\nReadUpdateTechnicalPolicies filter(not(isNull(YearEnd))) ~> NonNullYearEnd\nNonNullYearEnd split(not(isInteger(YearEnd)),\n\tdisjoint: false) ~> YearEndTypeCheck@(YearEndWrongType)\nYearEndTypeCheck@YearEndWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-542-YearEndWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteYearEndWrongTypeRows\nReadUpdateTechnicalPolicies filter(not(isNull(YearStart))) ~> NonNullYearStart\nNonNullYearStart split(not(isInteger(YearStart)),\n\tdisjoint: false) ~> YearStartTypeCheck@(YearStartWrongType)\nYearStartTypeCheck@YearStartWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-542-YearStartWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteYearStartWrongTypeRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateTechnicalPoliciesMapBudgetCategories\nUpdateTechnicalPoliciesMapBudgetCategories split(isNull(TechnicalPolicy),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingTechnicalPolicy, MissingIndex, MissingValue)\nMapBudgetCategoriesMandatoryCheck@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-541-MissColumnTechnicalPolicyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-541-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-541-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nUpdateTechnicalPoliciesMapBudgetCategories, TechnicalPoliciesStatus exists(TechnicalPolicy == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-540-NotExistingTechnicalPolicyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRowsBudgetCategories\nReadUpdateTechnicalPolicies filter(not(isNull(NbRepAction1))) ~> NonNullNbRepAction1\nNonNullNbRepAction1 split(not(isInteger(NbRepAction1)),\n\tdisjoint: false) ~> NbRepAction1TypeCheck@(NbRepAction1WrongType, NbRepAction1CorrectType)\nNbRepAction1TypeCheck@NbRepAction1WrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-542-NbRepAction1WrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNbRepAction1WrongTypeRows\nNbRepAction1TypeCheck@NbRepAction1CorrectType filter(toInteger(NbRepAction1) < 0.0) ~> NbRepAction1RangeCheck\nNbRepAction1RangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-543-NbRepAction1InvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNbRepAction1InvalidRangeRows"
+        }
+    }
+}

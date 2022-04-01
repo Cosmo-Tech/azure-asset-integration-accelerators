@@ -1,0 +1,53 @@
+{
+    "name": "DeleteBudgets_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "3-Budgets/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteBudgets",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteBudgets"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "BudgetsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "3_310",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_311",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInBudgetsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteBudgets\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> BudgetsStatus\nReadDeleteBudgets, BudgetsStatus exists(ReadDeleteBudgets@Name == BudgetsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInBudgetsStatus\nExistingNameInBudgetsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-310-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadDeleteBudgets split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-311-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+        }
+    }
+}

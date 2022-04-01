@@ -1,0 +1,94 @@
+{
+    "name": "CreateSustainmentActionsActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActionsActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSustainmentActionsActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingSustainmentActionRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingSustainmentActionInSustainmentActionsStatus"
+                },
+                {
+                    "name": "ExistingActionFamilyInActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nReadCreateSustainmentActionsActionFamilies, SustainmentActionsStatus exists(SustainmentAction == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSustainmentActionInSustainmentActionsStatus\nExistingSustainmentActionInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nReadCreateSustainmentActionsActionFamilies, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nReadCreateSustainmentActionsActionFamilies split(isNull(SustainmentAction),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingActionFamily)\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-211-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-211-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsActionFamiliesStatus\nReadCreateSustainmentActionsActionFamilies, SustainmentActionsActionFamiliesStatus exists(ReadCreateSustainmentActionsActionFamilies@SustainmentAction == SustainmentActionsActionFamiliesStatus@SustainmentAction && ReadCreateSustainmentActionsActionFamilies@ActionFamily == SustainmentActionsActionFamiliesStatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus\nStatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-AlreadyExistSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSustainmentActionRows"
+        }
+    }
+}

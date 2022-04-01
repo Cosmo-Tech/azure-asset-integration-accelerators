@@ -1,0 +1,39 @@
+{
+    "name": "UpdateAgingFamily_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "5-Finance/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateAgingFamily",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateAgingFamily"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateAgingFamily_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tRawInvestment as string,\n\t\tLifeSpan as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateAgingFamily\nReadUpdateAgingFamily select(mapColumn(\n\t\t{$id} = Name,\n\t\tRawInvestment,\n\t\tLifeSpan),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:AgingFamily;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_AgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo"
+        }
+    }
+}

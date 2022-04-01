@@ -1,0 +1,37 @@
+{
+    "name": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "00-Status/Temp"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "SubActionFamiliesAgingFamiliesApplication_status.csv",
+                "folderPath": "Status",
+                "container": "asset-integration-accelerator-temp"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "SubActionFamily",
+                "type": "String"
+            },
+            {
+                "name": "AgingFamily",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,59 @@
+{
+    "name": "DeleteBudgets_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "3-Budgets/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteBudgets",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteBudgets"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusBudgetsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteBudgets_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateBudgetsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionBudgetsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateBudgetsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteBudgets\nReadDeleteBudgets select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Budget;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Budgets.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusBudgetsStatusEditor\nReadDeleteBudgets select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionBudgetsStatusEditor\nReadTempStatusBudgetsStatusEditor, StatusColumnSelectionBudgetsStatusEditor exists(ReadTempStatusBudgetsStatusEditor@Name == StatusColumnSelectionBudgetsStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateBudgetsStatusEditor\nStatusUpdateBudgetsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Budgets_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateBudgetsStatusEditor"
+        }
+    }
+}

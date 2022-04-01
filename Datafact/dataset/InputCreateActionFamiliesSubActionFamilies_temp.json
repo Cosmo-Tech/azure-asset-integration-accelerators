@@ -1,0 +1,28 @@
+{
+    "name": "InputCreateActionFamiliesSubActionFamilies_temp",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "tmp_ActionFamiliesSubActionFamilies.v1.csv",
+                "folderPath": "AssetPortfolioActivitiesManagement/Create",
+                "container": "asset-integration-accelerator-temp"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

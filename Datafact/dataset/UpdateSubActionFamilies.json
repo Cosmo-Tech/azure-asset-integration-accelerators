@@ -1,0 +1,45 @@
+{
+    "name": "UpdateSubActionFamilies",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "SubActionFamilies.csv",
+                "folderPath": "AssetPortfolioActivitiesManagement/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "Type",
+                "type": "String"
+            },
+            {
+                "name": "ImpactMode",
+                "type": "String"
+            },
+            {
+                "name": "ImpactOnEquipment",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

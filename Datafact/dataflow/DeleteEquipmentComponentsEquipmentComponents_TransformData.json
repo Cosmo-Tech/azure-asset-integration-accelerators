@@ -1,0 +1,59 @@
+{
+    "name": "DeleteEquipmentComponentsEquipmentComponents_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentComponentsEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentComponentsEquipmentComponents_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_EquipmentComponentsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentComponentsEquipmentComponents\nReadDeleteEquipmentComponentsEquipmentComponents select(mapColumn(\n\t\t{$sourceId} = EquipmentComponentSource,\n\t\t{$targetId} = EquipmentComponentTarget),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'AgingInteraction',\n\t{$relationshipDelete} = 'true',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponentsEquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor\nReadDeleteEquipmentComponentsEquipmentComponents select(mapColumn(\n\t\tEquipmentComponentSource,\n\t\tEquipmentComponentTarget),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor\nReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor exists(ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor@EquipmentComponentSource == StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor@EquipmentComponentSource && ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor@EquipmentComponentTarget == StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor@EquipmentComponentTarget,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor\nStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponents_EquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+        }
+    }
+}

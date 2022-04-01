@@ -1,0 +1,27 @@
+{
+    "name": "ActivitiesManagement_CreateInjectorDataset",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorOutput",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "2-ActivitiesManagement/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "folderPath": "ActivitiesManagement/Create",
+                "container": "automatic-import"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

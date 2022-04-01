@@ -1,0 +1,45 @@
+{
+    "name": "UpdateAgingFamilies_MapFamilyPairHillParameters",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Update"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "AgingFamilies_MapFamilyPairHillParameters.csv",
+                "folderPath": "AssetPortfolio/Update",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "AgingFamily",
+                "type": "String"
+            },
+            {
+                "name": "AgentAgingFamily",
+                "type": "String"
+            },
+            {
+                "name": "HillParameters",
+                "type": "String"
+            },
+            {
+                "name": "Value",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

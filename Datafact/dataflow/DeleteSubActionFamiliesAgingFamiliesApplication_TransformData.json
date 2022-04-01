@@ -1,0 +1,59 @@
+{
+    "name": "DeleteSubActionFamiliesAgingFamiliesApplication_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSubActionFamiliesAgingFamiliesApplication"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SubActionFamiliesAgingFamiliesApplicationStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSubActionFamiliesAgingFamiliesApplication\nReadDeleteSubActionFamiliesAgingFamiliesApplication select(mapColumn(\n\t\t{$sourceId} = SubActionFamily,\n\t\t{$targetId} = AgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'apply_to_AgingFamily',\n\t{$relationshipDelete} = 'true',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SubActionFamiliesAgingFamiliesApplication.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadDeleteSubActionFamiliesAgingFamiliesApplication select(mapColumn(\n\t\tSubActionFamily,\n\t\tAgingFamily),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor exists(ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor@SubActionFamily == StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor@SubActionFamily && ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor@AgingFamily == StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor@AgingFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor\nStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesApplication_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+        }
+    }
+}

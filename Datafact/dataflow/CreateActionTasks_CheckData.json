@@ -1,0 +1,112 @@
+{
+    "name": "CreateActionTasks_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateActionTasks"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionTasksStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "12_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotUniqueNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteActionDurationPercentageWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteActionDurationPercentageInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteWorkforceFTEWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "12_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteWorkforceFTEInvalidRangeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "InternalNameUniquenessCheckAggregate"
+                },
+                {
+                    "name": "InternalNameUniquenessCheckFilter"
+                },
+                {
+                    "name": "StatusNameUniquenessCheckInActionTasksStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullActionDurationPercentage"
+                },
+                {
+                    "name": "ActionDurationPercentageTypeCheck"
+                },
+                {
+                    "name": "ActionDurationPercentageRangeCheck"
+                },
+                {
+                    "name": "NonNullWorkforceFTE"
+                },
+                {
+                    "name": "WorkforceFTETypeCheck"
+                },
+                {
+                    "name": "WorkforceFTERangeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tSkill as string,\n\t\tActionDurationPercentage as string,\n\t\tWorkforceFTE as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionTasks\nReadCreateActionTasks aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionTasksStatus\nReadCreateActionTasks, ActionTasksStatus exists(ReadCreateActionTasks@Name == ActionTasksStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInActionTasksStatus\nStatusNameUniquenessCheckInActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nReadCreateActionTasks split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadCreateActionTasks filter(not(isNull(ActionDurationPercentage))) ~> NonNullActionDurationPercentage\nNonNullActionDurationPercentage split(not(isInteger(ActionDurationPercentage)),\n\tdisjoint: false) ~> ActionDurationPercentageTypeCheck@(ActionDurationPercentageWrongType, ActionDurationPercentageCorrectType)\nActionDurationPercentageTypeCheck@ActionDurationPercentageWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-112-ActionDurationPercentageWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActionDurationPercentageWrongTypeRows\nActionDurationPercentageTypeCheck@ActionDurationPercentageCorrectType filter(or(toInteger(ActionDurationPercentage) < 0.0, toInteger(ActionDurationPercentage) > 100.0)) ~> ActionDurationPercentageRangeCheck\nActionDurationPercentageRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-113-ActionDurationPercentageInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActionDurationPercentageInvalidRangeRows\nReadCreateActionTasks filter(not(isNull(WorkforceFTE))) ~> NonNullWorkforceFTE\nNonNullWorkforceFTE split(not(isFloat(WorkforceFTE)),\n\tdisjoint: false) ~> WorkforceFTETypeCheck@(WorkforceFTEWrongType, WorkforceFTECorrectType)\nWorkforceFTETypeCheck@WorkforceFTEWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-112-WorkforceFTEWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteWorkforceFTEWrongTypeRows\nWorkforceFTETypeCheck@WorkforceFTECorrectType filter(toFloat(WorkforceFTE) < 0.0) ~> WorkforceFTERangeCheck\nWorkforceFTERangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-113-WorkforceFTEInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteWorkforceFTEInvalidRangeRows"
+        }
+    }
+}

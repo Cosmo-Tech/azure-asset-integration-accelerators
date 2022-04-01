@@ -1,0 +1,116 @@
+{
+    "name": "CreateTeams_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "4-HumanResources/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTeams",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateTeams"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateTeams_MapCatKeyLabels",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateTeams_MapAvailableQuantityByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateTeams_MapMinimalQuantityLevelByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TeamsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusTeamsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTeams_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_TeamsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateTeamsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapCatKeyLabelsKeyIndex"
+                },
+                {
+                    "name": "CatKeyLabelsCleaning"
+                },
+                {
+                    "name": "CatKeyLabelsUnion"
+                },
+                {
+                    "name": "CatKeyLabelsSelect"
+                },
+                {
+                    "name": "AggregateMapAvailableQuantityByYearKeyYear"
+                },
+                {
+                    "name": "AvailableQuantityByYearCleaning"
+                },
+                {
+                    "name": "AvailableQuantityByYearUnion"
+                },
+                {
+                    "name": "AvailableQuantityByYearSelect"
+                },
+                {
+                    "name": "AggregateMapMinimalQuantityLevelByYearKeyYear"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearCleaning"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearUnion"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionTeamsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateTeamsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tExtraArea as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateTeams\nReadCreateTeams select(mapColumn(\n\t\t{$id} = Name,\n\t\tConstrained,\n\t\tCostRate,\n\t\tExtraArea),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Team;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tTeam as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCatKeyLabels\nReadMapCatKeyLabels aggregate(groupBy(Team),\n\tCatKeyLabels = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapCatKeyLabelsKeyIndex\nAggregateMapCatKeyLabelsKeyIndex derive(CatKeyLabels = replace(replace(replace(CatKeyLabels, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CatKeyLabelsCleaning\nModelDefinition, CatKeyLabelsCleaning join({$id} == Team,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> CatKeyLabelsUnion\nCatKeyLabelsUnion select(mapColumn(\n\t\t{$id},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{ExtraArea},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCatKeyLabels),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CatKeyLabelsSelect\nsource(output(\n\t\tTeam as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapAvailableQuantityByYear\nReadMapAvailableQuantityByYear aggregate(groupBy(Team),\n\tAvailableQuantityByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapAvailableQuantityByYearKeyYear\nAggregateMapAvailableQuantityByYearKeyYear derive(AvailableQuantityByYear = replace(replace(replace(AvailableQuantityByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> AvailableQuantityByYearCleaning\nCatKeyLabelsSelect, AvailableQuantityByYearCleaning join({$id} == Team,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> AvailableQuantityByYearUnion\nAvailableQuantityByYearUnion select(mapColumn(\n\t\t{$id},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{ExtraArea},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CatKeyLabels},\n\t\tAvailableQuantityByYear),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> AvailableQuantityByYearSelect\nsource(output(\n\t\tTeam as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapMinimalQuantityLevelByYear\nReadMapMinimalQuantityLevelByYear aggregate(groupBy(Team),\n\tMinimalQuantityLevelByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapMinimalQuantityLevelByYearKeyYear\nAggregateMapMinimalQuantityLevelByYearKeyYear derive(MinimalQuantityLevelByYear = replace(replace(replace(MinimalQuantityLevelByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> MinimalQuantityLevelByYearCleaning\nAvailableQuantityByYearSelect, MinimalQuantityLevelByYearCleaning join({$id} == Team,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> MinimalQuantityLevelByYearUnion\nMinimalQuantityLevelByYearUnion select(mapColumn(\n\t\t{$id},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{ExtraArea},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CatKeyLabels},\n\t\t{AvailableQuantityByYear},\n\t\tMinimalQuantityLevelByYear),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MinimalQuantityLevelByYearSelect\nMinimalQuantityLevelByYearSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Teams.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTeamsStatusEditor\nReadCreateTeams select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTeamsStatusEditor\nReadTempStatusTeamsStatusEditor, StatusColumnSelectionTeamsStatusEditor union(byName: true)~> StatusUpdateTeamsStatusEditor\nStatusUpdateTeamsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Teams_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTeamsStatusEditor"
+        }
+    }
+}

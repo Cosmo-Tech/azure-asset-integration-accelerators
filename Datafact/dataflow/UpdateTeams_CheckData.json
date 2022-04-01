@@ -1,0 +1,228 @@
+{
+    "name": "UpdateTeams_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "4-HumanResources/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTeams",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateTeams"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TeamsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TeamsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTeams_MapCatKeyLabels",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateTeamsMapCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTeams_MapAvailableQuantityByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateTeamsMapAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateTeams_MapMinimalQuantityLevelByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateTeamsMapMinimalQuantityLevelByYear"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "4_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteConstrainedWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTeamRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTeamRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTeamRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingYearRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTeamRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAvailableQuantityByYearValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTeamRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingYearRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTeamRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMinimalQuantityLevelByYearValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "4_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCostRateWrongTypeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInTeamsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullConstrained"
+                },
+                {
+                    "name": "ConstrainedTypeCheck"
+                },
+                {
+                    "name": "MapCatKeyLabelsMandatoryCheck"
+                },
+                {
+                    "name": "MapCatKeyLabelsExistenceCheck"
+                },
+                {
+                    "name": "MapAvailableQuantityByYearMandatoryCheck"
+                },
+                {
+                    "name": "MapAvailableQuantityByYearExistenceCheck"
+                },
+                {
+                    "name": "NonNullAvailableQuantityByYearValue"
+                },
+                {
+                    "name": "AvailableQuantityByYearValueTypeCheck"
+                },
+                {
+                    "name": "MapMinimalQuantityLevelByYearMandatoryCheck"
+                },
+                {
+                    "name": "MapMinimalQuantityLevelByYearExistenceCheck"
+                },
+                {
+                    "name": "NonNullMinimalQuantityLevelByYearValue"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearValueTypeCheck"
+                },
+                {
+                    "name": "NonNullCostRate"
+                },
+                {
+                    "name": "CostRateTypeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tExtraArea as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateTeams\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TeamsStatus\nReadUpdateTeams, TeamsStatus exists(ReadUpdateTeams@Name == TeamsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInTeamsStatus\nExistingNameInTeamsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateTeams split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateTeams filter(not(isNull(Constrained))) ~> NonNullConstrained\nNonNullConstrained split(not(isBoolean(Constrained)),\n\tdisjoint: false) ~> ConstrainedTypeCheck@(ConstrainedWrongType)\nConstrainedTypeCheck@ConstrainedWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-512-ConstrainedWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteConstrainedWrongTypeRows\nsource(output(\n\t\tTeam as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateTeamsMapCatKeyLabels\nUpdateTeamsMapCatKeyLabels split(isNull(Team),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCatKeyLabelsMandatoryCheck@(MissingTeam, MissingIndex, MissingValue)\nMapCatKeyLabelsMandatoryCheck@MissingTeam sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnTeamCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTeamRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnIndexCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnValueCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCatKeyLabels\nUpdateTeamsMapCatKeyLabels, TeamsStatus exists(Team == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCatKeyLabelsExistenceCheck\nMapCatKeyLabelsExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-510-NotExistingTeamCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTeamRowsCatKeyLabels\nsource(output(\n\t\tTeam as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateTeamsMapAvailableQuantityByYear\nUpdateTeamsMapAvailableQuantityByYear split(isNull(Team),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapAvailableQuantityByYearMandatoryCheck@(MissingTeam, MissingYear, MissingValue)\nMapAvailableQuantityByYearMandatoryCheck@MissingTeam sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnTeamAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTeamRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnYearAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnValueAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsAvailableQuantityByYear\nUpdateTeamsMapAvailableQuantityByYear, TeamsStatus exists(Team == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapAvailableQuantityByYearExistenceCheck\nMapAvailableQuantityByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-510-NotExistingTeamAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTeamRowsAvailableQuantityByYear\nUpdateTeamsMapAvailableQuantityByYear filter(not(isNull(Value))) ~> NonNullAvailableQuantityByYearValue\nNonNullAvailableQuantityByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> AvailableQuantityByYearValueTypeCheck@(AvailableQuantityByYearValueWrongType)\nAvailableQuantityByYearValueTypeCheck@AvailableQuantityByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-512-AvailableQuantityByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAvailableQuantityByYearValueWrongTypeRows\nsource(output(\n\t\tTeam as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateTeamsMapMinimalQuantityLevelByYear\nUpdateTeamsMapMinimalQuantityLevelByYear split(isNull(Team),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapMinimalQuantityLevelByYearMandatoryCheck@(MissingTeam, MissingYear, MissingValue)\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingTeam sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnTeamMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTeamRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnYearMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-511-MissColumnValueMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsMinimalQuantityLevelByYear\nUpdateTeamsMapMinimalQuantityLevelByYear, TeamsStatus exists(Team == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapMinimalQuantityLevelByYearExistenceCheck\nMapMinimalQuantityLevelByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-510-NotExistingTeamMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTeamRowsMinimalQuantityLevelByYear\nUpdateTeamsMapMinimalQuantityLevelByYear filter(not(isNull(Value))) ~> NonNullMinimalQuantityLevelByYearValue\nNonNullMinimalQuantityLevelByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> MinimalQuantityLevelByYearValueTypeCheck@(MinimalQuantityLevelByYearValueWrongType)\nMinimalQuantityLevelByYearValueTypeCheck@MinimalQuantityLevelByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-512-MinimalQuantityLevelByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMinimalQuantityLevelByYearValueWrongTypeRows\nReadUpdateTeams filter(not(isNull(CostRate))) ~> NonNullCostRate\nNonNullCostRate split(not(isFloat(CostRate)),\n\tdisjoint: false) ~> CostRateTypeCheck@(CostRateWrongType)\nCostRateTypeCheck@CostRateWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-512-CostRateWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostRateWrongTypeRows"
+        }
+    }
+}

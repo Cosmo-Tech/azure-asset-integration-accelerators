@@ -1,0 +1,60 @@
+{
+    "name": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSustainmentActionsEquipmentGroups",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSustainmentActionsEquipmentGroups"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsEquipmentGroupsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_451",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_451",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_450",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSustainmentActionRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsEquipmentGroups\nReadDeleteSustainmentActionsEquipmentGroups split(isNull(SustainmentAction),\n\tisNull(EquipmentGroup),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingEquipmentGroup)\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-451-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-451-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsEquipmentGroupsStatus\nReadDeleteSustainmentActionsEquipmentGroups, SustainmentActionsEquipmentGroupsStatus exists(ReadDeleteSustainmentActionsEquipmentGroups@SustainmentAction == SustainmentActionsEquipmentGroupsStatus@SustainmentAction && ReadDeleteSustainmentActionsEquipmentGroups@EquipmentGroup == SustainmentActionsEquipmentGroupsStatus@EquipmentGroup,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus\nStatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-450-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows"
+        }
+    }
+}

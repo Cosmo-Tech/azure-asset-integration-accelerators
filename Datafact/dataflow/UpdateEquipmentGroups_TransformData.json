@@ -1,0 +1,77 @@
+{
+    "name": "UpdateEquipmentGroups_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateEquipmentGroups"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups_MapHRCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapHRCategories"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentGroups_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapBudgetCategoriesKeyIndex"
+                },
+                {
+                    "name": "BudgetCategoriesCleaning"
+                },
+                {
+                    "name": "BudgetCategoriesUnion"
+                },
+                {
+                    "name": "BudgetCategoriesSelect"
+                },
+                {
+                    "name": "AggregateMapHRCategoriesKeyIndex"
+                },
+                {
+                    "name": "HRCategoriesCleaning"
+                },
+                {
+                    "name": "HRCategoriesUnion"
+                },
+                {
+                    "name": "HRCategoriesSelect"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tQuantity as string,\n\t\tRatingLevel as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateEquipmentGroups\nReadUpdateEquipmentGroups select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tQuantity,\n\t\tRatingLevel),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:EquipmentGroup;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadMapBudgetCategories aggregate(groupBy(EquipmentGroup),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nModelDefinition, BudgetCategoriesCleaning join({$id} == EquipmentGroup,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{AssetClass},\n\t\t{Quantity},\n\t\t{RatingLevel},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapHRCategories\nReadMapHRCategories aggregate(groupBy(EquipmentGroup),\n\tHRCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapHRCategoriesKeyIndex\nAggregateMapHRCategoriesKeyIndex derive(HRCategories = replace(replace(replace(HRCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> HRCategoriesCleaning\nBudgetCategoriesSelect, HRCategoriesCleaning join({$id} == EquipmentGroup,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> HRCategoriesUnion\nHRCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{AssetClass},\n\t\t{Quantity},\n\t\t{RatingLevel},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{BudgetCategories},\n\t\tHRCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HRCategoriesSelect\nHRCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentGroups.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo"
+        }
+    }
+}

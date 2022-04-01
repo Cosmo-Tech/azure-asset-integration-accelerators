@@ -1,0 +1,37 @@
+{
+    "name": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "00-Status/Temp"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentComponents_EquipmentComponents_status.csv",
+                "folderPath": "Status",
+                "container": "asset-integration-accelerator-temp"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "EquipmentComponentSource",
+                "type": "String"
+            },
+            {
+                "name": "EquipmentComponentTarget",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

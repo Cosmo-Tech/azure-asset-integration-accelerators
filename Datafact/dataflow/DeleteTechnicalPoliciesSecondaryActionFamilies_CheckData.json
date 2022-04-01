@@ -1,0 +1,60 @@
+{
+    "name": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTechnicalPoliciesSecondaryActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesSecondaryActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_431",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_431",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_430",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesSecondaryActionFamilies\nReadDeleteTechnicalPoliciesSecondaryActionFamilies split(isNull(TechnicalPolicy),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingActionFamily)\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-431-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-431-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesSecondaryActionFamiliesStatus\nReadDeleteTechnicalPoliciesSecondaryActionFamilies, TechnicalPoliciesSecondaryActionFamiliesStatus exists(ReadDeleteTechnicalPoliciesSecondaryActionFamilies@TechnicalPolicy == TechnicalPoliciesSecondaryActionFamiliesStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesSecondaryActionFamilies@ActionFamily == TechnicalPoliciesSecondaryActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus\nStatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-430-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+        }
+    }
+}

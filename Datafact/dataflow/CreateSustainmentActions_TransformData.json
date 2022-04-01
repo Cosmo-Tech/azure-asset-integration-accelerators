@@ -1,0 +1,78 @@
+{
+    "name": "CreateSustainmentActions_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActions",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSustainmentActions"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActions_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusSustainmentActionsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSustainmentActions_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_SustainmentActionsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateSustainmentActionsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapBudgetCategoriesKeyIndex"
+                },
+                {
+                    "name": "BudgetCategoriesCleaning"
+                },
+                {
+                    "name": "BudgetCategoriesUnion"
+                },
+                {
+                    "name": "BudgetCategoriesSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionSustainmentActionsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateSustainmentActionsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tActivityPlanName as string,\n\t\tPlannedDate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActions\nReadCreateSustainmentActions select(mapColumn(\n\t\t{$id} = Name,\n\t\tActivityPlanName,\n\t\tPlannedDate),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SustainmentAction;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tSustainmentAction as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadMapBudgetCategories aggregate(groupBy(SustainmentAction),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nModelDefinition, BudgetCategoriesCleaning join({$id} == SustainmentAction,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{ActivityPlanName},\n\t\t{PlannedDate},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActions.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsStatusEditor\nReadCreateSustainmentActions select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsStatusEditor\nReadTempStatusSustainmentActionsStatusEditor, StatusColumnSelectionSustainmentActionsStatusEditor union(byName: true)~> StatusUpdateSustainmentActionsStatusEditor\nStatusUpdateSustainmentActionsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActions_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsStatusEditor"
+        }
+    }
+}

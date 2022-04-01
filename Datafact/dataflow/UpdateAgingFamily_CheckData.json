@@ -1,0 +1,79 @@
+{
+    "name": "UpdateAgingFamily_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "5-Finance/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateAgingFamily",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateAgingFamily"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "AgingFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "5_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "5_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "5_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteRawInvestmentWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "5_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteLifeSpanWrongTypeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInAgingFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullRawInvestment"
+                },
+                {
+                    "name": "RawInvestmentTypeCheck"
+                },
+                {
+                    "name": "NonNullLifeSpan"
+                },
+                {
+                    "name": "LifeSpanTypeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tRawInvestment as string,\n\t\tLifeSpan as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateAgingFamily\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nReadUpdateAgingFamily, AgingFamiliesStatus exists(ReadUpdateAgingFamily@Name == AgingFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInAgingFamiliesStatus\nExistingNameInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['5-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateAgingFamily split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['5-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateAgingFamily filter(not(isNull(RawInvestment))) ~> NonNullRawInvestment\nNonNullRawInvestment split(not(isFloat(RawInvestment)),\n\tdisjoint: false) ~> RawInvestmentTypeCheck@(RawInvestmentWrongType)\nRawInvestmentTypeCheck@RawInvestmentWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['5-512-RawInvestmentWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteRawInvestmentWrongTypeRows\nReadUpdateAgingFamily filter(not(isNull(LifeSpan))) ~> NonNullLifeSpan\nNonNullLifeSpan split(not(isInteger(LifeSpan)),\n\tdisjoint: false) ~> LifeSpanTypeCheck@(LifeSpanWrongType)\nLifeSpanTypeCheck@LifeSpanWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['5-512-LifeSpanWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteLifeSpanWrongTypeRows"
+        }
+    }
+}

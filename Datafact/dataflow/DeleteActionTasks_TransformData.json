@@ -1,0 +1,79 @@
+{
+    "name": "DeleteActionTasks_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteActionTasks"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusActionTasksStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusActionFamiliesActionTasksStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteActionTasks_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateActionTasksStatusEditor"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_ActionFamiliesActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionActionTasksStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateActionTasksStatusEditor"
+                },
+                {
+                    "name": "StatusColumnSelectionActionFamiliesActionTasksStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateActionFamiliesActionTasksStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionTasks\nReadDeleteActionTasks select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionTask;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionTasks.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionTasksStatusEditor\nReadDeleteActionTasks select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionTasksStatusEditor\nReadTempStatusActionTasksStatusEditor, StatusColumnSelectionActionTasksStatusEditor exists(ReadTempStatusActionTasksStatusEditor@Name == StatusColumnSelectionActionTasksStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionTasksStatusEditor\nStatusUpdateActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionTasksStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesActionTasksStatusEditor\nReadDeleteActionTasks select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesActionTasksStatusEditor\nReadTempStatusActionFamiliesActionTasksStatusEditor, StatusColumnSelectionActionFamiliesActionTasksStatusEditor exists(Name == ActionTask,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesActionTasksStatusEditor\nStatusUpdateActionFamiliesActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
+        }
+    }
+}

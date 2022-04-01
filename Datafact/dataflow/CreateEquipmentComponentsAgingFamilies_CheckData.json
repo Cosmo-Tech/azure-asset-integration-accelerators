@@ -1,0 +1,94 @@
+{
+    "name": "CreateEquipmentComponentsAgingFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponentsAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateEquipmentComponentsAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "AgingFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsAgingFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_211",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_210",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingEquipmentComponentRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingEquipmentComponentInEquipmentComponentsStatus"
+                },
+                {
+                    "name": "ExistingAgingFamilyInAgingFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsAgingFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nReadCreateEquipmentComponentsAgingFamilies, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentInEquipmentComponentsStatus\nExistingEquipmentComponentInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-NotExistingEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nReadCreateEquipmentComponentsAgingFamilies, AgingFamiliesStatus exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingAgingFamilyInAgingFamiliesStatus\nExistingAgingFamilyInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-NotExistingAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRows\nReadCreateEquipmentComponentsAgingFamilies split(isNull(EquipmentComponent),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentComponent, MissingAgingFamily)\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-211-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-211-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsAgingFamiliesStatus\nReadCreateEquipmentComponentsAgingFamilies, EquipmentComponentsAgingFamiliesStatus exists(ReadCreateEquipmentComponentsAgingFamilies@EquipmentComponent == EquipmentComponentsAgingFamiliesStatus@EquipmentComponent && ReadCreateEquipmentComponentsAgingFamilies@AgingFamily == EquipmentComponentsAgingFamiliesStatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus\nStatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-AlreadyExistEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingEquipmentComponentRows"
+        }
+    }
+}

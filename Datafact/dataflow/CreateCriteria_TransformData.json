@@ -1,0 +1,97 @@
+{
+    "name": "CreateCriteria_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateCriteria"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria_MapTargetedAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria_MapValueAsString",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_CriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusCriteriaStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_CriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateCriteriaStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapTargetedAgingFamiliesKeyIndex"
+                },
+                {
+                    "name": "TargetedAgingFamiliesCleaning"
+                },
+                {
+                    "name": "TargetedAgingFamiliesUnion"
+                },
+                {
+                    "name": "TargetedAgingFamiliesSelect"
+                },
+                {
+                    "name": "AggregateMapValueAsStringKeyIndex"
+                },
+                {
+                    "name": "ValueAsStringCleaning"
+                },
+                {
+                    "name": "ValueAsStringUnion"
+                },
+                {
+                    "name": "ValueAsStringSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionCriteriaStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateCriteriaStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tEquipmentComponentAttribute as string,\n\t\tOperator as string,\n\t\tThreshold as string,\n\t\tReferenceAttribute as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateCriteria\nReadCreateCriteria select(mapColumn(\n\t\t{$id} = Name,\n\t\tEquipmentComponentAttribute,\n\t\tOperator,\n\t\tThreshold,\n\t\tReferenceAttribute,\n\t\tValue),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Criterion;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapTargetedAgingFamilies\nReadMapTargetedAgingFamilies aggregate(groupBy(Criterion),\n\tTargetedAgingFamilies = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapTargetedAgingFamiliesKeyIndex\nAggregateMapTargetedAgingFamiliesKeyIndex derive(TargetedAgingFamilies = replace(replace(replace(TargetedAgingFamilies, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> TargetedAgingFamiliesCleaning\nModelDefinition, TargetedAgingFamiliesCleaning join({$id} == Criterion,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> TargetedAgingFamiliesUnion\nTargetedAgingFamiliesUnion select(mapColumn(\n\t\t{$id},\n\t\t{EquipmentComponentAttribute},\n\t\t{Operator},\n\t\t{Threshold},\n\t\t{ReferenceAttribute},\n\t\t{Value},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tTargetedAgingFamilies),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TargetedAgingFamiliesSelect\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapValueAsString\nReadMapValueAsString aggregate(groupBy(Criterion),\n\tValueAsString = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapValueAsStringKeyIndex\nAggregateMapValueAsStringKeyIndex derive(ValueAsString = replace(replace(replace(ValueAsString, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> ValueAsStringCleaning\nTargetedAgingFamiliesSelect, ValueAsStringCleaning join({$id} == Criterion,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> ValueAsStringUnion\nValueAsStringUnion select(mapColumn(\n\t\t{$id},\n\t\t{EquipmentComponentAttribute},\n\t\t{Operator},\n\t\t{Threshold},\n\t\t{ReferenceAttribute},\n\t\t{Value},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{TargetedAgingFamilies},\n\t\tValueAsString),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> ValueAsStringSelect\nValueAsStringSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Criteria.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusCriteriaStatusEditor\nReadCreateCriteria select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionCriteriaStatusEditor\nReadTempStatusCriteriaStatusEditor, StatusColumnSelectionCriteriaStatusEditor union(byName: true)~> StatusUpdateCriteriaStatusEditor\nStatusUpdateCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Criteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateCriteriaStatusEditor"
+        }
+    }
+}

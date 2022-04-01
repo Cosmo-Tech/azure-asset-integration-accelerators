@@ -1,0 +1,93 @@
+{
+    "name": "CreateEquipmentComponents",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorStorage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "EquipmentComponents.csv",
+                "folderPath": "AssetPortfolio/Create",
+                "container": "asset-integration-accelerator-input"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": [
+            {
+                "name": "Name",
+                "type": "String"
+            },
+            {
+                "name": "InstallationYear",
+                "type": "String"
+            },
+            {
+                "name": "EnvironmentAgingRate",
+                "type": "String"
+            },
+            {
+                "name": "Quantity",
+                "type": "String"
+            },
+            {
+                "name": "HealthScore",
+                "type": "String"
+            },
+            {
+                "name": "FinancialConsequencesFactor",
+                "type": "String"
+            },
+            {
+                "name": "EnvironmentalConsequencesFactor",
+                "type": "String"
+            },
+            {
+                "name": "NetworkConsequencesFactor",
+                "type": "String"
+            },
+            {
+                "name": "ExtraArea",
+                "type": "String"
+            },
+            {
+                "name": "DateOfLastSpecificAction",
+                "type": "String"
+            },
+            {
+                "name": "DateOfLastStateRecording",
+                "type": "String"
+            },
+            {
+                "name": "KnownApparentAge",
+                "type": "String"
+            },
+            {
+                "name": "CriticalityLevelFailure",
+                "type": "String"
+            },
+            {
+                "name": "CriticalityLevelNetworkConstraint",
+                "type": "String"
+            },
+            {
+                "name": "ExtraAreaLevel2",
+                "type": "String"
+            },
+            {
+                "name": "SAIDI15min",
+                "type": "String"
+            }
+        ]
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

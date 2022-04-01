@@ -1,0 +1,480 @@
+{
+    "name": "CreateAgingFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "AgingFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies_MapFamilyPairHillParameters",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateAgingFamiliesMapFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateAgingFamilies_MapMapReferenceCostOfFailure",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateAgingFamiliesMapMapReferenceCostOfFailure"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotUniqueNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_123",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAgingMethodologyInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMinimalAgeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMaximalAgeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteFailureRateAtMinimalAgeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteFailureRateAtMaximalAgeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteExternalFailureRatePerYearWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_123",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteExternalFailureRatePerYearInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsQuantityDiscreteWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteGFlagWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAgingFailureDelayWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRowsFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgentAgingFamilyRowsFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingHillParametersRowsFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingAgingFamilyRowsFamilyPairHillParameters"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_123",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteHillParametersFamilyPairHillParametersInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAmplitudeHillWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteOffsetHillWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteSlopeHillWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsFailureTransmittedWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsCouplingActiveWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteIsAgingAfterDeathWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMaintenanceIfOutOfOrderWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteShapeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteScaleWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteExpectedLifeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteFinancialCostOfFailureWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEnvironmentalCostOfFailureWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNetworkCostOfFailureWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRowsMapReferenceCostOfFailure"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingHealthIndexRowsMapReferenceCostOfFailure"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsMapReferenceCostOfFailure"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingAgingFamilyRowsMapReferenceCostOfFailure"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMapReferenceCostOfFailureValueWrongTypeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "InternalNameUniquenessCheckAggregate"
+                },
+                {
+                    "name": "InternalNameUniquenessCheckFilter"
+                },
+                {
+                    "name": "StatusNameUniquenessCheckInAgingFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnumAgingMethodology"
+                },
+                {
+                    "name": "AgingMethodologyEnumCheck"
+                },
+                {
+                    "name": "NonNullMinimalAge"
+                },
+                {
+                    "name": "MinimalAgeTypeCheck"
+                },
+                {
+                    "name": "NonNullMaximalAge"
+                },
+                {
+                    "name": "MaximalAgeTypeCheck"
+                },
+                {
+                    "name": "NonNullFailureRateAtMinimalAge"
+                },
+                {
+                    "name": "FailureRateAtMinimalAgeTypeCheck"
+                },
+                {
+                    "name": "NonNullFailureRateAtMaximalAge"
+                },
+                {
+                    "name": "FailureRateAtMaximalAgeTypeCheck"
+                },
+                {
+                    "name": "NonNullExternalFailureRatePerYear"
+                },
+                {
+                    "name": "ExternalFailureRatePerYearTypeCheck"
+                },
+                {
+                    "name": "ExternalFailureRatePerYearRangeCheck"
+                },
+                {
+                    "name": "NonNullIsQuantityDiscrete"
+                },
+                {
+                    "name": "IsQuantityDiscreteTypeCheck"
+                },
+                {
+                    "name": "NonNullGFlag"
+                },
+                {
+                    "name": "GFlagTypeCheck"
+                },
+                {
+                    "name": "NonNullAgingFailureDelay"
+                },
+                {
+                    "name": "AgingFailureDelayTypeCheck"
+                },
+                {
+                    "name": "MapFamilyPairHillParametersMandatoryCheck"
+                },
+                {
+                    "name": "MapFamilyPairHillParametersExistenceCheck"
+                },
+                {
+                    "name": "NonNullEnumHillParametersFamilyPairHillParameters"
+                },
+                {
+                    "name": "HillParametersFamilyPairHillParametersEnumCheck"
+                },
+                {
+                    "name": "MapFamilyPairHillParametersSplitKeyValues"
+                },
+                {
+                    "name": "NonNullAmplitudeHill"
+                },
+                {
+                    "name": "AmplitudeHillTypeCheck"
+                },
+                {
+                    "name": "NonNullOffsetHill"
+                },
+                {
+                    "name": "OffsetHillTypeCheck"
+                },
+                {
+                    "name": "NonNullSlopeHill"
+                },
+                {
+                    "name": "SlopeHillTypeCheck"
+                },
+                {
+                    "name": "NonNullIsFailureTransmitted"
+                },
+                {
+                    "name": "IsFailureTransmittedTypeCheck"
+                },
+                {
+                    "name": "NonNullIsCouplingActive"
+                },
+                {
+                    "name": "IsCouplingActiveTypeCheck"
+                },
+                {
+                    "name": "NonNullIsAgingAfterDeath"
+                },
+                {
+                    "name": "IsAgingAfterDeathTypeCheck"
+                },
+                {
+                    "name": "NonNullMaintenanceIfOutOfOrder"
+                },
+                {
+                    "name": "MaintenanceIfOutOfOrderTypeCheck"
+                },
+                {
+                    "name": "NonNullShape"
+                },
+                {
+                    "name": "ShapeTypeCheck"
+                },
+                {
+                    "name": "NonNullScale"
+                },
+                {
+                    "name": "ScaleTypeCheck"
+                },
+                {
+                    "name": "NonNullExpectedLife"
+                },
+                {
+                    "name": "ExpectedLifeTypeCheck"
+                },
+                {
+                    "name": "NonNullFinancialCostOfFailure"
+                },
+                {
+                    "name": "FinancialCostOfFailureTypeCheck"
+                },
+                {
+                    "name": "NonNullEnvironmentalCostOfFailure"
+                },
+                {
+                    "name": "EnvironmentalCostOfFailureTypeCheck"
+                },
+                {
+                    "name": "NonNullNetworkCostOfFailure"
+                },
+                {
+                    "name": "NetworkCostOfFailureTypeCheck"
+                },
+                {
+                    "name": "MapMapReferenceCostOfFailureMandatoryCheck"
+                },
+                {
+                    "name": "MapMapReferenceCostOfFailureExistenceCheck"
+                },
+                {
+                    "name": "NonNullMapReferenceCostOfFailureValue"
+                },
+                {
+                    "name": "MapReferenceCostOfFailureValueTypeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAgingMethodology as string,\n\t\tMinimalAge as string,\n\t\tMaximalAge as string,\n\t\tFailureRateAtMinimalAge as string,\n\t\tFailureRateAtMaximalAge as string,\n\t\tExternalFailureRatePerYear as string,\n\t\tIsQuantityDiscrete as string,\n\t\tGFlag as string,\n\t\tAgingFailureDelay as string,\n\t\tIsAgingAfterDeath as string,\n\t\tMaintenanceIfOutOfOrder as string,\n\t\tShape as string,\n\t\tScale as string,\n\t\tExpectedLife as string,\n\t\tFinancialCostOfFailure as string,\n\t\tEnvironmentalCostOfFailure as string,\n\t\tNetworkCostOfFailure as string,\n\t\tExtraNL as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateAgingFamilies\nReadCreateAgingFamilies aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nReadCreateAgingFamilies, AgingFamiliesStatus exists(ReadCreateAgingFamilies@Name == AgingFamiliesStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInAgingFamiliesStatus\nStatusNameUniquenessCheckInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nReadCreateAgingFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadCreateAgingFamilies filter(not(isNull(AgingMethodology))) ~> NonNullEnumAgingMethodology\nNonNullEnumAgingMethodology filter(not(in(['Weibull', 'Gompertz', 'HealthScore'], AgingMethodology))) ~> AgingMethodologyEnumCheck\nAgingMethodologyEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-AgingMethodologyInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAgingMethodologyInvalidRangeRows\nReadCreateAgingFamilies filter(not(isNull(MinimalAge))) ~> NonNullMinimalAge\nNonNullMinimalAge split(not(isInteger(MinimalAge)),\n\tdisjoint: false) ~> MinimalAgeTypeCheck@(MinimalAgeWrongType)\nMinimalAgeTypeCheck@MinimalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MinimalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMinimalAgeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(MaximalAge))) ~> NonNullMaximalAge\nNonNullMaximalAge split(not(isInteger(MaximalAge)),\n\tdisjoint: false) ~> MaximalAgeTypeCheck@(MaximalAgeWrongType)\nMaximalAgeTypeCheck@MaximalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MaximalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMaximalAgeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(FailureRateAtMinimalAge))) ~> NonNullFailureRateAtMinimalAge\nNonNullFailureRateAtMinimalAge split(not(isFloat(FailureRateAtMinimalAge)),\n\tdisjoint: false) ~> FailureRateAtMinimalAgeTypeCheck@(FailureRateAtMinimalAgeWrongType)\nFailureRateAtMinimalAgeTypeCheck@FailureRateAtMinimalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FailureRateAtMinimalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFailureRateAtMinimalAgeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(FailureRateAtMaximalAge))) ~> NonNullFailureRateAtMaximalAge\nNonNullFailureRateAtMaximalAge split(not(isFloat(FailureRateAtMaximalAge)),\n\tdisjoint: false) ~> FailureRateAtMaximalAgeTypeCheck@(FailureRateAtMaximalAgeWrongType)\nFailureRateAtMaximalAgeTypeCheck@FailureRateAtMaximalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FailureRateAtMaximalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFailureRateAtMaximalAgeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(ExternalFailureRatePerYear))) ~> NonNullExternalFailureRatePerYear\nNonNullExternalFailureRatePerYear split(not(isFloat(ExternalFailureRatePerYear)),\n\tdisjoint: false) ~> ExternalFailureRatePerYearTypeCheck@(ExternalFailureRatePerYearWrongType, ExternalFailureRatePerYearCorrectType)\nExternalFailureRatePerYearTypeCheck@ExternalFailureRatePerYearWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ExternalFailureRatePerYearWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExternalFailureRatePerYearWrongTypeRows\nExternalFailureRatePerYearTypeCheck@ExternalFailureRatePerYearCorrectType filter(or(toFloat(ExternalFailureRatePerYear) < 0.0, toFloat(ExternalFailureRatePerYear) > 1.0)) ~> ExternalFailureRatePerYearRangeCheck\nExternalFailureRatePerYearRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-ExternalFailureRatePerYearInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExternalFailureRatePerYearInvalidRangeRows\nReadCreateAgingFamilies filter(not(isNull(IsQuantityDiscrete))) ~> NonNullIsQuantityDiscrete\nNonNullIsQuantityDiscrete split(not(isBoolean(IsQuantityDiscrete)),\n\tdisjoint: false) ~> IsQuantityDiscreteTypeCheck@(IsQuantityDiscreteWrongType)\nIsQuantityDiscreteTypeCheck@IsQuantityDiscreteWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsQuantityDiscreteWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsQuantityDiscreteWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(GFlag))) ~> NonNullGFlag\nNonNullGFlag split(not(isBoolean(GFlag)),\n\tdisjoint: false) ~> GFlagTypeCheck@(GFlagWrongType)\nGFlagTypeCheck@GFlagWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-GFlagWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteGFlagWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(AgingFailureDelay))) ~> NonNullAgingFailureDelay\nNonNullAgingFailureDelay split(not(isFloat(AgingFailureDelay)),\n\tdisjoint: false) ~> AgingFailureDelayTypeCheck@(AgingFailureDelayWrongType)\nAgingFailureDelayTypeCheck@AgingFailureDelayWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-AgingFailureDelayWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAgingFailureDelayWrongTypeRows\nsource(output(\n\t\tAgingFamily as string,\n\t\tAgentAgingFamily as string,\n\t\tHillParameters as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateAgingFamiliesMapFamilyPairHillParameters\nCreateAgingFamiliesMapFamilyPairHillParameters split(isNull(AgingFamily),\n\tisNull(AgentAgingFamily),\n\tisNull(HillParameters),\n\tisNull(Value),\n\tdisjoint: false) ~> MapFamilyPairHillParametersMandatoryCheck@(MissingAgingFamily, MissingAgentAgingFamily, MissingHillParameters, MissingValue)\nMapFamilyPairHillParametersMandatoryCheck@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingAgentAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgentAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgentAgingFamilyRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingHillParameters sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnHillParametersFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingHillParametersRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnValueFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsFamilyPairHillParameters\nCreateAgingFamiliesMapFamilyPairHillParameters, ReadCreateAgingFamilies exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapFamilyPairHillParametersExistenceCheck\nMapFamilyPairHillParametersExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotExistingAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRowsFamilyPairHillParameters\nCreateAgingFamiliesMapFamilyPairHillParameters filter(not(isNull(HillParameters))) ~> NonNullEnumHillParametersFamilyPairHillParameters\nNonNullEnumHillParametersFamilyPairHillParameters filter(not(in(['AmplitudeHill', 'OffsetHill', 'SlopeHill', 'IsFailureTransmitted', 'IsCouplingActive'], HillParameters))) ~> HillParametersFamilyPairHillParametersEnumCheck\nHillParametersFamilyPairHillParametersEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-HillParametersFamilyPairHillParametersInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHillParametersFamilyPairHillParametersInvalidRangeRows\nCreateAgingFamiliesMapFamilyPairHillParameters split(HillParameters == 'AmplitudeHill',\n\tHillParameters == 'OffsetHill',\n\tHillParameters == 'SlopeHill',\n\tHillParameters == 'IsFailureTransmitted',\n\tHillParameters == 'IsCouplingActive',\n\tdisjoint: false) ~> MapFamilyPairHillParametersSplitKeyValues@(HillParametersAmplitudeHill, HillParametersOffsetHill, HillParametersSlopeHill, HillParametersIsFailureTransmitted, HillParametersIsCouplingActive)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersAmplitudeHill filter(not(isNull(Value))) ~> NonNullAmplitudeHill\nNonNullAmplitudeHill split(not(isFloat(Value)),\n\tdisjoint: false) ~> AmplitudeHillTypeCheck@(AmplitudeHillWrongType)\nAmplitudeHillTypeCheck@AmplitudeHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-AmplitudeHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAmplitudeHillWrongTypeRows\nMapFamilyPairHillParametersSplitKeyValues@HillParametersOffsetHill filter(not(isNull(Value))) ~> NonNullOffsetHill\nNonNullOffsetHill split(not(isFloat(Value)),\n\tdisjoint: false) ~> OffsetHillTypeCheck@(OffsetHillWrongType)\nOffsetHillTypeCheck@OffsetHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-OffsetHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteOffsetHillWrongTypeRows\nMapFamilyPairHillParametersSplitKeyValues@HillParametersSlopeHill filter(not(isNull(Value))) ~> NonNullSlopeHill\nNonNullSlopeHill split(not(isInteger(Value)),\n\tdisjoint: false) ~> SlopeHillTypeCheck@(SlopeHillWrongType)\nSlopeHillTypeCheck@SlopeHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-SlopeHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSlopeHillWrongTypeRows\nMapFamilyPairHillParametersSplitKeyValues@HillParametersIsFailureTransmitted filter(not(isNull(Value))) ~> NonNullIsFailureTransmitted\nNonNullIsFailureTransmitted split(not(isBoolean(Value)),\n\tdisjoint: false) ~> IsFailureTransmittedTypeCheck@(IsFailureTransmittedWrongType)\nIsFailureTransmittedTypeCheck@IsFailureTransmittedWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsFailureTransmittedWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsFailureTransmittedWrongTypeRows\nMapFamilyPairHillParametersSplitKeyValues@HillParametersIsCouplingActive filter(not(isNull(Value))) ~> NonNullIsCouplingActive\nNonNullIsCouplingActive split(not(isBoolean(Value)),\n\tdisjoint: false) ~> IsCouplingActiveTypeCheck@(IsCouplingActiveWrongType)\nIsCouplingActiveTypeCheck@IsCouplingActiveWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsCouplingActiveWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsCouplingActiveWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(IsAgingAfterDeath))) ~> NonNullIsAgingAfterDeath\nNonNullIsAgingAfterDeath split(not(isBoolean(IsAgingAfterDeath)),\n\tdisjoint: false) ~> IsAgingAfterDeathTypeCheck@(IsAgingAfterDeathWrongType)\nIsAgingAfterDeathTypeCheck@IsAgingAfterDeathWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsAgingAfterDeathWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsAgingAfterDeathWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(MaintenanceIfOutOfOrder))) ~> NonNullMaintenanceIfOutOfOrder\nNonNullMaintenanceIfOutOfOrder split(not(isBoolean(MaintenanceIfOutOfOrder)),\n\tdisjoint: false) ~> MaintenanceIfOutOfOrderTypeCheck@(MaintenanceIfOutOfOrderWrongType)\nMaintenanceIfOutOfOrderTypeCheck@MaintenanceIfOutOfOrderWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MaintenanceIfOutOfOrderWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMaintenanceIfOutOfOrderWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(Shape))) ~> NonNullShape\nNonNullShape split(not(isFloat(Shape)),\n\tdisjoint: false) ~> ShapeTypeCheck@(ShapeWrongType)\nShapeTypeCheck@ShapeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ShapeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteShapeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(Scale))) ~> NonNullScale\nNonNullScale split(not(isFloat(Scale)),\n\tdisjoint: false) ~> ScaleTypeCheck@(ScaleWrongType)\nScaleTypeCheck@ScaleWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ScaleWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteScaleWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(ExpectedLife))) ~> NonNullExpectedLife\nNonNullExpectedLife split(not(isInteger(ExpectedLife)),\n\tdisjoint: false) ~> ExpectedLifeTypeCheck@(ExpectedLifeWrongType)\nExpectedLifeTypeCheck@ExpectedLifeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ExpectedLifeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExpectedLifeWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(FinancialCostOfFailure))) ~> NonNullFinancialCostOfFailure\nNonNullFinancialCostOfFailure split(not(isFloat(FinancialCostOfFailure)),\n\tdisjoint: false) ~> FinancialCostOfFailureTypeCheck@(FinancialCostOfFailureWrongType)\nFinancialCostOfFailureTypeCheck@FinancialCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FinancialCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFinancialCostOfFailureWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(EnvironmentalCostOfFailure))) ~> NonNullEnvironmentalCostOfFailure\nNonNullEnvironmentalCostOfFailure split(not(isFloat(EnvironmentalCostOfFailure)),\n\tdisjoint: false) ~> EnvironmentalCostOfFailureTypeCheck@(EnvironmentalCostOfFailureWrongType)\nEnvironmentalCostOfFailureTypeCheck@EnvironmentalCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-EnvironmentalCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentalCostOfFailureWrongTypeRows\nReadCreateAgingFamilies filter(not(isNull(NetworkCostOfFailure))) ~> NonNullNetworkCostOfFailure\nNonNullNetworkCostOfFailure split(not(isFloat(NetworkCostOfFailure)),\n\tdisjoint: false) ~> NetworkCostOfFailureTypeCheck@(NetworkCostOfFailureWrongType)\nNetworkCostOfFailureTypeCheck@NetworkCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-NetworkCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNetworkCostOfFailureWrongTypeRows\nsource(output(\n\t\tAgingFamily as string,\n\t\tHealthIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateAgingFamiliesMapMapReferenceCostOfFailure\nCreateAgingFamiliesMapMapReferenceCostOfFailure split(isNull(AgingFamily),\n\tisNull(HealthIndex),\n\tisNull(Value),\n\tdisjoint: false) ~> MapMapReferenceCostOfFailureMandatoryCheck@(MissingAgingFamily, MissingHealthIndex, MissingValue)\nMapMapReferenceCostOfFailureMandatoryCheck@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgingFamilyMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRowsMapReferenceCostOfFailure\nMapMapReferenceCostOfFailureMandatoryCheck@MissingHealthIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnHealthIndexMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingHealthIndexRowsMapReferenceCostOfFailure\nMapMapReferenceCostOfFailureMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnValueMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsMapReferenceCostOfFailure\nCreateAgingFamiliesMapMapReferenceCostOfFailure, ReadCreateAgingFamilies exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapMapReferenceCostOfFailureExistenceCheck\nMapMapReferenceCostOfFailureExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotExistingAgingFamilyMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRowsMapReferenceCostOfFailure\nCreateAgingFamiliesMapMapReferenceCostOfFailure filter(not(isNull(Value))) ~> NonNullMapReferenceCostOfFailureValue\nNonNullMapReferenceCostOfFailureValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> MapReferenceCostOfFailureValueTypeCheck@(MapReferenceCostOfFailureValueWrongType)\nMapReferenceCostOfFailureValueTypeCheck@MapReferenceCostOfFailureValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MapReferenceCostOfFailureValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMapReferenceCostOfFailureValueWrongTypeRows"
+        }
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "name": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteEquipmentGroupsEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteEquipmentGroupsEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentGroupsEquipmentComponentsStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_441",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentGroupRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_441",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_440",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentGroupRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusEquipmentGroupEquipmentComponentExistenceCheckInEquipmentGroupsEquipmentComponentsStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteEquipmentGroupsEquipmentComponents\nReadDeleteEquipmentGroupsEquipmentComponents split(isNull(EquipmentGroup),\n\tisNull(EquipmentComponent),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentGroup, MissingEquipmentComponent)\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-441-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-441-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsEquipmentComponentsStatus\nReadDeleteEquipmentGroupsEquipmentComponents, EquipmentGroupsEquipmentComponentsStatus exists(ReadDeleteEquipmentGroupsEquipmentComponents@EquipmentGroup == EquipmentGroupsEquipmentComponentsStatus@EquipmentGroup && ReadDeleteEquipmentGroupsEquipmentComponents@EquipmentComponent == EquipmentGroupsEquipmentComponentsStatus@EquipmentComponent,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusEquipmentGroupEquipmentComponentExistenceCheckInEquipmentGroupsEquipmentComponentsStatus\nStatusEquipmentGroupEquipmentComponentExistenceCheckInEquipmentGroupsEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-440-NotExistingEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRows"
+        }
+    }
+}

@@ -1,0 +1,116 @@
+{
+    "name": "CreateBudgets_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "3-Budgets/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateBudgets"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapCatKeyLabels",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapAvailableQuantityByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapMinimalQuantityLevelByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusBudgetsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateBudgetsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapCatKeyLabelsKeyIndex"
+                },
+                {
+                    "name": "CatKeyLabelsCleaning"
+                },
+                {
+                    "name": "CatKeyLabelsUnion"
+                },
+                {
+                    "name": "CatKeyLabelsSelect"
+                },
+                {
+                    "name": "AggregateMapAvailableQuantityByYearKeyYear"
+                },
+                {
+                    "name": "AvailableQuantityByYearCleaning"
+                },
+                {
+                    "name": "AvailableQuantityByYearUnion"
+                },
+                {
+                    "name": "AvailableQuantityByYearSelect"
+                },
+                {
+                    "name": "AggregateMapMinimalQuantityLevelByYearKeyYear"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearCleaning"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearUnion"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionBudgetsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateBudgetsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tCostType as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tRank as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateBudgets\nReadCreateBudgets select(mapColumn(\n\t\t{$id} = Name,\n\t\tCostType,\n\t\tConstrained,\n\t\tCostRate,\n\t\tRank),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Budget;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tBudget as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCatKeyLabels\nReadMapCatKeyLabels aggregate(groupBy(Budget),\n\tCatKeyLabels = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapCatKeyLabelsKeyIndex\nAggregateMapCatKeyLabelsKeyIndex derive(CatKeyLabels = replace(replace(replace(CatKeyLabels, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CatKeyLabelsCleaning\nModelDefinition, CatKeyLabelsCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> CatKeyLabelsUnion\nCatKeyLabelsUnion select(mapColumn(\n\t\t{$id},\n\t\t{CostType},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{Rank},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCatKeyLabels),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CatKeyLabelsSelect\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapAvailableQuantityByYear\nReadMapAvailableQuantityByYear aggregate(groupBy(Budget),\n\tAvailableQuantityByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapAvailableQuantityByYearKeyYear\nAggregateMapAvailableQuantityByYearKeyYear derive(AvailableQuantityByYear = replace(replace(replace(AvailableQuantityByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> AvailableQuantityByYearCleaning\nCatKeyLabelsSelect, AvailableQuantityByYearCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> AvailableQuantityByYearUnion\nAvailableQuantityByYearUnion select(mapColumn(\n\t\t{$id},\n\t\t{CostType},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{Rank},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CatKeyLabels},\n\t\tAvailableQuantityByYear),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> AvailableQuantityByYearSelect\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapMinimalQuantityLevelByYear\nReadMapMinimalQuantityLevelByYear aggregate(groupBy(Budget),\n\tMinimalQuantityLevelByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapMinimalQuantityLevelByYearKeyYear\nAggregateMapMinimalQuantityLevelByYearKeyYear derive(MinimalQuantityLevelByYear = replace(replace(replace(MinimalQuantityLevelByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> MinimalQuantityLevelByYearCleaning\nAvailableQuantityByYearSelect, MinimalQuantityLevelByYearCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> MinimalQuantityLevelByYearUnion\nMinimalQuantityLevelByYearUnion select(mapColumn(\n\t\t{$id},\n\t\t{CostType},\n\t\t{Constrained},\n\t\t{CostRate},\n\t\t{Rank},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CatKeyLabels},\n\t\t{AvailableQuantityByYear},\n\t\tMinimalQuantityLevelByYear),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MinimalQuantityLevelByYearSelect\nMinimalQuantityLevelByYearSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Budgets.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusBudgetsStatusEditor\nReadCreateBudgets select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionBudgetsStatusEditor\nReadTempStatusBudgetsStatusEditor, StatusColumnSelectionBudgetsStatusEditor union(byName: true)~> StatusUpdateBudgetsStatusEditor\nStatusUpdateBudgetsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Budgets_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateBudgetsStatusEditor"
+        }
+    }
+}

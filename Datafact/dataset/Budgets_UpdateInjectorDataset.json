@@ -1,0 +1,27 @@
+{
+    "name": "Budgets_UpdateInjectorDataset",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AcceleratorOutput",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "3-Budgets/Injector"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "folderPath": "Budgets/Update",
+                "container": "automatic-import"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\"",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,311 @@
+{
+    "name": "UpdateEquipmentComponents_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentComponents_MapCustomDataString",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateEquipmentComponentsMapCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateEquipmentComponents_MapCustomDataNumber",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateEquipmentComponentsMapCustomDataNumber"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "1_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteInstallationYearWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEnvironmentAgingRateWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteQuantityWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteHealthScoreWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteHealthScoreInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteFinancialConsequencesFactorWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEnvironmentalConsequencesFactorWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNetworkConsequencesFactorWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteKnownApparentAgeWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_513",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteKnownApparentAgeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCriticalityLevelFailureWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCriticalityLevelNetworkConstraintWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRowsCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCustomDataRowsCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentRowsCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingEquipmentComponentRowsCustomDataNumber"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCustomDataRowsCustomDataNumber"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_511",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsCustomDataNumber"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_510",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingEquipmentComponentRowsCustomDataNumber"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCustomDataNumberValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "1_512",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteSAIDI15minWrongTypeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInEquipmentComponentsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullInstallationYear"
+                },
+                {
+                    "name": "InstallationYearTypeCheck"
+                },
+                {
+                    "name": "NonNullEnvironmentAgingRate"
+                },
+                {
+                    "name": "EnvironmentAgingRateTypeCheck"
+                },
+                {
+                    "name": "NonNullQuantity"
+                },
+                {
+                    "name": "QuantityTypeCheck"
+                },
+                {
+                    "name": "NonNullHealthScore"
+                },
+                {
+                    "name": "HealthScoreTypeCheck"
+                },
+                {
+                    "name": "HealthScoreRangeCheck"
+                },
+                {
+                    "name": "NonNullFinancialConsequencesFactor"
+                },
+                {
+                    "name": "FinancialConsequencesFactorTypeCheck"
+                },
+                {
+                    "name": "NonNullEnvironmentalConsequencesFactor"
+                },
+                {
+                    "name": "EnvironmentalConsequencesFactorTypeCheck"
+                },
+                {
+                    "name": "NonNullNetworkConsequencesFactor"
+                },
+                {
+                    "name": "NetworkConsequencesFactorTypeCheck"
+                },
+                {
+                    "name": "NonNullKnownApparentAge"
+                },
+                {
+                    "name": "KnownApparentAgeTypeCheck"
+                },
+                {
+                    "name": "KnownApparentAgeRangeCheck"
+                },
+                {
+                    "name": "NonNullCriticalityLevelFailure"
+                },
+                {
+                    "name": "CriticalityLevelFailureTypeCheck"
+                },
+                {
+                    "name": "NonNullCriticalityLevelNetworkConstraint"
+                },
+                {
+                    "name": "CriticalityLevelNetworkConstraintTypeCheck"
+                },
+                {
+                    "name": "MapCustomDataStringMandatoryCheck"
+                },
+                {
+                    "name": "MapCustomDataStringExistenceCheck"
+                },
+                {
+                    "name": "MapCustomDataNumberMandatoryCheck"
+                },
+                {
+                    "name": "MapCustomDataNumberExistenceCheck"
+                },
+                {
+                    "name": "NonNullCustomDataNumberValue"
+                },
+                {
+                    "name": "CustomDataNumberValueTypeCheck"
+                },
+                {
+                    "name": "NonNullSAIDI15min"
+                },
+                {
+                    "name": "SAIDI15minTypeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tInstallationYear as string,\n\t\tEnvironmentAgingRate as string,\n\t\tQuantity as string,\n\t\tHealthScore as string,\n\t\tFinancialConsequencesFactor as string,\n\t\tEnvironmentalConsequencesFactor as string,\n\t\tNetworkConsequencesFactor as string,\n\t\tExtraArea as string,\n\t\tDateOfLastSpecificAction as string,\n\t\tDateOfLastStateRecording as string,\n\t\tKnownApparentAge as string,\n\t\tCriticalityLevelFailure as string,\n\t\tCriticalityLevelNetworkConstraint as string,\n\t\tExtraAreaLevel2 as string,\n\t\tSAIDI15min as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nReadUpdateEquipmentComponents, EquipmentComponentsStatus exists(ReadUpdateEquipmentComponents@Name == EquipmentComponentsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInEquipmentComponentsStatus\nExistingNameInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateEquipmentComponents split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateEquipmentComponents filter(not(isNull(InstallationYear))) ~> NonNullInstallationYear\nNonNullInstallationYear split(not(isInteger(InstallationYear)),\n\tdisjoint: false) ~> InstallationYearTypeCheck@(InstallationYearWrongType)\nInstallationYearTypeCheck@InstallationYearWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-InstallationYearWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteInstallationYearWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(EnvironmentAgingRate))) ~> NonNullEnvironmentAgingRate\nNonNullEnvironmentAgingRate split(not(isFloat(EnvironmentAgingRate)),\n\tdisjoint: false) ~> EnvironmentAgingRateTypeCheck@(EnvironmentAgingRateWrongType)\nEnvironmentAgingRateTypeCheck@EnvironmentAgingRateWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-EnvironmentAgingRateWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentAgingRateWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(Quantity))) ~> NonNullQuantity\nNonNullQuantity split(not(isFloat(Quantity)),\n\tdisjoint: false) ~> QuantityTypeCheck@(QuantityWrongType)\nQuantityTypeCheck@QuantityWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-QuantityWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteQuantityWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(HealthScore))) ~> NonNullHealthScore\nNonNullHealthScore split(not(isFloat(HealthScore)),\n\tdisjoint: false) ~> HealthScoreTypeCheck@(HealthScoreWrongType, HealthScoreCorrectType)\nHealthScoreTypeCheck@HealthScoreWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-HealthScoreWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHealthScoreWrongTypeRows\nHealthScoreTypeCheck@HealthScoreCorrectType filter(toFloat(HealthScore) < 0.0) ~> HealthScoreRangeCheck\nHealthScoreRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-513-HealthScoreInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHealthScoreInvalidRangeRows\nReadUpdateEquipmentComponents filter(not(isNull(FinancialConsequencesFactor))) ~> NonNullFinancialConsequencesFactor\nNonNullFinancialConsequencesFactor split(not(isFloat(FinancialConsequencesFactor)),\n\tdisjoint: false) ~> FinancialConsequencesFactorTypeCheck@(FinancialConsequencesFactorWrongType)\nFinancialConsequencesFactorTypeCheck@FinancialConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-FinancialConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFinancialConsequencesFactorWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(EnvironmentalConsequencesFactor))) ~> NonNullEnvironmentalConsequencesFactor\nNonNullEnvironmentalConsequencesFactor split(not(isFloat(EnvironmentalConsequencesFactor)),\n\tdisjoint: false) ~> EnvironmentalConsequencesFactorTypeCheck@(EnvironmentalConsequencesFactorWrongType)\nEnvironmentalConsequencesFactorTypeCheck@EnvironmentalConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-EnvironmentalConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentalConsequencesFactorWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(NetworkConsequencesFactor))) ~> NonNullNetworkConsequencesFactor\nNonNullNetworkConsequencesFactor split(not(isFloat(NetworkConsequencesFactor)),\n\tdisjoint: false) ~> NetworkConsequencesFactorTypeCheck@(NetworkConsequencesFactorWrongType)\nNetworkConsequencesFactorTypeCheck@NetworkConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-NetworkConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNetworkConsequencesFactorWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(KnownApparentAge))) ~> NonNullKnownApparentAge\nNonNullKnownApparentAge split(not(isFloat(KnownApparentAge)),\n\tdisjoint: false) ~> KnownApparentAgeTypeCheck@(KnownApparentAgeWrongType, KnownApparentAgeCorrectType)\nKnownApparentAgeTypeCheck@KnownApparentAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-KnownApparentAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteKnownApparentAgeWrongTypeRows\nKnownApparentAgeTypeCheck@KnownApparentAgeCorrectType filter(toFloat(KnownApparentAge) < 0.0) ~> KnownApparentAgeRangeCheck\nKnownApparentAgeRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-513-KnownApparentAgeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteKnownApparentAgeInvalidRangeRows\nReadUpdateEquipmentComponents filter(not(isNull(CriticalityLevelFailure))) ~> NonNullCriticalityLevelFailure\nNonNullCriticalityLevelFailure split(not(isFloat(CriticalityLevelFailure)),\n\tdisjoint: false) ~> CriticalityLevelFailureTypeCheck@(CriticalityLevelFailureWrongType)\nCriticalityLevelFailureTypeCheck@CriticalityLevelFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-CriticalityLevelFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCriticalityLevelFailureWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(CriticalityLevelNetworkConstraint))) ~> NonNullCriticalityLevelNetworkConstraint\nNonNullCriticalityLevelNetworkConstraint split(not(isFloat(CriticalityLevelNetworkConstraint)),\n\tdisjoint: false) ~> CriticalityLevelNetworkConstraintTypeCheck@(CriticalityLevelNetworkConstraintWrongType)\nCriticalityLevelNetworkConstraintTypeCheck@CriticalityLevelNetworkConstraintWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-CriticalityLevelNetworkConstraintWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCriticalityLevelNetworkConstraintWrongTypeRows\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateEquipmentComponentsMapCustomDataString\nUpdateEquipmentComponentsMapCustomDataString split(isNull(EquipmentComponent),\n\tisNull(CustomData),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCustomDataStringMandatoryCheck@(MissingEquipmentComponent, MissingCustomData, MissingValue)\nMapCustomDataStringMandatoryCheck@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnEquipmentComponentCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRowsCustomDataString\nMapCustomDataStringMandatoryCheck@MissingCustomData sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnCustomDataCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCustomDataRowsCustomDataString\nMapCustomDataStringMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnValueCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCustomDataString\nUpdateEquipmentComponentsMapCustomDataString, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCustomDataStringExistenceCheck\nMapCustomDataStringExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-510-NotExistingEquipmentComponentCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRowsCustomDataString\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateEquipmentComponentsMapCustomDataNumber\nUpdateEquipmentComponentsMapCustomDataNumber split(isNull(EquipmentComponent),\n\tisNull(CustomData),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCustomDataNumberMandatoryCheck@(MissingEquipmentComponent, MissingCustomData, MissingValue)\nMapCustomDataNumberMandatoryCheck@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnEquipmentComponentCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRowsCustomDataNumber\nMapCustomDataNumberMandatoryCheck@MissingCustomData sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnCustomDataCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCustomDataRowsCustomDataNumber\nMapCustomDataNumberMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-511-MissColumnValueCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCustomDataNumber\nUpdateEquipmentComponentsMapCustomDataNumber, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCustomDataNumberExistenceCheck\nMapCustomDataNumberExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-510-NotExistingEquipmentComponentCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRowsCustomDataNumber\nUpdateEquipmentComponentsMapCustomDataNumber filter(not(isNull(Value))) ~> NonNullCustomDataNumberValue\nNonNullCustomDataNumberValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> CustomDataNumberValueTypeCheck@(CustomDataNumberValueWrongType)\nCustomDataNumberValueTypeCheck@CustomDataNumberValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-CustomDataNumberValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCustomDataNumberValueWrongTypeRows\nReadUpdateEquipmentComponents filter(not(isNull(SAIDI15min))) ~> NonNullSAIDI15min\nNonNullSAIDI15min split(not(isFloat(SAIDI15min)),\n\tdisjoint: false) ~> SAIDI15minTypeCheck@(SAIDI15minWrongType)\nSAIDI15minTypeCheck@SAIDI15minWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-512-SAIDI15minWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSAIDI15minWrongTypeRows"
+        }
+    }
+}

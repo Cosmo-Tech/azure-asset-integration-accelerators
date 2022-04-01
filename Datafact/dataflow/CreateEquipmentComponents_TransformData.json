@@ -1,0 +1,97 @@
+{
+    "name": "CreateEquipmentComponents_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponents_MapCustomDataString",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapCustomDataString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponents_MapCustomDataNumber",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapCustomDataNumber"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusEquipmentComponentsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentComponents_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_EquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateEquipmentComponentsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapCustomDataStringKeyCustomData"
+                },
+                {
+                    "name": "CustomDataStringCleaning"
+                },
+                {
+                    "name": "CustomDataStringUnion"
+                },
+                {
+                    "name": "CustomDataStringSelect"
+                },
+                {
+                    "name": "AggregateMapCustomDataNumberKeyCustomData"
+                },
+                {
+                    "name": "CustomDataNumberCleaning"
+                },
+                {
+                    "name": "CustomDataNumberUnion"
+                },
+                {
+                    "name": "CustomDataNumberSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionEquipmentComponentsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateEquipmentComponentsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tInstallationYear as string,\n\t\tEnvironmentAgingRate as string,\n\t\tQuantity as string,\n\t\tHealthScore as string,\n\t\tFinancialConsequencesFactor as string,\n\t\tEnvironmentalConsequencesFactor as string,\n\t\tNetworkConsequencesFactor as string,\n\t\tExtraArea as string,\n\t\tDateOfLastSpecificAction as string,\n\t\tDateOfLastStateRecording as string,\n\t\tKnownApparentAge as string,\n\t\tCriticalityLevelFailure as string,\n\t\tCriticalityLevelNetworkConstraint as string,\n\t\tExtraAreaLevel2 as string,\n\t\tSAIDI15min as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponents\nReadCreateEquipmentComponents select(mapColumn(\n\t\t{$id} = Name,\n\t\tInstallationYear,\n\t\tEnvironmentAgingRate,\n\t\tQuantity,\n\t\tHealthScore,\n\t\tFinancialConsequencesFactor,\n\t\tEnvironmentalConsequencesFactor,\n\t\tNetworkConsequencesFactor,\n\t\tExtraArea,\n\t\tDateOfLastSpecificAction,\n\t\tDateOfLastStateRecording,\n\t\tKnownApparentAge,\n\t\tCriticalityLevelFailure,\n\t\tCriticalityLevelNetworkConstraint,\n\t\tExtraAreaLevel2,\n\t\tSAIDI15min),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:EquipmentComponent;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCustomDataString\nReadMapCustomDataString aggregate(groupBy(EquipmentComponent),\n\tCustomDataString = toString(keyValues(collect(toString(CustomData)), collect(toString(Value))))) ~> AggregateMapCustomDataStringKeyCustomData\nAggregateMapCustomDataStringKeyCustomData derive(CustomDataString = replace(replace(replace(CustomDataString, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CustomDataStringCleaning\nModelDefinition, CustomDataStringCleaning join({$id} == EquipmentComponent,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> CustomDataStringUnion\nCustomDataStringUnion select(mapColumn(\n\t\t{$id},\n\t\t{InstallationYear},\n\t\t{EnvironmentAgingRate},\n\t\t{Quantity},\n\t\t{HealthScore},\n\t\t{FinancialConsequencesFactor},\n\t\t{EnvironmentalConsequencesFactor},\n\t\t{NetworkConsequencesFactor},\n\t\t{ExtraArea},\n\t\t{DateOfLastSpecificAction},\n\t\t{DateOfLastStateRecording},\n\t\t{KnownApparentAge},\n\t\t{CriticalityLevelFailure},\n\t\t{CriticalityLevelNetworkConstraint},\n\t\t{ExtraAreaLevel2},\n\t\t{SAIDI15min},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CustomData_String} = CustomDataString),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CustomDataStringSelect\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCustomDataNumber\nReadMapCustomDataNumber aggregate(groupBy(EquipmentComponent),\n\tCustomDataNumber = toString(keyValues(collect(toString(CustomData)), collect(toFloat(Value))))) ~> AggregateMapCustomDataNumberKeyCustomData\nAggregateMapCustomDataNumberKeyCustomData derive(CustomDataNumber = replace(replace(replace(CustomDataNumber, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CustomDataNumberCleaning\nCustomDataStringSelect, CustomDataNumberCleaning join({$id} == EquipmentComponent,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> CustomDataNumberUnion\nCustomDataNumberUnion select(mapColumn(\n\t\t{$id},\n\t\t{InstallationYear},\n\t\t{EnvironmentAgingRate},\n\t\t{Quantity},\n\t\t{HealthScore},\n\t\t{FinancialConsequencesFactor},\n\t\t{EnvironmentalConsequencesFactor},\n\t\t{NetworkConsequencesFactor},\n\t\t{ExtraArea},\n\t\t{DateOfLastSpecificAction},\n\t\t{DateOfLastStateRecording},\n\t\t{KnownApparentAge},\n\t\t{CriticalityLevelFailure},\n\t\t{CriticalityLevelNetworkConstraint},\n\t\t{ExtraAreaLevel2},\n\t\t{SAIDI15min},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\t{CustomData_String},\n\t\t{CustomData_Number} = CustomDataNumber),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CustomDataNumberSelect\nCustomDataNumberSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsStatusEditor\nReadCreateEquipmentComponents select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsStatusEditor\nReadTempStatusEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentComponentsStatusEditor union(byName: true)~> StatusUpdateEquipmentComponentsStatusEditor\nStatusUpdateEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsStatusEditor"
+        }
+    }
+}

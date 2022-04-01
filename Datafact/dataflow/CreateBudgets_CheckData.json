@@ -1,0 +1,267 @@
+{
+    "name": "CreateBudgets_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "3-Budgets/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateBudgets"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_BudgetsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "BudgetsStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapCatKeyLabels",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateBudgetsMapCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapAvailableQuantityByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateBudgetsMapAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateBudgets_MapMinimalQuantityLevelByYear",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateBudgetsMapMinimalQuantityLevelByYear"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "3_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotUniqueNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCostTypeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteConstrainedWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingBudgetRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingBudgetRowsCatKeyLabels"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingBudgetRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingYearRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingBudgetRowsAvailableQuantityByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAvailableQuantityByYearValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingBudgetRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingYearRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingBudgetRowsMinimalQuantityLevelByYear"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMinimalQuantityLevelByYearValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteCostRateWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "3_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteRankWrongTypeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "InternalNameUniquenessCheckAggregate"
+                },
+                {
+                    "name": "InternalNameUniquenessCheckFilter"
+                },
+                {
+                    "name": "StatusNameUniquenessCheckInBudgetsStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnumCostType"
+                },
+                {
+                    "name": "CostTypeEnumCheck"
+                },
+                {
+                    "name": "NonNullConstrained"
+                },
+                {
+                    "name": "ConstrainedTypeCheck"
+                },
+                {
+                    "name": "MapCatKeyLabelsMandatoryCheck"
+                },
+                {
+                    "name": "MapCatKeyLabelsExistenceCheck"
+                },
+                {
+                    "name": "MapAvailableQuantityByYearMandatoryCheck"
+                },
+                {
+                    "name": "MapAvailableQuantityByYearExistenceCheck"
+                },
+                {
+                    "name": "NonNullAvailableQuantityByYearValue"
+                },
+                {
+                    "name": "AvailableQuantityByYearValueTypeCheck"
+                },
+                {
+                    "name": "MapMinimalQuantityLevelByYearMandatoryCheck"
+                },
+                {
+                    "name": "MapMinimalQuantityLevelByYearExistenceCheck"
+                },
+                {
+                    "name": "NonNullMinimalQuantityLevelByYearValue"
+                },
+                {
+                    "name": "MinimalQuantityLevelByYearValueTypeCheck"
+                },
+                {
+                    "name": "NonNullCostRate"
+                },
+                {
+                    "name": "CostRateTypeCheck"
+                },
+                {
+                    "name": "NonNullRank"
+                },
+                {
+                    "name": "RankTypeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tCostType as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tRank as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateBudgets\nReadCreateBudgets aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> BudgetsStatus\nReadCreateBudgets, BudgetsStatus exists(ReadCreateBudgets@Name == BudgetsStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInBudgetsStatus\nStatusNameUniquenessCheckInBudgetsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nReadCreateBudgets split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadCreateBudgets filter(not(isNull(CostType))) ~> NonNullEnumCostType\nNonNullEnumCostType filter(not(in(['Suppliers', 'Workforce'], CostType))) ~> CostTypeEnumCheck\nCostTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-113-CostTypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostTypeInvalidRangeRows\nReadCreateBudgets filter(not(isNull(Constrained))) ~> NonNullConstrained\nNonNullConstrained split(not(isBoolean(Constrained)),\n\tdisjoint: false) ~> ConstrainedTypeCheck@(ConstrainedWrongType)\nConstrainedTypeCheck@ConstrainedWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-ConstrainedWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteConstrainedWrongTypeRows\nsource(output(\n\t\tBudget as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapCatKeyLabels\nCreateBudgetsMapCatKeyLabels split(isNull(Budget),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCatKeyLabelsMandatoryCheck@(MissingBudget, MissingIndex, MissingValue)\nMapCatKeyLabelsMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnIndexCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCatKeyLabels\nCreateBudgetsMapCatKeyLabels, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCatKeyLabelsExistenceCheck\nMapCatKeyLabelsExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsCatKeyLabels\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapAvailableQuantityByYear\nCreateBudgetsMapAvailableQuantityByYear split(isNull(Budget),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapAvailableQuantityByYearMandatoryCheck@(MissingBudget, MissingYear, MissingValue)\nMapAvailableQuantityByYearMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnYearAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsAvailableQuantityByYear\nCreateBudgetsMapAvailableQuantityByYear, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapAvailableQuantityByYearExistenceCheck\nMapAvailableQuantityByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsAvailableQuantityByYear\nCreateBudgetsMapAvailableQuantityByYear filter(not(isNull(Value))) ~> NonNullAvailableQuantityByYearValue\nNonNullAvailableQuantityByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> AvailableQuantityByYearValueTypeCheck@(AvailableQuantityByYearValueWrongType)\nAvailableQuantityByYearValueTypeCheck@AvailableQuantityByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-AvailableQuantityByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAvailableQuantityByYearValueWrongTypeRows\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapMinimalQuantityLevelByYear\nCreateBudgetsMapMinimalQuantityLevelByYear split(isNull(Budget),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapMinimalQuantityLevelByYearMandatoryCheck@(MissingBudget, MissingYear, MissingValue)\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnYearMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsMinimalQuantityLevelByYear\nCreateBudgetsMapMinimalQuantityLevelByYear, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapMinimalQuantityLevelByYearExistenceCheck\nMapMinimalQuantityLevelByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsMinimalQuantityLevelByYear\nCreateBudgetsMapMinimalQuantityLevelByYear filter(not(isNull(Value))) ~> NonNullMinimalQuantityLevelByYearValue\nNonNullMinimalQuantityLevelByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> MinimalQuantityLevelByYearValueTypeCheck@(MinimalQuantityLevelByYearValueWrongType)\nMinimalQuantityLevelByYearValueTypeCheck@MinimalQuantityLevelByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-MinimalQuantityLevelByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMinimalQuantityLevelByYearValueWrongTypeRows\nReadCreateBudgets filter(not(isNull(CostRate))) ~> NonNullCostRate\nNonNullCostRate split(not(isFloat(CostRate)),\n\tdisjoint: false) ~> CostRateTypeCheck@(CostRateWrongType)\nCostRateTypeCheck@CostRateWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-CostRateWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostRateWrongTypeRows\nReadCreateBudgets filter(not(isNull(Rank))) ~> NonNullRank\nNonNullRank split(not(isInteger(Rank)),\n\tdisjoint: false) ~> RankTypeCheck@(RankWrongType)\nRankTypeCheck@RankWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-RankWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteRankWrongTypeRows"
+        }
+    }
+}

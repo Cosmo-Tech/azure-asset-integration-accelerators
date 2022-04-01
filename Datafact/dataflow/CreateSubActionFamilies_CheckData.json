@@ -1,0 +1,115 @@
+{
+    "name": "CreateSubActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSubActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SubActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotUniqueNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_110",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_111",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTypeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactModeInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_112",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactOnEquipmentWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_113",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteImpactOnEquipmentInvalidRangeRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "InternalNameUniquenessCheckAggregate"
+                },
+                {
+                    "name": "InternalNameUniquenessCheckFilter"
+                },
+                {
+                    "name": "StatusNameUniquenessCheckInSubActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnumType"
+                },
+                {
+                    "name": "TypeEnumCheck"
+                },
+                {
+                    "name": "NonNullEnumImpactMode"
+                },
+                {
+                    "name": "ImpactModeEnumCheck"
+                },
+                {
+                    "name": "NonNullImpactOnEquipment"
+                },
+                {
+                    "name": "ImpactOnEquipmentTypeCheck"
+                },
+                {
+                    "name": "ImpactOnEquipmentRangeCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tType as string,\n\t\tImpactMode as string,\n\t\tImpactOnEquipment as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamilies\nReadCreateSubActionFamilies aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nReadCreateSubActionFamilies, SubActionFamiliesStatus exists(ReadCreateSubActionFamilies@Name == SubActionFamiliesStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInSubActionFamiliesStatus\nStatusNameUniquenessCheckInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nReadCreateSubActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadCreateSubActionFamilies filter(not(isNull(Type))) ~> NonNullEnumType\nNonNullEnumType filter(not(in(['NoAction', 'Repairs', 'Replacement', 'Inspection', 'Activation', 'Deactivation', 'RepairsWithoutInspection'], Type))) ~> TypeEnumCheck\nTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-TypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTypeInvalidRangeRows\nReadCreateSubActionFamilies filter(not(isNull(ImpactMode))) ~> NonNullEnumImpactMode\nNonNullEnumImpactMode filter(not(in(['ApparentAgeBased'], ImpactMode))) ~> ImpactModeEnumCheck\nImpactModeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-ImpactModeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactModeInvalidRangeRows\nReadCreateSubActionFamilies filter(not(isNull(ImpactOnEquipment))) ~> NonNullImpactOnEquipment\nNonNullImpactOnEquipment split(not(isFloat(ImpactOnEquipment)),\n\tdisjoint: false) ~> ImpactOnEquipmentTypeCheck@(ImpactOnEquipmentWrongType, ImpactOnEquipmentCorrectType)\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-112-ImpactOnEquipmentWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentWrongTypeRows\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentCorrectType filter(or(toFloat(ImpactOnEquipment) < 0.0, toFloat(ImpactOnEquipment) > 1.0)) ~> ImpactOnEquipmentRangeCheck\nImpactOnEquipmentRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-ImpactOnEquipmentInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentInvalidRangeRows"
+        }
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "name": "CreateTechnicalPoliciesSecondaryActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateTechnicalPoliciesSecondaryActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesSecondaryActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_230",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_230",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_231",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_231",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_230",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingTechnicalPolicyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingTechnicalPolicyInTechnicalPoliciesStatus"
+                },
+                {
+                    "name": "ExistingActionFamilyInActionFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusTechnicalPolicyActionFamilyUniquenessCheckInTechnicalPoliciesSecondaryActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateTechnicalPoliciesSecondaryActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesStatus\nReadCreateTechnicalPoliciesSecondaryActionFamilies, TechnicalPoliciesStatus exists(TechnicalPolicy == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingTechnicalPolicyInTechnicalPoliciesStatus\nExistingTechnicalPolicyInTechnicalPoliciesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-230-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nReadCreateTechnicalPoliciesSecondaryActionFamilies, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-230-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nReadCreateTechnicalPoliciesSecondaryActionFamilies split(isNull(TechnicalPolicy),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingActionFamily)\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-231-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-231-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesSecondaryActionFamiliesStatus\nReadCreateTechnicalPoliciesSecondaryActionFamilies, TechnicalPoliciesSecondaryActionFamiliesStatus exists(ReadCreateTechnicalPoliciesSecondaryActionFamilies@TechnicalPolicy == TechnicalPoliciesSecondaryActionFamiliesStatus@TechnicalPolicy && ReadCreateTechnicalPoliciesSecondaryActionFamilies@ActionFamily == TechnicalPoliciesSecondaryActionFamiliesStatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyActionFamilyUniquenessCheckInTechnicalPoliciesSecondaryActionFamiliesStatus\nStatusTechnicalPolicyActionFamilyUniquenessCheckInTechnicalPoliciesSecondaryActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-230-AlreadyExistTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingTechnicalPolicyRows"
+        }
+    }
+}

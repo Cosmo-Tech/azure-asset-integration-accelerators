@@ -1,0 +1,133 @@
+{
+    "name": "UpdateCriteria_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Update"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "UpdateCriteria",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadUpdateCriteria"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_CriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CriteriaStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "UpdateCriteria_MapValueAsString",
+                        "type": "DatasetReference"
+                    },
+                    "name": "UpdateCriteriaMapValueAsString"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_520",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_523",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteOperatorInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_522",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteThresholdWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_522",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCriterionRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_521",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_520",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingCriterionRowsValueAsString"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingNameInCriteriaStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "NonNullEnumOperator"
+                },
+                {
+                    "name": "OperatorEnumCheck"
+                },
+                {
+                    "name": "NonNullThreshold"
+                },
+                {
+                    "name": "ThresholdTypeCheck"
+                },
+                {
+                    "name": "NonNullValue"
+                },
+                {
+                    "name": "ValueTypeCheck"
+                },
+                {
+                    "name": "MapValueAsStringMandatoryCheck"
+                },
+                {
+                    "name": "MapValueAsStringExistenceCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tEquipmentComponentAttribute as string,\n\t\tOperator as string,\n\t\tThreshold as string,\n\t\tReferenceAttribute as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateCriteria\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CriteriaStatus\nReadUpdateCriteria, CriteriaStatus exists(ReadUpdateCriteria@Name == CriteriaStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInCriteriaStatus\nExistingNameInCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-520-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nReadUpdateCriteria split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-521-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nReadUpdateCriteria filter(not(isNull(Operator))) ~> NonNullEnumOperator\nNonNullEnumOperator filter(not(in(['None', 'LT', 'GT', 'LEQ', 'GEQ'], Operator))) ~> OperatorEnumCheck\nOperatorEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-523-OperatorInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteOperatorInvalidRangeRows\nReadUpdateCriteria filter(not(isNull(Threshold))) ~> NonNullThreshold\nNonNullThreshold split(not(isFloat(Threshold)),\n\tdisjoint: false) ~> ThresholdTypeCheck@(ThresholdWrongType)\nThresholdTypeCheck@ThresholdWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-522-ThresholdWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteThresholdWrongTypeRows\nReadUpdateCriteria filter(not(isNull(Value))) ~> NonNullValue\nNonNullValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> ValueTypeCheck@(ValueWrongType)\nValueTypeCheck@ValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-522-ValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteValueWrongTypeRows\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateCriteriaMapValueAsString\nUpdateCriteriaMapValueAsString split(isNull(Criterion),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapValueAsStringMandatoryCheck@(MissingCriterion, MissingIndex, MissingValue)\nMapValueAsStringMandatoryCheck@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-521-MissColumnCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-521-MissColumnIndexValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-521-MissColumnValueValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsValueAsString\nUpdateCriteriaMapValueAsString, CriteriaStatus exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapValueAsStringExistenceCheck\nMapValueAsStringExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-520-NotExistingCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRowsValueAsString"
+        }
+    }
+}

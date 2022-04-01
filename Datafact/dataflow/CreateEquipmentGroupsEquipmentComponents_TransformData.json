@@ -1,0 +1,59 @@
+{
+    "name": "CreateEquipmentGroupsEquipmentComponents_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentGroupsEquipmentComponents",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateEquipmentGroupsEquipmentComponents"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentGroupsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateEquipmentGroupsEquipmentComponents_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_EquipmentGroupsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroupsEquipmentComponents\nReadCreateEquipmentGroupsEquipmentComponents select(mapColumn(\n\t\t{$sourceId} = EquipmentGroup,\n\t\t{$targetId} = EquipmentComponent),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'Group_contains_EquipmentComponent',\n\t{$relationshipDelete} = 'false',\n\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentGroupsEquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor\nReadCreateEquipmentGroupsEquipmentComponents select(mapColumn(\n\t\tEquipmentGroup,\n\t\tEquipmentComponent),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor\nReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor union(byName: true)~> StatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor\nStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentGroupsEquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+        }
+    }
+}

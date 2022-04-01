@@ -1,0 +1,78 @@
+{
+    "name": "CreateTechnicalPolicies_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTechnicalPolicies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateTechnicalPolicies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateTechnicalPolicies_MapBudgetCategories",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadMapBudgetCategories"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusTechnicalPoliciesStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTechnicalPolicies_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "AggregateMapBudgetCategoriesKeyIndex"
+                },
+                {
+                    "name": "BudgetCategoriesCleaning"
+                },
+                {
+                    "name": "BudgetCategoriesUnion"
+                },
+                {
+                    "name": "BudgetCategoriesSelect"
+                },
+                {
+                    "name": "StatusColumnSelectionTechnicalPoliciesStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateTechnicalPoliciesStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCriteriaFormula as string,\n\t\tEnablePendingActionRemoval as string,\n\t\tIsInactive as string,\n\t\tType as string,\n\t\tYearEnd as string,\n\t\tYearStart as string,\n\t\tNbRepAction1 as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateTechnicalPolicies\nReadCreateTechnicalPolicies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tCriteriaFormula,\n\t\tEnablePendingActionRemoval,\n\t\tIsInactive,\n\t\tType,\n\t\tYearEnd,\n\t\tYearStart,\n\t\tNbRepAction1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:TechnicalPolicy;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadMapBudgetCategories aggregate(groupBy(TechnicalPolicy),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nModelDefinition, BudgetCategoriesCleaning join({$id} == TechnicalPolicy,\n\tjoinType:'left',\n\tbroadcast: 'auto') ~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\t{AssetClass},\n\t\t{CriteriaFormula},\n\t\t{EnablePendingActionRemoval},\n\t\t{IsInactive},\n\t\t{Type},\n\t\t{YearEnd},\n\t\t{YearStart},\n\t\t{NbRepAction1},\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPolicies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesStatusEditor\nReadCreateTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesStatusEditor\nReadTempStatusTechnicalPoliciesStatusEditor, StatusColumnSelectionTechnicalPoliciesStatusEditor union(byName: true)~> StatusUpdateTechnicalPoliciesStatusEditor\nStatusUpdateTechnicalPoliciesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor"
+        }
+    }
+}

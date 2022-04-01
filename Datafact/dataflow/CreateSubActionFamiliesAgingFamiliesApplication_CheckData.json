@@ -1,0 +1,94 @@
+{
+    "name": "CreateSubActionFamiliesAgingFamiliesApplication_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateSubActionFamiliesAgingFamiliesApplication",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateSubActionFamiliesAgingFamiliesApplication"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SubActionFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_AgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "AgingFamiliesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SubActionFamiliesAgingFamiliesApplicationStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_220",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSubActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_220",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_221",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSubActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_221",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingAgingFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_220",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingSubActionFamilyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingSubActionFamilyInSubActionFamiliesStatus"
+                },
+                {
+                    "name": "ExistingAgingFamilyInAgingFamiliesStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesApplication\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication, SubActionFamiliesStatus exists(SubActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSubActionFamilyInSubActionFamiliesStatus\nExistingSubActionFamilyInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-NotExistingSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSubActionFamilyRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication, AgingFamiliesStatus exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingAgingFamilyInAgingFamiliesStatus\nExistingAgingFamilyInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-NotExistingAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRows\nReadCreateSubActionFamiliesAgingFamiliesApplication split(isNull(SubActionFamily),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSubActionFamily, MissingAgingFamily)\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-221-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-221-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesAgingFamiliesApplicationStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication, SubActionFamiliesAgingFamiliesApplicationStatus exists(ReadCreateSubActionFamiliesAgingFamiliesApplication@SubActionFamily == SubActionFamiliesAgingFamiliesApplicationStatus@SubActionFamily && ReadCreateSubActionFamiliesAgingFamiliesApplication@AgingFamily == SubActionFamiliesAgingFamiliesApplicationStatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus\nStatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-AlreadyExistSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSubActionFamilyRows"
+        }
+    }
+}

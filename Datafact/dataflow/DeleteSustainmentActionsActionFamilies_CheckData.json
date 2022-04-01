@@ -1,0 +1,60 @@
+{
+    "name": "DeleteSustainmentActionsActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteSustainmentActionsActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteSustainmentActionsActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionsActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSustainmentActionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_410",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingSustainmentActionRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsActionFamilies\nReadDeleteSustainmentActionsActionFamilies split(isNull(SustainmentAction),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingActionFamily)\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-411-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-411-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsActionFamiliesStatus\nReadDeleteSustainmentActionsActionFamilies, SustainmentActionsActionFamiliesStatus exists(ReadDeleteSustainmentActionsActionFamilies@SustainmentAction == SustainmentActionsActionFamiliesStatus@SustainmentAction && ReadDeleteSustainmentActionsActionFamilies@ActionFamily == SustainmentActionsActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus\nStatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-410-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows"
+        }
+    }
+}

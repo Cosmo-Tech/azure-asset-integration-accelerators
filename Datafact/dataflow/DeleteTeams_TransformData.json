@@ -1,0 +1,59 @@
+{
+    "name": "DeleteTeams_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "4-HumanResources/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTeams",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteTeams"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TeamsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusTeamsStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteTeams_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_TeamsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateTeamsStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionTeamsStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateTeamsStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTeams\nReadDeleteTeams select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Team;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Teams.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTeamsStatusEditor\nReadDeleteTeams select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTeamsStatusEditor\nReadTempStatusTeamsStatusEditor, StatusColumnSelectionTeamsStatusEditor exists(ReadTempStatusTeamsStatusEditor@Name == StatusColumnSelectionTeamsStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTeamsStatusEditor\nStatusUpdateTeamsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Teams_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTeamsStatusEditor"
+        }
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "name": "DeleteActionFamiliesSubActionFamilies_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "11-AssetPortfolioActivitiesManagement/Delete"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "DeleteActionFamiliesSubActionFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadDeleteActionFamiliesSubActionFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionFamiliesSubActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamiliesSubActionFamiliesStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "11_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_411",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingSubActionFamilyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "11_410",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingActionFamilyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusActionFamilySubActionFamilyExistenceCheckInActionFamiliesSubActionFamiliesStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionFamiliesSubActionFamilies\nReadDeleteActionFamiliesSubActionFamilies split(isNull(ActionFamily),\n\tisNull(SubActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingActionFamily, MissingSubActionFamily)\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-411-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-411-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesSubActionFamiliesStatus\nReadDeleteActionFamiliesSubActionFamilies, ActionFamiliesSubActionFamiliesStatus exists(ReadDeleteActionFamiliesSubActionFamilies@ActionFamily == ActionFamiliesSubActionFamiliesStatus@ActionFamily && ReadDeleteActionFamiliesSubActionFamilies@SubActionFamily == ActionFamiliesSubActionFamiliesStatus@SubActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusActionFamilySubActionFamilyExistenceCheckInActionFamiliesSubActionFamiliesStatus\nStatusActionFamilySubActionFamilyExistenceCheckInActionFamiliesSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-410-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows"
+        }
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "name": "CreateActionTasks_TransformData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateActionTasks"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadTempStatusActionTasksStatusEditor"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateActionTasks_temp",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteToTempRepo"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempOutput_ActionTasksStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTempStatusStatusUpdateActionTasksStatusEditor"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "IdSelection"
+                },
+                {
+                    "name": "ModelDefinition"
+                },
+                {
+                    "name": "StatusColumnSelectionActionTasksStatusEditor"
+                },
+                {
+                    "name": "StatusUpdateActionTasksStatusEditor"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tSkill as string,\n\t\tActionDurationPercentage as string,\n\t\tWorkforceFTE as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionTasks\nReadCreateActionTasks select(mapColumn(\n\t\t{$id} = Name,\n\t\tSkill,\n\t\tActionDurationPercentage,\n\t\tWorkforceFTE),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionTask;1',\n\t{$entityDelete} = 'false') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionTasks.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionTasksStatusEditor\nReadCreateActionTasks select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionTasksStatusEditor\nReadTempStatusActionTasksStatusEditor, StatusColumnSelectionActionTasksStatusEditor union(byName: true)~> StatusUpdateActionTasksStatusEditor\nStatusUpdateActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionTasksStatusEditor"
+        }
+    }
+}

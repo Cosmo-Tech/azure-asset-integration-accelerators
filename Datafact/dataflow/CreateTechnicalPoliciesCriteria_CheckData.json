@@ -1,0 +1,94 @@
+{
+    "name": "CreateTechnicalPoliciesCriteria_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateTechnicalPoliciesCriteria",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateTechnicalPoliciesCriteria"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_CriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CriteriaStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPoliciesCriteriaStatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingCriterionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_241",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingTechnicalPolicyRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_241",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCriterionRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_240",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingTechnicalPolicyRows"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "ExistingTechnicalPolicyInTechnicalPoliciesStatus"
+                },
+                {
+                    "name": "ExistingCriterionInCriteriaStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "StatusTechnicalPolicyCriterionUniquenessCheckInTechnicalPoliciesCriteriaStatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateTechnicalPoliciesCriteria\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesStatus\nReadCreateTechnicalPoliciesCriteria, TechnicalPoliciesStatus exists(TechnicalPolicy == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingTechnicalPolicyInTechnicalPoliciesStatus\nExistingTechnicalPolicyInTechnicalPoliciesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-240-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CriteriaStatus\nReadCreateTechnicalPoliciesCriteria, CriteriaStatus exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingCriterionInCriteriaStatus\nExistingCriterionInCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-240-NotExistingCriterion.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRows\nReadCreateTechnicalPoliciesCriteria split(isNull(TechnicalPolicy),\n\tisNull(Criterion),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingCriterion)\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-241-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-241-MissColumnCriterion.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRows\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesCriteriaStatus\nReadCreateTechnicalPoliciesCriteria, TechnicalPoliciesCriteriaStatus exists(ReadCreateTechnicalPoliciesCriteria@TechnicalPolicy == TechnicalPoliciesCriteriaStatus@TechnicalPolicy && ReadCreateTechnicalPoliciesCriteria@Criterion == TechnicalPoliciesCriteriaStatus@Criterion,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyCriterionUniquenessCheckInTechnicalPoliciesCriteriaStatus\nStatusTechnicalPolicyCriterionUniquenessCheckInTechnicalPoliciesCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-240-AlreadyExistTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingTechnicalPolicyRows"
+        }
+    }
+}

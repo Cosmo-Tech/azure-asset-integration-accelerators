@@ -1,0 +1,187 @@
+{
+    "name": "CreateCriteria_CheckData",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Create"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadCreateCriteria"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_CriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CriteriaStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria_MapTargetedAgingFamilies",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateCriteriaMapTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CreateCriteria_MapValueAsString",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CreateCriteriaMapValueAsString"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "2_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotUniqueNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteAlreadyExistingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingNameRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCriterionRowsTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingCriterionRowsTargetedAgingFamilies"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_123",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteOperatorInvalidRangeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteThresholdWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_122",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteValueWrongTypeRows"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingCriterionRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingIndexRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_121",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteMissingValueRowsValueAsString"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "2_120",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteNotExistingCriterionRowsValueAsString"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "InternalNameUniquenessCheckAggregate"
+                },
+                {
+                    "name": "InternalNameUniquenessCheckFilter"
+                },
+                {
+                    "name": "StatusNameUniquenessCheckInCriteriaStatus"
+                },
+                {
+                    "name": "CheckMandatoryData"
+                },
+                {
+                    "name": "MapTargetedAgingFamiliesMandatoryCheck"
+                },
+                {
+                    "name": "MapTargetedAgingFamiliesExistenceCheck"
+                },
+                {
+                    "name": "NonNullEnumOperator"
+                },
+                {
+                    "name": "OperatorEnumCheck"
+                },
+                {
+                    "name": "NonNullThreshold"
+                },
+                {
+                    "name": "ThresholdTypeCheck"
+                },
+                {
+                    "name": "NonNullValue"
+                },
+                {
+                    "name": "ValueTypeCheck"
+                },
+                {
+                    "name": "MapValueAsStringMandatoryCheck"
+                },
+                {
+                    "name": "MapValueAsStringExistenceCheck"
+                }
+            ],
+            "script": "source(output(\n\t\tName as string,\n\t\tEquipmentComponentAttribute as string,\n\t\tOperator as string,\n\t\tThreshold as string,\n\t\tReferenceAttribute as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateCriteria\nReadCreateCriteria aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CriteriaStatus\nReadCreateCriteria, CriteriaStatus exists(ReadCreateCriteria@Name == CriteriaStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInCriteriaStatus\nStatusNameUniquenessCheckInCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nReadCreateCriteria split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateCriteriaMapTargetedAgingFamilies\nCreateCriteriaMapTargetedAgingFamilies split(isNull(Criterion),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapTargetedAgingFamiliesMandatoryCheck@(MissingCriterion, MissingIndex, MissingValue)\nMapTargetedAgingFamiliesMandatoryCheck@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnCriterionTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRowsTargetedAgingFamilies\nMapTargetedAgingFamiliesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnIndexTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsTargetedAgingFamilies\nMapTargetedAgingFamiliesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnValueTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsTargetedAgingFamilies\nCreateCriteriaMapTargetedAgingFamilies, ReadCreateCriteria exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapTargetedAgingFamiliesExistenceCheck\nMapTargetedAgingFamiliesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotExistingCriterionTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRowsTargetedAgingFamilies\nReadCreateCriteria filter(not(isNull(Operator))) ~> NonNullEnumOperator\nNonNullEnumOperator filter(not(in(['None', 'LT', 'GT', 'LEQ', 'GEQ'], Operator))) ~> OperatorEnumCheck\nOperatorEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-123-OperatorInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteOperatorInvalidRangeRows\nReadCreateCriteria filter(not(isNull(Threshold))) ~> NonNullThreshold\nNonNullThreshold split(not(isFloat(Threshold)),\n\tdisjoint: false) ~> ThresholdTypeCheck@(ThresholdWrongType)\nThresholdTypeCheck@ThresholdWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-122-ThresholdWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteThresholdWrongTypeRows\nReadCreateCriteria filter(not(isNull(Value))) ~> NonNullValue\nNonNullValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> ValueTypeCheck@(ValueWrongType)\nValueTypeCheck@ValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-122-ValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteValueWrongTypeRows\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateCriteriaMapValueAsString\nCreateCriteriaMapValueAsString split(isNull(Criterion),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapValueAsStringMandatoryCheck@(MissingCriterion, MissingIndex, MissingValue)\nMapValueAsStringMandatoryCheck@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnIndexValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnValueValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsValueAsString\nCreateCriteriaMapValueAsString, ReadCreateCriteria exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapValueAsStringExistenceCheck\nMapValueAsStringExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotExistingCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRowsValueAsString"
+        }
+    }
+}
