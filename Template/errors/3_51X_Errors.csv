@@ -1,0 +1,21 @@
+File,ErrorCode,Message
+3-510-NotExistingName.csv,3-510,Reference Name in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv not existing. See 3-510-NotExistingName.csv for details
+3-511-MissColumnName.csv,3-511,Missing Mandatory Columns Name in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnName.csv for details
+3-513-CostTypeInvalidRange.csv,3-513,Incorrect range for CostType in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-513-CostTypeInvalidRange.csv for details
+3-512-ConstrainedWrongType.csv,3-512,Incorrect type for Constrained in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-512-ConstrainedWrongType.csv for details
+3-511-MissColumnBudgetCatKeyLabels.csv,3-511,Missing Mandatory Columns Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnBudgetCatKeyLabels.csv for details
+3-511-MissColumnIndexCatKeyLabels.csv,3-511,Missing Mandatory Columns Index in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnIndexCatKeyLabels.csv for details
+3-511-MissColumnValueCatKeyLabels.csv,3-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnValueCatKeyLabels.csv for details
+3-510-NotExistingBudgetCatKeyLabels.csv,3-510,Reference Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv not existing. See 3-510-NotExistingBudgetCatKeyLabels.csv for details
+3-511-MissColumnBudgetAvailableQuantityByYear.csv,3-511,Missing Mandatory Columns Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnBudgetAvailableQuantityByYear.csv for details
+3-511-MissColumnYearAvailableQuantityByYear.csv,3-511,Missing Mandatory Columns Year in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnYearAvailableQuantityByYear.csv for details
+3-511-MissColumnValueAvailableQuantityByYear.csv,3-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnValueAvailableQuantityByYear.csv for details
+3-510-NotExistingBudgetAvailableQuantityByYear.csv,3-510,Reference Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv not existing. See 3-510-NotExistingBudgetAvailableQuantityByYear.csv for details
+3-512-AvailableQuantityByYearValueWrongType.csv,3-512,Incorrect type for AvailableQuantityByYearValue in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-512-AvailableQuantityByYearValueWrongType.csv for details
+3-511-MissColumnBudgetMinimalQuantityLevelByYear.csv,3-511,Missing Mandatory Columns Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnBudgetMinimalQuantityLevelByYear.csv for details
+3-511-MissColumnYearMinimalQuantityLevelByYear.csv,3-511,Missing Mandatory Columns Year in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnYearMinimalQuantityLevelByYear.csv for details
+3-511-MissColumnValueMinimalQuantityLevelByYear.csv,3-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv. Open 3-511-MissColumnValueMinimalQuantityLevelByYear.csv for details
+3-510-NotExistingBudgetMinimalQuantityLevelByYear.csv,3-510,Reference Budget in file asset-integration-accelerator-input/Budgets/Update/Budgets.csv not existing. See 3-510-NotExistingBudgetMinimalQuantityLevelByYear.csv for details
+3-512-MinimalQuantityLevelByYearValueWrongType.csv,3-512,Incorrect type for MinimalQuantityLevelByYearValue in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-512-MinimalQuantityLevelByYearValueWrongType.csv for details
+3-512-CostRateWrongType.csv,3-512,Incorrect type for CostRate in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-512-CostRateWrongType.csv for details
+3-512-RankWrongType.csv,3-512,Incorrect type for Rank in asset-integration-accelerator-input/Budgets/Update/Budgets.csv. See 3-512-RankWrongType.csv for details

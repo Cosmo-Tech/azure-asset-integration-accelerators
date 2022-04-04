@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+12-210-NotExistingActionFamily.csv,12-210,Reference ActionFamily in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionFamiliesActionTasks.csv not existing. See 12-210-NotExistingActionFamily.csv for details
+12-210-NotExistingActionTask.csv,12-210,Reference ActionTask in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionFamiliesActionTasks.csv not existing. See 12-210-NotExistingActionTask.csv for details
+12-211-MissColumnActionFamily.csv,12-211,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionFamiliesActionTasks.csv. Open 12-211-MissColumnActionFamily.csv for details
+12-211-MissColumnActionTask.csv,12-211,Missing Mandatory Columns ActionTask in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionFamiliesActionTasks.csv. Open 12-211-MissColumnActionTask.csv for details
+12-210-AlreadyExistActionFamily.csv,12-210,ActionFamily have already used value in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionFamiliesActionTasks.csv. See 12-210-AlreadyExistActionFamily.csv for details

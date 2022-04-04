@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+2-421-MissColumnTechnicalPolicy.csv,2-421,Missing Mandatory Columns TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesMainActionFamilies.csv. Open 2-421-MissColumnTechnicalPolicy.csv for details
+2-421-MissColumnActionFamily.csv,2-421,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesMainActionFamilies.csv. Open 2-421-MissColumnActionFamily.csv for details
+2-420-NotExistingTechnicalPolicy.csv,2-420,Reference TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesMainActionFamilies.csv not existing. See 2-420-NotExistingTechnicalPolicy.csv for details

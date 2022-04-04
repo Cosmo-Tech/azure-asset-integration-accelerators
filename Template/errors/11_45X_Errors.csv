@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+11-451-MissColumnSustainmentAction.csv,11-451,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SustainmentActionsEquipmentGroups.csv. Open 11-451-MissColumnSustainmentAction.csv for details
+11-451-MissColumnEquipmentGroup.csv,11-451,Missing Mandatory Columns EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SustainmentActionsEquipmentGroups.csv. Open 11-451-MissColumnEquipmentGroup.csv for details
+11-450-NotExistingSustainmentAction.csv,11-450,Reference SustainmentAction in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SustainmentActionsEquipmentGroups.csv not existing. See 11-450-NotExistingSustainmentAction.csv for details

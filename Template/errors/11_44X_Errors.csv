@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+11-441-MissColumnEquipmentGroup.csv,11-441,Missing Mandatory Columns EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/EquipmentGroupsEquipmentComponents.csv. Open 11-441-MissColumnEquipmentGroup.csv for details
+11-441-MissColumnEquipmentComponent.csv,11-441,Missing Mandatory Columns EquipmentComponent in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/EquipmentGroupsEquipmentComponents.csv. Open 11-441-MissColumnEquipmentComponent.csv for details
+11-440-NotExistingEquipmentGroup.csv,11-440,Reference EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/EquipmentGroupsEquipmentComponents.csv not existing. See 11-440-NotExistingEquipmentGroup.csv for details

@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+11-220-NotExistingSubActionFamily.csv,11-220,Reference SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SubActionFamiliesAgingFamiliesApplication.csv not existing. See 11-220-NotExistingSubActionFamily.csv for details
+11-220-NotExistingAgingFamily.csv,11-220,Reference AgingFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SubActionFamiliesAgingFamiliesApplication.csv not existing. See 11-220-NotExistingAgingFamily.csv for details
+11-221-MissColumnSubActionFamily.csv,11-221,Missing Mandatory Columns SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SubActionFamiliesAgingFamiliesApplication.csv. Open 11-221-MissColumnSubActionFamily.csv for details
+11-221-MissColumnAgingFamily.csv,11-221,Missing Mandatory Columns AgingFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SubActionFamiliesAgingFamiliesApplication.csv. Open 11-221-MissColumnAgingFamily.csv for details
+11-220-AlreadyExistSubActionFamily.csv,11-220,SubActionFamily have already used value in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SubActionFamiliesAgingFamiliesApplication.csv. See 11-220-AlreadyExistSubActionFamily.csv for details

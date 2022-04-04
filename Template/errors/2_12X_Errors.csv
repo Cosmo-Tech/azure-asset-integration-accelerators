@@ -1,0 +1,15 @@
+File,ErrorCode,Message
+2-120-NotUniqueName.csv,2-120,Similar values for Name are used in asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. See 2-120-NotUniqueName.csv for details
+2-120-AlreadyExistName.csv,2-120,Name have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. See 2-120-AlreadyExistName.csv for details
+2-121-MissColumnName.csv,2-121,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnName.csv for details
+2-121-MissColumnCriterionTargetedAgingFamilies.csv,2-121,Missing Mandatory Columns Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnCriterionTargetedAgingFamilies.csv for details
+2-121-MissColumnIndexTargetedAgingFamilies.csv,2-121,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnIndexTargetedAgingFamilies.csv for details
+2-121-MissColumnValueTargetedAgingFamilies.csv,2-121,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnValueTargetedAgingFamilies.csv for details
+2-120-NotExistingCriterionTargetedAgingFamilies.csv,2-120,Reference Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv not existing. See 2-120-NotExistingCriterionTargetedAgingFamilies.csv for details
+2-123-OperatorInvalidRange.csv,2-123,Incorrect range for Operator in asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. See 2-123-OperatorInvalidRange.csv for details
+2-122-ThresholdWrongType.csv,2-122,Incorrect type for Threshold in asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. See 2-122-ThresholdWrongType.csv for details
+2-122-ValueWrongType.csv,2-122,Incorrect type for Value in asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. See 2-122-ValueWrongType.csv for details
+2-121-MissColumnCriterionValueAsString.csv,2-121,Missing Mandatory Columns Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnCriterionValueAsString.csv for details
+2-121-MissColumnIndexValueAsString.csv,2-121,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnIndexValueAsString.csv for details
+2-121-MissColumnValueValueAsString.csv,2-121,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv. Open 2-121-MissColumnValueValueAsString.csv for details
+2-120-NotExistingCriterionValueAsString.csv,2-120,Reference Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/Criteria.csv not existing. See 2-120-NotExistingCriterionValueAsString.csv for details

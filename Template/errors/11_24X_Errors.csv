@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+11-240-NotExistingEquipmentGroup.csv,11-240,Reference EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/EquipmentGroupsEquipmentComponents.csv not existing. See 11-240-NotExistingEquipmentGroup.csv for details
+11-240-NotExistingEquipmentComponent.csv,11-240,Reference EquipmentComponent in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/EquipmentGroupsEquipmentComponents.csv not existing. See 11-240-NotExistingEquipmentComponent.csv for details
+11-241-MissColumnEquipmentGroup.csv,11-241,Missing Mandatory Columns EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/EquipmentGroupsEquipmentComponents.csv. Open 11-241-MissColumnEquipmentGroup.csv for details
+11-241-MissColumnEquipmentComponent.csv,11-241,Missing Mandatory Columns EquipmentComponent in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/EquipmentGroupsEquipmentComponents.csv. Open 11-241-MissColumnEquipmentComponent.csv for details
+11-240-AlreadyExistEquipmentGroup.csv,11-240,EquipmentGroup have already used value in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/EquipmentGroupsEquipmentComponents.csv. See 11-240-AlreadyExistEquipmentGroup.csv for details

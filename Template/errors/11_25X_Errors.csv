@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+11-250-NotExistingSustainmentAction.csv,11-250,Reference SustainmentAction in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SustainmentActionsEquipmentGroups.csv not existing. See 11-250-NotExistingSustainmentAction.csv for details
+11-250-NotExistingEquipmentGroup.csv,11-250,Reference EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SustainmentActionsEquipmentGroups.csv not existing. See 11-250-NotExistingEquipmentGroup.csv for details
+11-251-MissColumnSustainmentAction.csv,11-251,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SustainmentActionsEquipmentGroups.csv. Open 11-251-MissColumnSustainmentAction.csv for details
+11-251-MissColumnEquipmentGroup.csv,11-251,Missing Mandatory Columns EquipmentGroup in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SustainmentActionsEquipmentGroups.csv. Open 11-251-MissColumnEquipmentGroup.csv for details
+11-250-AlreadyExistSustainmentAction.csv,11-250,SustainmentAction have already used value in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/SustainmentActionsEquipmentGroups.csv. See 11-250-AlreadyExistSustainmentAction.csv for details

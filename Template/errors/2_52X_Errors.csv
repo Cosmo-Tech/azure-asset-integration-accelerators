@@ -1,0 +1,10 @@
+File,ErrorCode,Message
+2-520-NotExistingName.csv,2-520,Reference Name in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv not existing. See 2-520-NotExistingName.csv for details
+2-521-MissColumnName.csv,2-521,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. Open 2-521-MissColumnName.csv for details
+2-523-OperatorInvalidRange.csv,2-523,Incorrect range for Operator in asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. See 2-523-OperatorInvalidRange.csv for details
+2-522-ThresholdWrongType.csv,2-522,Incorrect type for Threshold in asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. See 2-522-ThresholdWrongType.csv for details
+2-522-ValueWrongType.csv,2-522,Incorrect type for Value in asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. See 2-522-ValueWrongType.csv for details
+2-521-MissColumnCriterionValueAsString.csv,2-521,Missing Mandatory Columns Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. Open 2-521-MissColumnCriterionValueAsString.csv for details
+2-521-MissColumnIndexValueAsString.csv,2-521,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. Open 2-521-MissColumnIndexValueAsString.csv for details
+2-521-MissColumnValueValueAsString.csv,2-521,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv. Open 2-521-MissColumnValueValueAsString.csv for details
+2-520-NotExistingCriterionValueAsString.csv,2-520,Reference Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Update/Criteria.csv not existing. See 2-520-NotExistingCriterionValueAsString.csv for details

@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+2-441-MissColumnTechnicalPolicy.csv,2-441,Missing Mandatory Columns TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesCriteria.csv. Open 2-441-MissColumnTechnicalPolicy.csv for details
+2-441-MissColumnCriterion.csv,2-441,Missing Mandatory Columns Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesCriteria.csv. Open 2-441-MissColumnCriterion.csv for details
+2-440-NotExistingTechnicalPolicy.csv,2-440,Reference TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Delete/TechnicalPoliciesCriteria.csv not existing. See 2-440-NotExistingTechnicalPolicy.csv for details

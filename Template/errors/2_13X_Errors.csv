@@ -1,0 +1,8 @@
+File,ErrorCode,Message
+2-130-NotUniqueName.csv,2-130,Similar values for Name are used in asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. See 2-130-NotUniqueName.csv for details
+2-130-AlreadyExistName.csv,2-130,Name have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. See 2-130-AlreadyExistName.csv for details
+2-131-MissColumnName.csv,2-131,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. Open 2-131-MissColumnName.csv for details
+2-131-MissColumnSustainmentActionBudgetCategories.csv,2-131,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. Open 2-131-MissColumnSustainmentActionBudgetCategories.csv for details
+2-131-MissColumnIndexBudgetCategories.csv,2-131,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. Open 2-131-MissColumnIndexBudgetCategories.csv for details
+2-131-MissColumnValueBudgetCategories.csv,2-131,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv. Open 2-131-MissColumnValueBudgetCategories.csv for details
+2-130-NotExistingSustainmentActionBudgetCategories.csv,2-130,Reference SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActions.csv not existing. See 2-130-NotExistingSustainmentActionBudgetCategories.csv for details

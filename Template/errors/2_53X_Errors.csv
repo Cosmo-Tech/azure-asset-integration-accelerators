@@ -1,0 +1,7 @@
+File,ErrorCode,Message
+2-530-NotExistingName.csv,2-530,Reference Name in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv not existing. See 2-530-NotExistingName.csv for details
+2-531-MissColumnName.csv,2-531,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv. Open 2-531-MissColumnName.csv for details
+2-531-MissColumnSustainmentActionBudgetCategories.csv,2-531,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv. Open 2-531-MissColumnSustainmentActionBudgetCategories.csv for details
+2-531-MissColumnIndexBudgetCategories.csv,2-531,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv. Open 2-531-MissColumnIndexBudgetCategories.csv for details
+2-531-MissColumnValueBudgetCategories.csv,2-531,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv. Open 2-531-MissColumnValueBudgetCategories.csv for details
+2-530-NotExistingSustainmentActionBudgetCategories.csv,2-530,Reference SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Update/SustainmentActions.csv not existing. See 2-530-NotExistingSustainmentActionBudgetCategories.csv for details

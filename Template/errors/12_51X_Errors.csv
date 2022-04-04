@@ -1,0 +1,7 @@
+File,ErrorCode,Message
+12-510-NotExistingName.csv,12-510,Reference Name in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv not existing. See 12-510-NotExistingName.csv for details
+12-511-MissColumnName.csv,12-511,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv. Open 12-511-MissColumnName.csv for details
+12-512-ActionDurationPercentageWrongType.csv,12-512,Incorrect type for ActionDurationPercentage in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv. See 12-512-ActionDurationPercentageWrongType.csv for details
+12-513-ActionDurationPercentageInvalidRange.csv,12-513,Incorrect range for ActionDurationPercentage in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv. See 12-513-ActionDurationPercentageInvalidRange.csv for details
+12-512-WorkforceFTEWrongType.csv,12-512,Incorrect type for WorkforceFTE in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv. See 12-512-WorkforceFTEWrongType.csv for details
+12-513-WorkforceFTEInvalidRange.csv,12-513,Incorrect range for WorkforceFTE in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Update/ActionTasks.csv. See 12-513-WorkforceFTEInvalidRange.csv for details

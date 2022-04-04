@@ -1,0 +1,8 @@
+File,ErrorCode,Message
+12-110-NotUniqueName.csv,12-110,Similar values for Name are used in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-110-NotUniqueName.csv for details
+12-110-AlreadyExistName.csv,12-110,Name have already used value in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-110-AlreadyExistName.csv for details
+12-111-MissColumnName.csv,12-111,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. Open 12-111-MissColumnName.csv for details
+12-112-ActionDurationPercentageWrongType.csv,12-112,Incorrect type for ActionDurationPercentage in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-112-ActionDurationPercentageWrongType.csv for details
+12-113-ActionDurationPercentageInvalidRange.csv,12-113,Incorrect range for ActionDurationPercentage in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-113-ActionDurationPercentageInvalidRange.csv for details
+12-112-WorkforceFTEWrongType.csv,12-112,Incorrect type for WorkforceFTE in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-112-WorkforceFTEWrongType.csv for details
+12-113-WorkforceFTEInvalidRange.csv,12-113,Incorrect range for WorkforceFTE in asset-integration-accelerator-input/ActivitiesManagementHumanResources/Create/ActionTasks.csv. See 12-113-WorkforceFTEInvalidRange.csv for details

@@ -1,0 +1,3 @@
+File,ErrorCode,Message
+11-310-NotExistingName.csv,11-310,Reference Name in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SubActionFamilies.csv not existing. See 11-310-NotExistingName.csv for details
+11-311-MissColumnName.csv,11-311,Missing Mandatory Columns Name in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SubActionFamilies.csv. Open 11-311-MissColumnName.csv for details

@@ -1,0 +1,5 @@
+File,ErrorCode,Message
+5-510-NotExistingName.csv,5-510,Reference Name in file asset-integration-accelerator-input/Finance/Update/AgingFamilies.csv not existing. See 5-510-NotExistingName.csv for details
+5-511-MissColumnName.csv,5-511,Missing Mandatory Columns Name in file asset-integration-accelerator-input/Finance/Update/AgingFamilies.csv. Open 5-511-MissColumnName.csv for details
+5-512-RawInvestmentWrongType.csv,5-512,Incorrect type for RawInvestment in asset-integration-accelerator-input/Finance/Update/AgingFamilies.csv. See 5-512-RawInvestmentWrongType.csv for details
+5-512-LifeSpanWrongType.csv,5-512,Incorrect type for LifeSpan in asset-integration-accelerator-input/Finance/Update/AgingFamilies.csv. See 5-512-LifeSpanWrongType.csv for details

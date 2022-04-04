@@ -1,0 +1,19 @@
+File,ErrorCode,Message
+4-510-NotExistingName.csv,4-510,Reference Name in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv not existing. See 4-510-NotExistingName.csv for details
+4-511-MissColumnName.csv,4-511,Missing Mandatory Columns Name in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnName.csv for details
+4-512-ConstrainedWrongType.csv,4-512,Incorrect type for Constrained in asset-integration-accelerator-input/HumanResources/Update/Teams.csv. See 4-512-ConstrainedWrongType.csv for details
+4-511-MissColumnTeamCatKeyLabels.csv,4-511,Missing Mandatory Columns Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnTeamCatKeyLabels.csv for details
+4-511-MissColumnIndexCatKeyLabels.csv,4-511,Missing Mandatory Columns Index in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnIndexCatKeyLabels.csv for details
+4-511-MissColumnValueCatKeyLabels.csv,4-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnValueCatKeyLabels.csv for details
+4-510-NotExistingTeamCatKeyLabels.csv,4-510,Reference Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv not existing. See 4-510-NotExistingTeamCatKeyLabels.csv for details
+4-511-MissColumnTeamAvailableQuantityByYear.csv,4-511,Missing Mandatory Columns Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnTeamAvailableQuantityByYear.csv for details
+4-511-MissColumnYearAvailableQuantityByYear.csv,4-511,Missing Mandatory Columns Year in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnYearAvailableQuantityByYear.csv for details
+4-511-MissColumnValueAvailableQuantityByYear.csv,4-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnValueAvailableQuantityByYear.csv for details
+4-510-NotExistingTeamAvailableQuantityByYear.csv,4-510,Reference Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv not existing. See 4-510-NotExistingTeamAvailableQuantityByYear.csv for details
+4-512-AvailableQuantityByYearValueWrongType.csv,4-512,Incorrect type for AvailableQuantityByYearValue in asset-integration-accelerator-input/HumanResources/Update/Teams.csv. See 4-512-AvailableQuantityByYearValueWrongType.csv for details
+4-511-MissColumnTeamMinimalQuantityLevelByYear.csv,4-511,Missing Mandatory Columns Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnTeamMinimalQuantityLevelByYear.csv for details
+4-511-MissColumnYearMinimalQuantityLevelByYear.csv,4-511,Missing Mandatory Columns Year in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnYearMinimalQuantityLevelByYear.csv for details
+4-511-MissColumnValueMinimalQuantityLevelByYear.csv,4-511,Missing Mandatory Columns Value in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv. Open 4-511-MissColumnValueMinimalQuantityLevelByYear.csv for details
+4-510-NotExistingTeamMinimalQuantityLevelByYear.csv,4-510,Reference Team in file asset-integration-accelerator-input/HumanResources/Update/Teams.csv not existing. See 4-510-NotExistingTeamMinimalQuantityLevelByYear.csv for details
+4-512-MinimalQuantityLevelByYearValueWrongType.csv,4-512,Incorrect type for MinimalQuantityLevelByYearValue in asset-integration-accelerator-input/HumanResources/Update/Teams.csv. See 4-512-MinimalQuantityLevelByYearValueWrongType.csv for details
+4-512-CostRateWrongType.csv,4-512,Incorrect type for CostRate in asset-integration-accelerator-input/HumanResources/Update/Teams.csv. See 4-512-CostRateWrongType.csv for details

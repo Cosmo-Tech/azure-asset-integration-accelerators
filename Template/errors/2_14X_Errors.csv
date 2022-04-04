@@ -1,0 +1,15 @@
+File,ErrorCode,Message
+2-140-NotUniqueName.csv,2-140,Similar values for Name are used in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-140-NotUniqueName.csv for details
+2-140-AlreadyExistName.csv,2-140,Name have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-140-AlreadyExistName.csv for details
+2-141-MissColumnName.csv,2-141,Missing Mandatory Columns Name in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. Open 2-141-MissColumnName.csv for details
+2-142-EnablePendingActionRemovalWrongType.csv,2-142,Incorrect type for EnablePendingActionRemoval in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-142-EnablePendingActionRemovalWrongType.csv for details
+2-142-IsInactiveWrongType.csv,2-142,Incorrect type for IsInactive in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-142-IsInactiveWrongType.csv for details
+2-143-TypeInvalidRange.csv,2-143,Incorrect range for Type in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-143-TypeInvalidRange.csv for details
+2-142-YearEndWrongType.csv,2-142,Incorrect type for YearEnd in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-142-YearEndWrongType.csv for details
+2-142-YearStartWrongType.csv,2-142,Incorrect type for YearStart in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-142-YearStartWrongType.csv for details
+2-141-MissColumnTechnicalPolicyBudgetCategories.csv,2-141,Missing Mandatory Columns TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. Open 2-141-MissColumnTechnicalPolicyBudgetCategories.csv for details
+2-141-MissColumnIndexBudgetCategories.csv,2-141,Missing Mandatory Columns Index in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. Open 2-141-MissColumnIndexBudgetCategories.csv for details
+2-141-MissColumnValueBudgetCategories.csv,2-141,Missing Mandatory Columns Value in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. Open 2-141-MissColumnValueBudgetCategories.csv for details
+2-140-NotExistingTechnicalPolicyBudgetCategories.csv,2-140,Reference TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv not existing. See 2-140-NotExistingTechnicalPolicyBudgetCategories.csv for details
+2-142-NbRepAction1WrongType.csv,2-142,Incorrect type for NbRepAction1 in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-142-NbRepAction1WrongType.csv for details
+2-143-NbRepAction1InvalidRange.csv,2-143,Incorrect range for NbRepAction1 in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPolicies.csv. See 2-143-NbRepAction1InvalidRange.csv for details

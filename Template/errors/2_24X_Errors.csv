@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+2-240-NotExistingTechnicalPolicy.csv,2-240,Reference TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesCriteria.csv not existing. See 2-240-NotExistingTechnicalPolicy.csv for details
+2-240-NotExistingCriterion.csv,2-240,Reference Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesCriteria.csv not existing. See 2-240-NotExistingCriterion.csv for details
+2-241-MissColumnTechnicalPolicy.csv,2-241,Missing Mandatory Columns TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesCriteria.csv. Open 2-241-MissColumnTechnicalPolicy.csv for details
+2-241-MissColumnCriterion.csv,2-241,Missing Mandatory Columns Criterion in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesCriteria.csv. Open 2-241-MissColumnCriterion.csv for details
+2-240-AlreadyExistTechnicalPolicy.csv,2-240,TechnicalPolicy have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesCriteria.csv. See 2-240-AlreadyExistTechnicalPolicy.csv for details

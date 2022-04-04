@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+11-210-NotExistingActionFamily.csv,11-210,Reference ActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/ActionFamiliesSubActionFamilies.csv not existing. See 11-210-NotExistingActionFamily.csv for details
+11-210-NotExistingSubActionFamily.csv,11-210,Reference SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/ActionFamiliesSubActionFamilies.csv not existing. See 11-210-NotExistingSubActionFamily.csv for details
+11-211-MissColumnActionFamily.csv,11-211,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/ActionFamiliesSubActionFamilies.csv. Open 11-211-MissColumnActionFamily.csv for details
+11-211-MissColumnSubActionFamily.csv,11-211,Missing Mandatory Columns SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/ActionFamiliesSubActionFamilies.csv. Open 11-211-MissColumnSubActionFamily.csv for details
+11-210-AlreadyExistActionFamily.csv,11-210,ActionFamily have already used value in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Create/ActionFamiliesSubActionFamilies.csv. See 11-210-AlreadyExistActionFamily.csv for details

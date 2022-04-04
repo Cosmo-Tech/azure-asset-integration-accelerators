@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+2-220-NotExistingTechnicalPolicy.csv,2-220,Reference TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesMainActionFamilies.csv not existing. See 2-220-NotExistingTechnicalPolicy.csv for details
+2-220-NotExistingActionFamily.csv,2-220,Reference ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesMainActionFamilies.csv not existing. See 2-220-NotExistingActionFamily.csv for details
+2-221-MissColumnTechnicalPolicy.csv,2-221,Missing Mandatory Columns TechnicalPolicy in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesMainActionFamilies.csv. Open 2-221-MissColumnTechnicalPolicy.csv for details
+2-221-MissColumnActionFamily.csv,2-221,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesMainActionFamilies.csv. Open 2-221-MissColumnActionFamily.csv for details
+2-220-AlreadyExistTechnicalPolicy.csv,2-220,TechnicalPolicy have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/TechnicalPoliciesMainActionFamilies.csv. See 2-220-AlreadyExistTechnicalPolicy.csv for details

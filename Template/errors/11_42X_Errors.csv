@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+11-421-MissColumnSubActionFamily.csv,11-421,Missing Mandatory Columns SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SubActionFamiliesAgingFamiliesApplication.csv. Open 11-421-MissColumnSubActionFamily.csv for details
+11-421-MissColumnAgingFamily.csv,11-421,Missing Mandatory Columns AgingFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SubActionFamiliesAgingFamiliesApplication.csv. Open 11-421-MissColumnAgingFamily.csv for details
+11-420-NotExistingSubActionFamily.csv,11-420,Reference SubActionFamily in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Delete/SubActionFamiliesAgingFamiliesApplication.csv not existing. See 11-420-NotExistingSubActionFamily.csv for details

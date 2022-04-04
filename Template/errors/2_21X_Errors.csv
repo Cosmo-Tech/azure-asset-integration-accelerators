@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+2-210-NotExistingSustainmentAction.csv,2-210,Reference SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActionsActionFamilies.csv not existing. See 2-210-NotExistingSustainmentAction.csv for details
+2-210-NotExistingActionFamily.csv,2-210,Reference ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActionsActionFamilies.csv not existing. See 2-210-NotExistingActionFamily.csv for details
+2-211-MissColumnSustainmentAction.csv,2-211,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActionsActionFamilies.csv. Open 2-211-MissColumnSustainmentAction.csv for details
+2-211-MissColumnActionFamily.csv,2-211,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActionsActionFamilies.csv. Open 2-211-MissColumnActionFamily.csv for details
+2-210-AlreadyExistSustainmentAction.csv,2-210,SustainmentAction have already used value in asset-integration-accelerator-input/ActivitiesManagement/Create/SustainmentActionsActionFamilies.csv. See 2-210-AlreadyExistSustainmentAction.csv for details

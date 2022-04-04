@@ -1,0 +1,6 @@
+File,ErrorCode,Message
+1-210-NotExistingEquipmentComponent.csv,1-210,Reference EquipmentComponent in file asset-integration-accelerator-input/AssetPortfolio/Create/EquipmentComponentsAgingFamilies.csv not existing. See 1-210-NotExistingEquipmentComponent.csv for details
+1-210-NotExistingAgingFamily.csv,1-210,Reference AgingFamily in file asset-integration-accelerator-input/AssetPortfolio/Create/EquipmentComponentsAgingFamilies.csv not existing. See 1-210-NotExistingAgingFamily.csv for details
+1-211-MissColumnEquipmentComponent.csv,1-211,Missing Mandatory Columns EquipmentComponent in file asset-integration-accelerator-input/AssetPortfolio/Create/EquipmentComponentsAgingFamilies.csv. Open 1-211-MissColumnEquipmentComponent.csv for details
+1-211-MissColumnAgingFamily.csv,1-211,Missing Mandatory Columns AgingFamily in file asset-integration-accelerator-input/AssetPortfolio/Create/EquipmentComponentsAgingFamilies.csv. Open 1-211-MissColumnAgingFamily.csv for details
+1-210-AlreadyExistEquipmentComponent.csv,1-210,EquipmentComponent have already used value in asset-integration-accelerator-input/AssetPortfolio/Create/EquipmentComponentsAgingFamilies.csv. See 1-210-AlreadyExistEquipmentComponent.csv for details

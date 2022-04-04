@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+2-411-MissColumnSustainmentAction.csv,2-411,Missing Mandatory Columns SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Delete/SustainmentActionsActionFamilies.csv. Open 2-411-MissColumnSustainmentAction.csv for details
+2-411-MissColumnActionFamily.csv,2-411,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagement/Delete/SustainmentActionsActionFamilies.csv. Open 2-411-MissColumnActionFamily.csv for details
+2-410-NotExistingSustainmentAction.csv,2-410,Reference SustainmentAction in file asset-integration-accelerator-input/ActivitiesManagement/Delete/SustainmentActionsActionFamilies.csv not existing. See 2-410-NotExistingSustainmentAction.csv for details

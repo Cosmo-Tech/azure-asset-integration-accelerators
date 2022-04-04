@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+12-411-MissColumnActionFamily.csv,12-411,Missing Mandatory Columns ActionFamily in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Delete/ActionFamiliesActionTasks.csv. Open 12-411-MissColumnActionFamily.csv for details
+12-411-MissColumnActionTask.csv,12-411,Missing Mandatory Columns ActionTask in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Delete/ActionFamiliesActionTasks.csv. Open 12-411-MissColumnActionTask.csv for details
+12-410-NotExistingActionFamily.csv,12-410,Reference ActionFamily in file asset-integration-accelerator-input/ActivitiesManagementHumanResources/Delete/ActionFamiliesActionTasks.csv not existing. See 12-410-NotExistingActionFamily.csv for details

@@ -1,0 +1,4 @@
+File,ErrorCode,Message
+1-421-MissColumnEquipmentComponentSource.csv,1-421,Missing Mandatory Columns EquipmentComponentSource in file asset-integration-accelerator-input/AssetPortfolio/Delete/EquipmentComponentsEquipmentComponents.csv. Open 1-421-MissColumnEquipmentComponentSource.csv for details
+1-421-MissColumnEquipmentComponentTarget.csv,1-421,Missing Mandatory Columns EquipmentComponentTarget in file asset-integration-accelerator-input/AssetPortfolio/Delete/EquipmentComponentsEquipmentComponents.csv. Open 1-421-MissColumnEquipmentComponentTarget.csv for details
+1-420-NotExistingEquipmentComponentSource.csv,1-420,Reference EquipmentComponentSource in file asset-integration-accelerator-input/AssetPortfolio/Delete/EquipmentComponentsEquipmentComponents.csv not existing. See 1-420-NotExistingEquipmentComponentSource.csv for details

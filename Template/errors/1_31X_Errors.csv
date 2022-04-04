@@ -1,0 +1,3 @@
+File,ErrorCode,Message
+1-310-NotExistingName.csv,1-310,Reference Name in file asset-integration-accelerator-input/AssetPortfolio/Delete/EquipmentComponents.csv not existing. See 1-310-NotExistingName.csv for details
+1-311-MissColumnName.csv,1-311,Missing Mandatory Columns Name in file asset-integration-accelerator-input/AssetPortfolio/Delete/EquipmentComponents.csv. Open 1-311-MissColumnName.csv for details

@@ -1,0 +1,7 @@
+File,ErrorCode,Message
+11-510-NotExistingName.csv,11-510,Reference Name in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv not existing. See 11-510-NotExistingName.csv for details
+11-511-MissColumnName.csv,11-511,Missing Mandatory Columns Name in file asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv. Open 11-511-MissColumnName.csv for details
+11-513-TypeInvalidRange.csv,11-513,Incorrect range for Type in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv. See 11-513-TypeInvalidRange.csv for details
+11-513-ImpactModeInvalidRange.csv,11-513,Incorrect range for ImpactMode in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv. See 11-513-ImpactModeInvalidRange.csv for details
+11-512-ImpactOnEquipmentWrongType.csv,11-512,Incorrect type for ImpactOnEquipment in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv. See 11-512-ImpactOnEquipmentWrongType.csv for details
+11-513-ImpactOnEquipmentInvalidRange.csv,11-513,Incorrect range for ImpactOnEquipment in asset-integration-accelerator-input/AssetPortfolioActivitiesManagement/Update/SubActionFamilies.csv. See 11-513-ImpactOnEquipmentInvalidRange.csv for details
