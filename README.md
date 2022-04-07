@@ -8,7 +8,7 @@ You can use this projet to build a data integration pipeline.
 The integration runtime objects must be created manually before loading the data factory objects. To do so:
 * Go to your Data Factory resource and open it using Azure Data Factory Studio (accessible from the tab overview)
 * In the left menu, click on "Manage" (last icon)
-* In the menu "Connection", click on "Integration runtimes"
+* In the menu "Connections", click on "Integration runtimes"
 * For each json file in the folder Datafact/integrationRuntime:
   * Create a new resource by clicking the button "+ New"
   * Select Azure, Self-Hosted
