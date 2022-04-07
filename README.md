@@ -5,10 +5,10 @@ The Azure Asset Integration Accelerators aim to be an exemple of Data Factory pi
 You can use this projet to build a data integration pipeline.
 
 ## Create Integration Runtimes
-The integration runtime object must be create manually before loading the data factory objects. To do so:
+The integration runtime objects must be created manually before loading the data factory objects. To do so:
 * Go to your Data Factory resource and open it using Azure Data Factory Studio (accessible from the tab overview)
 * In the left menu, click on "Manage" (last icon)
-* In the menu "Source Control", click on "Integration runtimes"
+* In the menu "Connection", click on "Integration runtimes"
 * For each json file in the folder Datafact/integrationRuntime:
   * Create a new resource by clicking the button "+ New"
   * Select Azure, Self-Hosted
@@ -41,4 +41,4 @@ The data factory is now connected to the git repository
 To load all the data factory objects, follow the following steps:
 * In the left menu, click on "Author" (second icon)
 * Click on the top left menu with the github logo and select the collaboration branch "main"
-* All the object are download in the Studio Editor. To save them, click on "Publish" in the top left menu
+* All the objects are downloaded in the Studio Editor. To save them, click on "Publish" in the top left menu
