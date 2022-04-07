@@ -40,5 +40,5 @@ The data factory is now connected to the git repository
 ### Load Data Factory Objects
 To load all the data factory objects, follow the following steps:
 * In the left menu, click on "Author" (second icon)
-* Click on the top left menu with the github logo and select the collaboration branch "main"
+* Click on the top left menu with the github logo and select the collaboration branch "main branch"
 * All the objects are downloaded in the Studio Editor. To save them, click on "Publish" in the top left menu
