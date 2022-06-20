@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "DeleteActionFamiliesActionTasks",
+                "name": "ConditionalDeleteActionFamiliesActionTasks",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteActionFamiliesActionTasks",
+                        "referenceName": "ConditionalDeleteActionFamiliesActionTasks",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -38,19 +38,19 @@
                 ]
             },
             {
-                "name": "DeleteActionTasks",
+                "name": "ConditionalDeleteActionTasks",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteActionTasks",
+                        "referenceName": "ConditionalDeleteActionTasks",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamiliesActionTasks",
+                        "activity": "ConditionalDeleteActionFamiliesActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -58,19 +58,19 @@
                 ]
             },
             {
-                "name": "CreateActionTasks",
+                "name": "ConditionalCreateActionTasks",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateActionTasks",
+                        "referenceName": "ConditionalCreateActionTasks",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionTasks",
+                        "activity": "ConditionalDeleteActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -78,19 +78,19 @@
                 ]
             },
             {
-                "name": "CreateActionFamiliesActionTasks",
+                "name": "ConditionalCreateActionFamiliesActionTasks",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateActionFamiliesActionTasks",
+                        "referenceName": "ConditionalCreateActionFamiliesActionTasks",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionTasks",
+                        "activity": "ConditionalCreateActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -98,19 +98,19 @@
                 ]
             },
             {
-                "name": "UpdateActionTasks",
+                "name": "ConditionalUpdateActionTasks",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateActionTasks",
+                        "referenceName": "ConditionalUpdateActionTasks",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamiliesActionTasks",
+                        "activity": "ConditionalCreateActionFamiliesActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -130,7 +130,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateActionTasks",
+                        "activity": "ConditionalUpdateActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -150,7 +150,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateActionTasks",
+                        "activity": "ConditionalUpdateActionTasks",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

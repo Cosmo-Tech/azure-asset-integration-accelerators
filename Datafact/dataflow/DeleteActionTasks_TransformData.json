@@ -33,21 +33,21 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteActionTasks_temp",
+                        "referenceName": "ActivitiesManagementHumanResourcesDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionTasksStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionTasksStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionFamiliesActionTasksStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"

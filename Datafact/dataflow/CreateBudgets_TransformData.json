@@ -47,14 +47,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateBudgets_temp",
+                        "referenceName": "BudgetsCreateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_BudgetsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateBudgetsStatusEditor"

@@ -26,14 +26,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication_temp",
+                        "referenceName": "AssetPortfolioActivitiesManagementDeleteRelationship_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_SubActionFamiliesAgingFamiliesApplicationStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"

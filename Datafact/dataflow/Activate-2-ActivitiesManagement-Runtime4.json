@@ -1,0 +1,36 @@
+{
+    "name": "Activate-2-ActivitiesManagement-Runtime4",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "IntegrationRuntimeActivator"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "Activate_2_ActivitiesManagement_Runtime4",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadActivationDataset"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "Activate_2_ActivitiesManagement_Runtime4",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteActivationFile"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "AddActivationColumn"
+                }
+            ],
+            "script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive({dataset_column} = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Activate_2_ActivitiesManagement_Runtime4'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "name": "Activate-11-AssetPortfolioActivitiesManagement-Runtime5",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "IntegrationRuntimeActivator"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "Activate_11_AssetPortfolioActivitiesManagement_Runtime5",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ReadActivationDataset"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "Activate_11_AssetPortfolioActivitiesManagement_Runtime5",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteActivationFile"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "AddActivationColumn"
+                }
+            ],
+            "script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive({dataset_column} = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Activate_11_AssetPortfolioActivitiesManagement_Runtime5'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+        }
+    }
+}

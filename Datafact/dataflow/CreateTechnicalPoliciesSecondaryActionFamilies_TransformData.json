@@ -26,14 +26,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateTechnicalPoliciesSecondaryActionFamilies_temp",
+                        "referenceName": "ActivitiesManagementCreateRelationship_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"

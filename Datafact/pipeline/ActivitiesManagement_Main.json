@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "DeleteSustainmentActionsActionFamilies",
+                "name": "ConditionalDeleteSustainmentActionsActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSustainmentActionsActionFamilies",
+                        "referenceName": "ConditionalDeleteSustainmentActionsActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -38,12 +38,12 @@
                 ]
             },
             {
-                "name": "DeleteTechnicalPoliciesMainActionFamilies",
+                "name": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "referenceName": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -58,12 +58,12 @@
                 ]
             },
             {
-                "name": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                "name": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "referenceName": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -78,12 +78,12 @@
                 ]
             },
             {
-                "name": "DeleteTechnicalPoliciesCriteria",
+                "name": "ConditionalDeleteTechnicalPoliciesCriteria",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteTechnicalPoliciesCriteria",
+                        "referenceName": "ConditionalDeleteTechnicalPoliciesCriteria",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -98,37 +98,37 @@
                 ]
             },
             {
-                "name": "DeleteActionFamilies",
+                "name": "ConditionalDeleteActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteActionFamilies",
+                        "referenceName": "ConditionalDeleteActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSustainmentActionsActionFamilies",
+                        "activity": "ConditionalDeleteSustainmentActionsActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesCriteria",
+                        "activity": "ConditionalDeleteTechnicalPoliciesCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -136,37 +136,37 @@
                 ]
             },
             {
-                "name": "DeleteCriteria",
+                "name": "ConditionalDeleteCriteria",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteCriteria",
+                        "referenceName": "ConditionalDeleteCriteria",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSustainmentActionsActionFamilies",
+                        "activity": "ConditionalDeleteSustainmentActionsActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesCriteria",
+                        "activity": "ConditionalDeleteTechnicalPoliciesCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -174,37 +174,37 @@
                 ]
             },
             {
-                "name": "DeleteSustainmentActions",
+                "name": "ConditionalDeleteSustainmentActions",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSustainmentActions",
+                        "referenceName": "ConditionalDeleteSustainmentActions",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSustainmentActionsActionFamilies",
+                        "activity": "ConditionalDeleteSustainmentActionsActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesCriteria",
+                        "activity": "ConditionalDeleteTechnicalPoliciesCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -212,37 +212,37 @@
                 ]
             },
             {
-                "name": "DeleteTechnicalPolicies",
+                "name": "ConditionalDeleteTechnicalPolicies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteTechnicalPolicies",
+                        "referenceName": "ConditionalDeleteTechnicalPolicies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSustainmentActionsActionFamilies",
+                        "activity": "ConditionalDeleteSustainmentActionsActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPoliciesCriteria",
+                        "activity": "ConditionalDeleteTechnicalPoliciesCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -250,37 +250,37 @@
                 ]
             },
             {
-                "name": "CreateActionFamilies",
+                "name": "UpdateSustainmentActionsActionFamiliesStatus",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateActionFamilies",
+                        "referenceName": "UpdateSustainmentActionsActionFamiliesStatus",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamilies",
+                        "activity": "ConditionalDeleteActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteCriteria",
+                        "activity": "ConditionalDeleteCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActions",
+                        "activity": "ConditionalDeleteSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPolicies",
+                        "activity": "ConditionalDeleteTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -288,37 +288,37 @@
                 ]
             },
             {
-                "name": "CreateCriteria",
+                "name": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateCriteria",
+                        "referenceName": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamilies",
+                        "activity": "ConditionalDeleteActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteCriteria",
+                        "activity": "ConditionalDeleteCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActions",
+                        "activity": "ConditionalDeleteSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPolicies",
+                        "activity": "ConditionalDeleteTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -326,37 +326,37 @@
                 ]
             },
             {
-                "name": "CreateSustainmentActions",
+                "name": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSustainmentActions",
+                        "referenceName": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamilies",
+                        "activity": "ConditionalDeleteActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteCriteria",
+                        "activity": "ConditionalDeleteCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActions",
+                        "activity": "ConditionalDeleteSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPolicies",
+                        "activity": "ConditionalDeleteTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -364,37 +364,37 @@
                 ]
             },
             {
-                "name": "CreateTechnicalPolicies",
+                "name": "UpdateTechnicalPoliciesCriteriaStatus",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateTechnicalPolicies",
+                        "referenceName": "UpdateTechnicalPoliciesCriteriaStatus",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamilies",
+                        "activity": "ConditionalDeleteActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteCriteria",
+                        "activity": "ConditionalDeleteCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActions",
+                        "activity": "ConditionalDeleteSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteTechnicalPolicies",
+                        "activity": "ConditionalDeleteTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -402,37 +402,37 @@
                 ]
             },
             {
-                "name": "CreateSustainmentActionsActionFamilies",
+                "name": "ConditionalCreateActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSustainmentActionsActionFamilies",
+                        "referenceName": "ConditionalCreateActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamilies",
+                        "activity": "UpdateSustainmentActionsActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateCriteria",
+                        "activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActions",
+                        "activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPolicies",
+                        "activity": "UpdateTechnicalPoliciesCriteriaStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -440,37 +440,37 @@
                 ]
             },
             {
-                "name": "CreateTechnicalPoliciesMainActionFamilies",
+                "name": "ConditionalCreateCriteria",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateTechnicalPoliciesMainActionFamilies",
+                        "referenceName": "ConditionalCreateCriteria",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamilies",
+                        "activity": "UpdateSustainmentActionsActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateCriteria",
+                        "activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActions",
+                        "activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPolicies",
+                        "activity": "UpdateTechnicalPoliciesCriteriaStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -478,37 +478,37 @@
                 ]
             },
             {
-                "name": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                "name": "ConditionalCreateSustainmentActions",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "referenceName": "ConditionalCreateSustainmentActions",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamilies",
+                        "activity": "UpdateSustainmentActionsActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateCriteria",
+                        "activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActions",
+                        "activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPolicies",
+                        "activity": "UpdateTechnicalPoliciesCriteriaStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -516,37 +516,37 @@
                 ]
             },
             {
-                "name": "CreateTechnicalPoliciesCriteria",
+                "name": "ConditionalCreateTechnicalPolicies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateTechnicalPoliciesCriteria",
+                        "referenceName": "ConditionalCreateTechnicalPolicies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamilies",
+                        "activity": "UpdateSustainmentActionsActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateCriteria",
+                        "activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActions",
+                        "activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPolicies",
+                        "activity": "UpdateTechnicalPoliciesCriteriaStatus",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -554,37 +554,37 @@
                 ]
             },
             {
-                "name": "UpdateActionFamilies",
+                "name": "ConditionalCreateSustainmentActionsActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateActionFamilies",
+                        "referenceName": "ConditionalCreateSustainmentActionsActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSustainmentActionsActionFamilies",
+                        "activity": "ConditionalCreateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalCreateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalCreateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesCriteria",
+                        "activity": "ConditionalCreateTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -592,37 +592,37 @@
                 ]
             },
             {
-                "name": "UpdateCriteria",
+                "name": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateCriteria",
+                        "referenceName": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSustainmentActionsActionFamilies",
+                        "activity": "ConditionalCreateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalCreateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalCreateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesCriteria",
+                        "activity": "ConditionalCreateTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -630,37 +630,37 @@
                 ]
             },
             {
-                "name": "UpdateSustainmentActions",
+                "name": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateSustainmentActions",
+                        "referenceName": "ConditionalCreateTechnicalPoliciesSecondaryActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSustainmentActionsActionFamilies",
+                        "activity": "ConditionalCreateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalCreateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalCreateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesCriteria",
+                        "activity": "ConditionalCreateTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -668,37 +668,189 @@
                 ]
             },
             {
-                "name": "UpdateTechnicalPolicies",
+                "name": "ConditionalCreateTechnicalPoliciesCriteria",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateTechnicalPolicies",
+                        "referenceName": "ConditionalCreateTechnicalPoliciesCriteria",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSustainmentActionsActionFamilies",
+                        "activity": "ConditionalCreateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesMainActionFamilies",
+                        "activity": "ConditionalCreateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesSecondaryActionFamilies",
+                        "activity": "ConditionalCreateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateTechnicalPoliciesCriteria",
+                        "activity": "ConditionalCreateTechnicalPolicies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "ConditionalUpdateActionFamilies",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "ConditionalUpdateActionFamilies",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ConditionalCreateSustainmentActionsActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesCriteria",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "ConditionalUpdateCriteria",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "ConditionalUpdateCriteria",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ConditionalCreateSustainmentActionsActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesCriteria",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "ConditionalUpdateSustainmentActions",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "ConditionalUpdateSustainmentActions",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ConditionalCreateSustainmentActionsActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesCriteria",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "ConditionalUpdateTechnicalPolicies",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "ConditionalUpdateTechnicalPolicies",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ConditionalCreateSustainmentActionsActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ConditionalCreateTechnicalPoliciesCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -718,25 +870,25 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateActionFamilies",
+                        "activity": "ConditionalUpdateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateCriteria",
+                        "activity": "ConditionalUpdateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateSustainmentActions",
+                        "activity": "ConditionalUpdateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateTechnicalPolicies",
+                        "activity": "ConditionalUpdateTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -756,25 +908,25 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateActionFamilies",
+                        "activity": "ConditionalUpdateActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateCriteria",
+                        "activity": "ConditionalUpdateCriteria",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateSustainmentActions",
+                        "activity": "ConditionalUpdateSustainmentActions",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateTechnicalPolicies",
+                        "activity": "ConditionalUpdateTechnicalPolicies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

@@ -40,14 +40,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateCriteria_temp",
+                        "referenceName": "ActivitiesManagementCreateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_CriteriaStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateCriteriaStatusEditor"

@@ -26,7 +26,7 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "UpdateSustainmentActions_temp",
+                        "referenceName": "ActivitiesManagementUpdateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"

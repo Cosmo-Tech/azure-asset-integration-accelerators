@@ -6,7 +6,7 @@
         },
         "activities": [
             {
-                "name": "CopyInputDeleteBudgets_temp",
+                "name": "CopyBudgetsDeleteRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -21,7 +21,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -50,7 +51,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputDeleteBudgets_temp",
+                        "referenceName": "BudgetsDeleteRelationship_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -62,7 +63,7 @@
                 ]
             },
             {
-                "name": "CopyInputCreateBudgets_temp",
+                "name": "CopyBudgetsDeleteEntity_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -77,7 +78,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -106,7 +108,72 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputCreateBudgets_temp",
+                        "referenceName": "BudgetsDeleteEntity_temp",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "Budgets_DeleteInjectorDataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "dependsOn": [
+                    {
+                        "activity": "CopyBudgetsDeleteRelationship_temp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CopyBudgetsCreateEntity_temp",
+                "type": "Copy",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".csv"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "BudgetsCreateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -118,7 +185,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputDeleteBudgets_temp",
+                        "activity": "CopyBudgetsDeleteEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -126,7 +193,7 @@
                 ]
             },
             {
-                "name": "CopyInputUpdateBudgets_temp",
+                "name": "CopyBudgetsCreateRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -141,7 +208,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -170,7 +238,72 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputUpdateBudgets_temp",
+                        "referenceName": "BudgetsCreateRelationship_temp",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "Budgets_CreateInjectorDataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "dependsOn": [
+                    {
+                        "activity": "CopyBudgetsCreateEntity_temp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CopyBudgetsUpdateEntity_temp",
+                "type": "Copy",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".csv"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "BudgetsUpdateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -182,7 +315,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputCreateBudgets_temp",
+                        "activity": "CopyBudgetsCreateRelationship_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -190,10 +323,10 @@
                 ]
             },
             {
-                "name": "BudgetsTempCreationDatasetDeletion",
-                "type": "Delete",
+                "name": "CheckBudgetsExistence",
+                "type": "GetMetadata",
                 "policy": {
-                    "timeout": "7.00:00:00",
+                    "timeout": "0.00:30:00",
                     "retry": 0,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
@@ -202,19 +335,23 @@
                 "userProperties": [],
                 "typeProperties": {
                     "dataset": {
-                        "referenceName": "Budgets_DeleteCreateTempDataset",
+                        "referenceName": "Budgets_DeleteTempDataset",
                         "type": "DatasetReference"
                     },
-                    "enableLogging": false,
+                    "fieldList": [
+                        "exists"
+                    ],
                     "storeSettings": {
                         "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
                         "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
                     }
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateBudgets_temp",
+                        "activity": "CopyBudgetsUpdateEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -222,63 +359,45 @@
                 ]
             },
             {
-                "name": "BudgetsTempDeletionDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
+                "name": "DeletionIfCheck",
+                "type": "IfCondition",
                 "userProperties": [],
                 "typeProperties": {
-                    "dataset": {
-                        "referenceName": "Budgets_DeleteDeleteTempDataset",
-                        "type": "DatasetReference"
+                    "expression": {
+                        "value": "@activity('CheckBudgetsExistence').output.exists",
+                        "type": "Expression"
                     },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
+                    "ifTrueActivities": [
+                        {
+                            "name": "BudgetsTempDatasetDeletion",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "Budgets_DeleteTempDataset",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false
+                                }
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": []
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateBudgets_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "BudgetsTempUpdateDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataset": {
-                        "referenceName": "Budgets_DeleteUpdateTempDataset",
-                        "type": "DatasetReference"
-                    },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
-                },
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputUpdateBudgets_temp",
+                        "activity": "CheckBudgetsExistence",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

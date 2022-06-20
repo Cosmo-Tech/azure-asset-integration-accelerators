@@ -13,7 +13,7 @@
         "typeProperties": {
             "location": {
                 "type": "AzureBlobStorageLocation",
-                "fileName": "EquipmentComponents_AgingFamilies_status.csv",
+                "fileName": "EquipmentComponentsAgingFamilies_status.csv",
                 "folderPath": "Status",
                 "container": "asset-integration-accelerator-temp"
             },

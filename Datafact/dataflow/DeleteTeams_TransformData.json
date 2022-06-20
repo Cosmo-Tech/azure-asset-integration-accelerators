@@ -26,14 +26,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteTeams_temp",
+                        "referenceName": "HumanResourcesDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TeamsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateTeamsStatusEditor"

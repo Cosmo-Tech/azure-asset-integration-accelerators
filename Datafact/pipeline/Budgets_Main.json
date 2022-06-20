@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "DeleteBudgets",
+                "name": "ConditionalDeleteBudgets",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteBudgets",
+                        "referenceName": "ConditionalDeleteBudgets",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -38,19 +38,19 @@
                 ]
             },
             {
-                "name": "CreateBudgets",
+                "name": "ConditionalCreateBudgets",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateBudgets",
+                        "referenceName": "ConditionalCreateBudgets",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteBudgets",
+                        "activity": "ConditionalDeleteBudgets",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -58,19 +58,19 @@
                 ]
             },
             {
-                "name": "UpdateBudgets",
+                "name": "ConditionalUpdateBudgets",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateBudgets",
+                        "referenceName": "ConditionalUpdateBudgets",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateBudgets",
+                        "activity": "ConditionalCreateBudgets",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -90,7 +90,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateBudgets",
+                        "activity": "ConditionalUpdateBudgets",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -110,7 +110,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateBudgets",
+                        "activity": "ConditionalUpdateBudgets",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

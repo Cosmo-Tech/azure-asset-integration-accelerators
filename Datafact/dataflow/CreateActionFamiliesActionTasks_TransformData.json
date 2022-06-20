@@ -26,14 +26,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateActionFamiliesActionTasks_temp",
+                        "referenceName": "ActivitiesManagementHumanResourcesCreateRelationship_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionFamiliesActionTasksStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"

@@ -6,7 +6,7 @@
         },
         "activities": [
             {
-                "name": "CopyInputDeleteTeams_temp",
+                "name": "CopyHumanResourcesDeleteRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -21,7 +21,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -50,7 +51,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputDeleteTeams_temp",
+                        "referenceName": "HumanResourcesDeleteRelationship_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -62,7 +63,7 @@
                 ]
             },
             {
-                "name": "CopyInputCreateTeams_temp",
+                "name": "CopyHumanResourcesDeleteEntity_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -77,7 +78,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -106,7 +108,72 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputCreateTeams_temp",
+                        "referenceName": "HumanResourcesDeleteEntity_temp",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "HumanResources_DeleteInjectorDataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "dependsOn": [
+                    {
+                        "activity": "CopyHumanResourcesDeleteRelationship_temp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CopyHumanResourcesCreateEntity_temp",
+                "type": "Copy",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".csv"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "HumanResourcesCreateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -118,7 +185,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputDeleteTeams_temp",
+                        "activity": "CopyHumanResourcesDeleteEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -126,7 +193,7 @@
                 ]
             },
             {
-                "name": "CopyInputUpdateTeams_temp",
+                "name": "CopyHumanResourcesCreateRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -141,7 +208,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -170,7 +238,72 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputUpdateTeams_temp",
+                        "referenceName": "HumanResourcesCreateRelationship_temp",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "HumanResources_CreateInjectorDataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "dependsOn": [
+                    {
+                        "activity": "CopyHumanResourcesCreateEntity_temp",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CopyHumanResourcesUpdateEntity_temp",
+                "type": "Copy",
+                "policy": {
+                    "timeout": "1.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".csv"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "HumanResourcesUpdateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -182,7 +315,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputCreateTeams_temp",
+                        "activity": "CopyHumanResourcesCreateRelationship_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -190,10 +323,10 @@
                 ]
             },
             {
-                "name": "HumanResourcesTempCreationDatasetDeletion",
-                "type": "Delete",
+                "name": "CheckHumanResourcesExistence",
+                "type": "GetMetadata",
                 "policy": {
-                    "timeout": "7.00:00:00",
+                    "timeout": "0.00:30:00",
                     "retry": 0,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
@@ -202,19 +335,23 @@
                 "userProperties": [],
                 "typeProperties": {
                     "dataset": {
-                        "referenceName": "HumanResources_DeleteCreateTempDataset",
+                        "referenceName": "HumanResources_DeleteTempDataset",
                         "type": "DatasetReference"
                     },
-                    "enableLogging": false,
+                    "fieldList": [
+                        "exists"
+                    ],
                     "storeSettings": {
                         "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
                         "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
                     }
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateTeams_temp",
+                        "activity": "CopyHumanResourcesUpdateEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -222,63 +359,45 @@
                 ]
             },
             {
-                "name": "HumanResourcesTempDeletionDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
+                "name": "DeletionIfCheck",
+                "type": "IfCondition",
                 "userProperties": [],
                 "typeProperties": {
-                    "dataset": {
-                        "referenceName": "HumanResources_DeleteDeleteTempDataset",
-                        "type": "DatasetReference"
+                    "expression": {
+                        "value": "@activity('CheckHumanResourcesExistence').output.exists",
+                        "type": "Expression"
                     },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
+                    "ifTrueActivities": [
+                        {
+                            "name": "HumanResourcesTempDatasetDeletion",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "HumanResources_DeleteTempDataset",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false
+                                }
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": []
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateTeams_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "HumanResourcesTempUpdateDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataset": {
-                        "referenceName": "HumanResources_DeleteUpdateTempDataset",
-                        "type": "DatasetReference"
-                    },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
-                },
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputUpdateTeams_temp",
+                        "activity": "CheckHumanResourcesExistence",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

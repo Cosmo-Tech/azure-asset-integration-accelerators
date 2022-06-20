@@ -40,14 +40,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateEquipmentComponents_temp",
+                        "referenceName": "AssetPortfolioCreateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_EquipmentComponentsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateEquipmentComponentsStatusEditor"

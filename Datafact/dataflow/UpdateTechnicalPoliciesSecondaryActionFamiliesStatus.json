@@ -1,0 +1,53 @@
+{
+    "name": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Status"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "MainStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTechnicalPoliciesSecondaryActionFamiliesStatus"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus"
+                },
+                {
+                    "name": "FilterTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> MainStatus\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus\nMainStatus, ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus exists(MainStatus@TechnicalPolicy == ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus@TechnicalPolicy && MainStatus@ActionFamily == ActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus\nFilterActionFamilyTechnicalPoliciesSecondaryActionFamiliesstatus, TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus exists(MainStatus@TechnicalPolicy == TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus@TechnicalPolicy && MainStatus@ActionFamily == TechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus\nFilterTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesstatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTechnicalPoliciesSecondaryActionFamiliesStatus"
+        }
+    }
+}

@@ -15,7 +15,15 @@
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
-                }
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ActivateIntegrationRuntime",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
             },
             {
                 "name": "ActivitiesManagement",
@@ -27,7 +35,15 @@
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
-                }
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ActivateIntegrationRuntime",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
             },
             {
                 "name": "Budgets",
@@ -39,7 +55,15 @@
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
-                }
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ActivateIntegrationRuntime",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
             },
             {
                 "name": "HumanResources",
@@ -51,7 +75,15 @@
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
-                }
+                },
+                "dependsOn": [
+                    {
+                        "activity": "ActivateIntegrationRuntime",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
             },
             {
                 "name": "Finance",
@@ -67,6 +99,12 @@
                 "dependsOn": [
                     {
                         "activity": "AssetPortfolio",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ActivateIntegrationRuntime",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -96,6 +134,12 @@
                         "dependencyConditions": [
                             "Succeeded"
                         ]
+                    },
+                    {
+                        "activity": "ActivateIntegrationRuntime",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
                     }
                 ]
             },
@@ -119,6 +163,12 @@
                     },
                     {
                         "activity": "HumanResources",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "ActivateIntegrationRuntime",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -180,6 +230,18 @@
                         ]
                     }
                 ]
+            },
+            {
+                "name": "ActivateIntegrationRuntime",
+                "type": "ExecutePipeline",
+                "userProperties": [],
+                "typeProperties": {
+                    "pipeline": {
+                        "referenceName": "IntegrationRuntimeActivation",
+                        "type": "PipelineReference"
+                    },
+                    "waitOnCompletion": true
+                }
             }
         ],
         "annotations": [],

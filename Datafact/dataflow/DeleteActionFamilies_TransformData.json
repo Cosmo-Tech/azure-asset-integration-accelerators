@@ -27,21 +27,21 @@
                         "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusSustainmentActionsActionFamiliesStatusEditor"
+                    "name": "ReadTempStatusActionFamilySustainmentActionsActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
                         "referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "ReadTempStatusActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
                         "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "ReadTempStatusActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
@@ -61,49 +61,49 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteActionFamilies_temp",
+                        "referenceName": "ActivitiesManagementDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_SustainmentActionsActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateActionFamilySustainmentActionsActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesMainActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionFamiliesSubActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_ActionFamiliesActionTasksStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
@@ -123,22 +123,22 @@
                     "name": "StatusUpdateActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor"
+                    "name": "StatusColumnSelectionActionFamilySustainmentActionsActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+                    "name": "StatusUpdateActionFamilySustainmentActionsActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "StatusColumnSelectionActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "StatusUpdateActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "StatusColumnSelectionActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "StatusUpdateActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
                     "name": "StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor"
@@ -153,7 +153,7 @@
                     "name": "StatusUpdateActionFamiliesActionTasksStatusEditor"
                 }
             ],
-            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionFamilies\nReadDeleteActionFamilies select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionFamily;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesStatusEditor\nReadTempStatusActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesStatusEditor exists(ReadTempStatusActionFamiliesStatusEditor@Name == StatusColumnSelectionActionFamiliesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesStatusEditor\nStatusUpdateActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsActionFamiliesStatusEditor\nStatusUpdateSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor\nReadTempStatusActionFamiliesSubActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nStatusUpdateActionFamiliesSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesSubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesActionTasksStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesActionTasksStatusEditor\nReadTempStatusActionFamiliesActionTasksStatusEditor, StatusColumnSelectionActionFamiliesActionTasksStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesActionTasksStatusEditor\nStatusUpdateActionFamiliesActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteActionFamilies\nReadDeleteActionFamilies select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionFamily;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesStatusEditor\nReadTempStatusActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesStatusEditor exists(ReadTempStatusActionFamiliesStatusEditor@Name == StatusColumnSelectionActionFamiliesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesStatusEditor\nStatusUpdateActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamilySustainmentActionsActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamilySustainmentActionsActionFamiliesStatusEditor\nReadTempStatusActionFamilySustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionActionFamilySustainmentActionsActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamilySustainmentActionsActionFamiliesStatusEditor\nStatusUpdateActionFamilySustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamily_SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamilySustainmentActionsActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamily_TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamilyTechnicalPoliciesMainActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nStatusUpdateActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamily_TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamilyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor\nReadTempStatusActionFamiliesSubActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nStatusUpdateActionFamiliesSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesSubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesActionTasksStatusEditor\nReadDeleteActionFamilies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesActionTasksStatusEditor\nReadTempStatusActionFamiliesActionTasksStatusEditor, StatusColumnSelectionActionFamiliesActionTasksStatusEditor exists(Name == ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesActionTasksStatusEditor\nStatusUpdateActionFamiliesActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
         }
     }
 }

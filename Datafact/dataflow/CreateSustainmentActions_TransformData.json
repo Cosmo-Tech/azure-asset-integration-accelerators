@@ -33,14 +33,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateSustainmentActions_temp",
+                        "referenceName": "ActivitiesManagementCreateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_SustainmentActionsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateSustainmentActionsStatusEditor"

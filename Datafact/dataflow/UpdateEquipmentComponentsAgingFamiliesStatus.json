@@ -1,0 +1,53 @@
+{
+    "name": "UpdateEquipmentComponentsAgingFamiliesStatus",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Status"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "MainStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "EquipmentComponentEquipmentComponentsAgingFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentEquipmentComponentsAgingFamiliesstatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "AgingFamilyEquipmentComponentsAgingFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "AgingFamilyEquipmentComponentsAgingFamiliesstatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEquipmentComponentsAgingFamiliesStatus"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterEquipmentComponentEquipmentComponentsAgingFamiliesstatus"
+                },
+                {
+                    "name": "FilterAgingFamilyEquipmentComponentsAgingFamiliesstatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> MainStatus\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentEquipmentComponentsAgingFamiliesstatus\nMainStatus, EquipmentComponentEquipmentComponentsAgingFamiliesstatus exists(MainStatus@EquipmentComponent == EquipmentComponentEquipmentComponentsAgingFamiliesstatus@EquipmentComponent && MainStatus@AgingFamily == EquipmentComponentEquipmentComponentsAgingFamiliesstatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterEquipmentComponentEquipmentComponentsAgingFamiliesstatus\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamilyEquipmentComponentsAgingFamiliesstatus\nFilterEquipmentComponentEquipmentComponentsAgingFamiliesstatus, AgingFamilyEquipmentComponentsAgingFamiliesstatus exists(MainStatus@EquipmentComponent == AgingFamilyEquipmentComponentsAgingFamiliesstatus@EquipmentComponent && MainStatus@AgingFamily == AgingFamilyEquipmentComponentsAgingFamiliesstatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterAgingFamilyEquipmentComponentsAgingFamiliesstatus\nFilterAgingFamilyEquipmentComponentsAgingFamiliesstatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponentsAgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEquipmentComponentsAgingFamiliesStatus"
+        }
+    }
+}

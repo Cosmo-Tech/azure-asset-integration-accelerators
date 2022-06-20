@@ -47,14 +47,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "CreateTeams_temp",
+                        "referenceName": "HumanResourcesCreateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TeamsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateTeamsStatusEditor"

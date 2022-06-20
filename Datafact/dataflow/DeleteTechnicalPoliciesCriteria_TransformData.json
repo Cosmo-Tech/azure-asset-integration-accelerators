@@ -26,14 +26,14 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteTechnicalPoliciesCriteria_temp",
+                        "referenceName": "ActivitiesManagementDeleteRelationship_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesCriteriaStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"

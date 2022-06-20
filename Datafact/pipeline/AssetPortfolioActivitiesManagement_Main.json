@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "DeleteActionFamiliesSubActionFamilies",
+                "name": "ConditionalDeleteActionFamiliesSubActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteActionFamiliesSubActionFamilies",
+                        "referenceName": "ConditionalDeleteActionFamiliesSubActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -38,12 +38,12 @@
                 ]
             },
             {
-                "name": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                "name": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                        "referenceName": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplication",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -58,12 +58,12 @@
                 ]
             },
             {
-                "name": "DeleteSubActionFamiliesAgingFamiliesReplacement",
+                "name": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSubActionFamiliesAgingFamiliesReplacement",
+                        "referenceName": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacement",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -78,12 +78,12 @@
                 ]
             },
             {
-                "name": "DeleteEquipmentGroupsEquipmentComponents",
+                "name": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteEquipmentGroupsEquipmentComponents",
+                        "referenceName": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -98,12 +98,12 @@
                 ]
             },
             {
-                "name": "DeleteSustainmentActionsEquipmentGroups",
+                "name": "ConditionalDeleteSustainmentActionsEquipmentGroups",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSustainmentActionsEquipmentGroups",
+                        "referenceName": "ConditionalDeleteSustainmentActionsEquipmentGroups",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -118,43 +118,43 @@
                 ]
             },
             {
-                "name": "DeleteSubActionFamilies",
+                "name": "ConditionalDeleteSubActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteSubActionFamilies",
+                        "referenceName": "ConditionalDeleteSubActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamiliesSubActionFamilies",
+                        "activity": "ConditionalDeleteActionFamiliesSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                        "activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSubActionFamiliesAgingFamiliesReplacement",
+                        "activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteEquipmentGroupsEquipmentComponents",
+                        "activity": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActionsEquipmentGroups",
+                        "activity": "ConditionalDeleteSustainmentActionsEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -162,43 +162,43 @@
                 ]
             },
             {
-                "name": "DeleteEquipmentGroups",
+                "name": "ConditionalDeleteEquipmentGroups",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteEquipmentGroups",
+                        "referenceName": "ConditionalDeleteEquipmentGroups",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteActionFamiliesSubActionFamilies",
+                        "activity": "ConditionalDeleteActionFamiliesSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSubActionFamiliesAgingFamiliesApplication",
+                        "activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSubActionFamiliesAgingFamiliesReplacement",
+                        "activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteEquipmentGroupsEquipmentComponents",
+                        "activity": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteSustainmentActionsEquipmentGroups",
+                        "activity": "ConditionalDeleteSustainmentActionsEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -206,25 +206,25 @@
                 ]
             },
             {
-                "name": "CreateSubActionFamilies",
+                "name": "ConditionalCreateSubActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSubActionFamilies",
+                        "referenceName": "ConditionalCreateSubActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSubActionFamilies",
+                        "activity": "ConditionalDeleteSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteEquipmentGroups",
+                        "activity": "ConditionalDeleteEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -232,25 +232,25 @@
                 ]
             },
             {
-                "name": "CreateEquipmentGroups",
+                "name": "ConditionalCreateEquipmentGroups",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateEquipmentGroups",
+                        "referenceName": "ConditionalCreateEquipmentGroups",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteSubActionFamilies",
+                        "activity": "ConditionalDeleteSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "DeleteEquipmentGroups",
+                        "activity": "ConditionalDeleteEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -258,25 +258,25 @@
                 ]
             },
             {
-                "name": "CreateActionFamiliesSubActionFamilies",
+                "name": "ConditionalCreateActionFamiliesSubActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateActionFamiliesSubActionFamilies",
+                        "referenceName": "ConditionalCreateActionFamiliesSubActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSubActionFamilies",
+                        "activity": "ConditionalCreateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroups",
+                        "activity": "ConditionalCreateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -284,25 +284,25 @@
                 ]
             },
             {
-                "name": "CreateSubActionFamiliesAgingFamiliesApplication",
+                "name": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSubActionFamiliesAgingFamiliesApplication",
+                        "referenceName": "ConditionalCreateSubActionFamiliesAgingFamiliesApplication",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSubActionFamilies",
+                        "activity": "ConditionalCreateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroups",
+                        "activity": "ConditionalCreateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -310,25 +310,25 @@
                 ]
             },
             {
-                "name": "CreateSubActionFamiliesAgingFamiliesReplacement",
+                "name": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSubActionFamiliesAgingFamiliesReplacement",
+                        "referenceName": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacement",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSubActionFamilies",
+                        "activity": "ConditionalCreateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroups",
+                        "activity": "ConditionalCreateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -336,25 +336,25 @@
                 ]
             },
             {
-                "name": "CreateEquipmentGroupsEquipmentComponents",
+                "name": "ConditionalCreateEquipmentGroupsEquipmentComponents",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateEquipmentGroupsEquipmentComponents",
+                        "referenceName": "ConditionalCreateEquipmentGroupsEquipmentComponents",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSubActionFamilies",
+                        "activity": "ConditionalCreateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroups",
+                        "activity": "ConditionalCreateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -362,25 +362,25 @@
                 ]
             },
             {
-                "name": "CreateSustainmentActionsEquipmentGroups",
+                "name": "ConditionalCreateSustainmentActionsEquipmentGroups",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateSustainmentActionsEquipmentGroups",
+                        "referenceName": "ConditionalCreateSustainmentActionsEquipmentGroups",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateSubActionFamilies",
+                        "activity": "ConditionalCreateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroups",
+                        "activity": "ConditionalCreateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -388,43 +388,43 @@
                 ]
             },
             {
-                "name": "UpdateSubActionFamilies",
+                "name": "ConditionalUpdateSubActionFamilies",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateSubActionFamilies",
+                        "referenceName": "ConditionalUpdateSubActionFamilies",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamiliesSubActionFamilies",
+                        "activity": "ConditionalCreateActionFamiliesSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSubActionFamiliesAgingFamiliesApplication",
+                        "activity": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSubActionFamiliesAgingFamiliesReplacement",
+                        "activity": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroupsEquipmentComponents",
+                        "activity": "ConditionalCreateEquipmentGroupsEquipmentComponents",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActionsEquipmentGroups",
+                        "activity": "ConditionalCreateSustainmentActionsEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -432,43 +432,43 @@
                 ]
             },
             {
-                "name": "UpdateEquipmentGroups",
+                "name": "ConditionalUpdateEquipmentGroups",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateEquipmentGroups",
+                        "referenceName": "ConditionalUpdateEquipmentGroups",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateActionFamiliesSubActionFamilies",
+                        "activity": "ConditionalCreateActionFamiliesSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSubActionFamiliesAgingFamiliesApplication",
+                        "activity": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSubActionFamiliesAgingFamiliesReplacement",
+                        "activity": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateEquipmentGroupsEquipmentComponents",
+                        "activity": "ConditionalCreateEquipmentGroupsEquipmentComponents",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "CreateSustainmentActionsEquipmentGroups",
+                        "activity": "ConditionalCreateSustainmentActionsEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -488,13 +488,13 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateSubActionFamilies",
+                        "activity": "ConditionalUpdateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateEquipmentGroups",
+                        "activity": "ConditionalUpdateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -514,13 +514,13 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateSubActionFamilies",
+                        "activity": "ConditionalUpdateSubActionFamilies",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
                     },
                     {
-                        "activity": "UpdateEquipmentGroups",
+                        "activity": "ConditionalUpdateEquipmentGroups",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

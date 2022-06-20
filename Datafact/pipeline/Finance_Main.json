@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "UpdateAgingFamily",
+                "name": "ConditionalUpdateAgingFamily",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateAgingFamily",
+                        "referenceName": "ConditionalUpdateAgingFamily",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -50,7 +50,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateAgingFamily",
+                        "activity": "ConditionalUpdateAgingFamily",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -70,7 +70,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateAgingFamily",
+                        "activity": "ConditionalUpdateAgingFamily",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

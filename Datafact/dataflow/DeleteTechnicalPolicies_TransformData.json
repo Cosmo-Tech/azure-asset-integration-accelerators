@@ -27,58 +27,58 @@
                         "referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
                         "referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
                         "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteTechnicalPolicies_temp",
+                        "referenceName": "ActivitiesManagementDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesMainActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesCriteriaStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
             "transformations": [
@@ -95,25 +95,25 @@
                     "name": "StatusUpdateTechnicalPoliciesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+                    "name": "StatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+                    "name": "StatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "StatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
-            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPolicies\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:TechnicalPolicy;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPolicies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesStatusEditor\nReadTempStatusTechnicalPoliciesStatusEditor, StatusColumnSelectionTechnicalPoliciesStatusEditor exists(ReadTempStatusTechnicalPoliciesStatusEditor@Name == StatusColumnSelectionTechnicalPoliciesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesStatusEditor\nStatusUpdateTechnicalPoliciesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesCriteriaStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesCriteriaStatusEditor\nStatusUpdateTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPolicies\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:TechnicalPolicy;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPolicies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesStatusEditor\nReadTempStatusTechnicalPoliciesStatusEditor, StatusColumnSelectionTechnicalPoliciesStatusEditor exists(ReadTempStatusTechnicalPoliciesStatusEditor@Name == StatusColumnSelectionTechnicalPoliciesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesStatusEditor\nStatusUpdateTechnicalPoliciesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
         }
     }
 }

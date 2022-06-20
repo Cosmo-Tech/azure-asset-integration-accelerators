@@ -33,7 +33,7 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "UpdateAgingFamilies_temp",
+                        "referenceName": "AssetPortfolioUpdateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"

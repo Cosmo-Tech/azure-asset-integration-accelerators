@@ -1,0 +1,53 @@
+{
+    "name": "UpdateEquipmentComponentsEquipmentComponentsStatus",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "1-AssetPortfolio/Status"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "MainStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteEquipmentComponentsEquipmentComponentsStatus"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterEquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus"
+                },
+                {
+                    "name": "FilterEquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus"
+                }
+            ],
+            "script": "source(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> MainStatus\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus\nMainStatus, EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus exists(MainStatus@EquipmentComponentSource == EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus@EquipmentComponentSource && MainStatus@EquipmentComponentTarget == EquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus@EquipmentComponentTarget,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterEquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus\nFilterEquipmentComponentSourceEquipmentComponentsEquipmentComponentsstatus, EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus exists(MainStatus@EquipmentComponentSource == EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus@EquipmentComponentSource && MainStatus@EquipmentComponentTarget == EquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus@EquipmentComponentTarget,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterEquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus\nFilterEquipmentComponentTargetEquipmentComponentsEquipmentComponentsstatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponentsEquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEquipmentComponentsEquipmentComponentsStatus"
+        }
+    }
+}

@@ -204,7 +204,7 @@
                         "type": "AzureBlobStorageReadSettings",
                         "recursive": true,
                         "enablePartitionDiscovery": false,
-                        "wildcardFileName": "EquipmentComponents_AgingFamilies_status.csv"
+                        "wildcardFileName": "EquipmentComponentsAgingFamilies_status.csv"
                     }
                 }
             },
@@ -293,7 +293,7 @@
                         "type": "AzureBlobStorageReadSettings",
                         "recursive": true,
                         "enablePartitionDiscovery": false,
-                        "wildcardFileName": "EquipmentComponents_EquipmentComponents_status.csv"
+                        "wildcardFileName": "EquipmentComponentsEquipmentComponents_status.csv"
                     }
                 }
             },

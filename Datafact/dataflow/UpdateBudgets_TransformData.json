@@ -40,7 +40,7 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "UpdateBudgets_temp",
+                        "referenceName": "BudgetsUpdateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"

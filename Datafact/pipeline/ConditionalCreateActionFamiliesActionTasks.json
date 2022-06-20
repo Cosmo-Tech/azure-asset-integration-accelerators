@@ -1,0 +1,75 @@
+{
+    "name": "ConditionalCreateActionFamiliesActionTasks",
+    "properties": {
+        "folder": {
+            "name": "12-ActivitiesManagementHumanResources/Create"
+        },
+        "activities": [
+            {
+                "name": "CheckFileExistence",
+                "type": "GetMetadata",
+                "policy": {
+                    "timeout": "0.00:30:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataset": {
+                        "referenceName": "CreateActionFamiliesActionTasks",
+                        "type": "DatasetReference"
+                    },
+                    "fieldList": [
+                        "exists"
+                    ],
+                    "storeSettings": {
+                        "type": "AzureBlobStorageReadSettings",
+                        "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
+                    }
+                }
+            },
+            {
+                "name": "CreateActionFamiliesActionTasks_IfCheck",
+                "type": "IfCondition",
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@activity('CheckFileExistence').output.exists",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "ExecuteCreateActionFamiliesActionTasks",
+                            "type": "ExecutePipeline",
+                            "userProperties": [],
+                            "typeProperties": {
+                                "pipeline": {
+                                    "referenceName": "CreateActionFamiliesActionTasks",
+                                    "type": "PipelineReference"
+                                },
+                                "waitOnCompletion": true
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": []
+                },
+                "dependsOn": [
+                    {
+                        "activity": "CheckFileExistence",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": ""
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -6,7 +6,7 @@
         },
         "activities": [
             {
-                "name": "CopyInputDeleteEquipmentComponentsAgingFamilies_temp",
+                "name": "CopyAssetPortfolioDeleteRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -21,7 +21,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -50,7 +51,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputDeleteEquipmentComponentsAgingFamilies_temp",
+                        "referenceName": "AssetPortfolioDeleteRelationship_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -62,7 +63,7 @@
                 ]
             },
             {
-                "name": "CopyInputDeleteEquipmentComponentsEquipmentComponents_t",
+                "name": "CopyAssetPortfolioDeleteEntity_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -77,7 +78,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -106,63 +108,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputDeleteEquipmentComponentsEquipmentComponents_temp",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "AssetPortfolio_DeleteInjectorDataset",
-                        "type": "DatasetReference"
-                    }
-                ]
-            },
-            {
-                "name": "CopyInputDeleteEquipmentComponents_temp",
-                "type": "Copy",
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "typeProperties": {
-                    "source": {
-                        "type": "DelimitedTextSource",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "enablePartitionDiscovery": false
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ".csv"
-                        }
-                    },
-                    "enableStaging": false,
-                    "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                            "allowDataTruncation": true,
-                            "treatBooleanAsNumber": false
-                        }
-                    }
-                },
-                "inputs": [
-                    {
-                        "referenceName": "InputDeleteEquipmentComponents_temp",
+                        "referenceName": "AssetPortfolioDeleteEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -174,13 +120,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputDeleteEquipmentComponentsAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputDeleteEquipmentComponentsEquipmentComponents_t",
+                        "activity": "CopyAssetPortfolioDeleteRelationship_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -188,7 +128,7 @@
                 ]
             },
             {
-                "name": "CopyInputDeleteAgingFamilies_temp",
+                "name": "CopyAssetPortfolioCreateEntity_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -203,7 +143,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -232,77 +173,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputDeleteAgingFamilies_temp",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "AssetPortfolio_DeleteInjectorDataset",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputDeleteEquipmentComponentsAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputDeleteEquipmentComponentsEquipmentComponents_t",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "CopyInputCreateEquipmentComponents_temp",
-                "type": "Copy",
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "typeProperties": {
-                    "source": {
-                        "type": "DelimitedTextSource",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "enablePartitionDiscovery": false
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ".csv"
-                        }
-                    },
-                    "enableStaging": false,
-                    "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                            "allowDataTruncation": true,
-                            "treatBooleanAsNumber": false
-                        }
-                    }
-                },
-                "inputs": [
-                    {
-                        "referenceName": "InputCreateEquipmentComponents_temp",
+                        "referenceName": "AssetPortfolioCreateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -314,13 +185,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputDeleteEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputDeleteAgingFamilies_temp",
+                        "activity": "CopyAssetPortfolioDeleteEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -328,7 +193,7 @@
                 ]
             },
             {
-                "name": "CopyInputCreateAgingFamilies_temp",
+                "name": "CopyAssetPortfolioCreateRelationship_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -343,7 +208,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -372,7 +238,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputCreateAgingFamilies_temp",
+                        "referenceName": "AssetPortfolioCreateRelationship_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -384,13 +250,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputDeleteEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputDeleteAgingFamilies_temp",
+                        "activity": "CopyAssetPortfolioCreateEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -398,7 +258,7 @@
                 ]
             },
             {
-                "name": "CopyInputCreateEquipmentComponentsAgingFamilies_temp",
+                "name": "CopyAssetPortfolioUpdateEntity_temp",
                 "type": "Copy",
                 "policy": {
                     "timeout": "1.00:00:00",
@@ -413,7 +273,8 @@
                         "storeSettings": {
                             "type": "AzureBlobStorageReadSettings",
                             "recursive": true,
-                            "enablePartitionDiscovery": false
+                            "enablePartitionDiscovery": false,
+                            "wildcardFileName": "*"
                         },
                         "formatSettings": {
                             "type": "DelimitedTextReadSettings"
@@ -442,147 +303,7 @@
                 },
                 "inputs": [
                     {
-                        "referenceName": "InputCreateEquipmentComponentsAgingFamilies_temp",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "AssetPortfolio_CreateInjectorDataset",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputCreateEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputCreateAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "CopyInputCreateEquipmentComponentsEquipmentComponents_t",
-                "type": "Copy",
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "typeProperties": {
-                    "source": {
-                        "type": "DelimitedTextSource",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "enablePartitionDiscovery": false
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ".csv"
-                        }
-                    },
-                    "enableStaging": false,
-                    "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                            "allowDataTruncation": true,
-                            "treatBooleanAsNumber": false
-                        }
-                    }
-                },
-                "inputs": [
-                    {
-                        "referenceName": "InputCreateEquipmentComponentsEquipmentComponents_temp",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "AssetPortfolio_CreateInjectorDataset",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputCreateEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputCreateAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "CopyInputUpdateEquipmentComponents_temp",
-                "type": "Copy",
-                "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "typeProperties": {
-                    "source": {
-                        "type": "DelimitedTextSource",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "enablePartitionDiscovery": false
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ".csv"
-                        }
-                    },
-                    "enableStaging": false,
-                    "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                            "allowDataTruncation": true,
-                            "treatBooleanAsNumber": false
-                        }
-                    }
-                },
-                "inputs": [
-                    {
-                        "referenceName": "InputUpdateEquipmentComponents_temp",
+                        "referenceName": "AssetPortfolioUpdateEntity_temp",
                         "type": "DatasetReference"
                     }
                 ],
@@ -594,13 +315,7 @@
                 ],
                 "dependsOn": [
                     {
-                        "activity": "CopyInputCreateEquipmentComponentsAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputCreateEquipmentComponentsEquipmentComponents_t",
+                        "activity": "CopyAssetPortfolioCreateRelationship_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -608,80 +323,10 @@
                 ]
             },
             {
-                "name": "CopyInputUpdateAgingFamilies_temp",
-                "type": "Copy",
+                "name": "CheckAssetPortfolioExistence",
+                "type": "GetMetadata",
                 "policy": {
-                    "timeout": "1.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "typeProperties": {
-                    "source": {
-                        "type": "DelimitedTextSource",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageReadSettings",
-                            "recursive": true,
-                            "enablePartitionDiscovery": false
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextReadSettings"
-                        }
-                    },
-                    "sink": {
-                        "type": "DelimitedTextSink",
-                        "storeSettings": {
-                            "type": "AzureBlobStorageWriteSettings"
-                        },
-                        "formatSettings": {
-                            "type": "DelimitedTextWriteSettings",
-                            "quoteAllText": true,
-                            "fileExtension": ".csv"
-                        }
-                    },
-                    "enableStaging": false,
-                    "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                            "allowDataTruncation": true,
-                            "treatBooleanAsNumber": false
-                        }
-                    }
-                },
-                "inputs": [
-                    {
-                        "referenceName": "InputUpdateAgingFamilies_temp",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "outputs": [
-                    {
-                        "referenceName": "AssetPortfolio_UpdateInjectorDataset",
-                        "type": "DatasetReference"
-                    }
-                ],
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputCreateEquipmentComponentsAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputCreateEquipmentComponentsEquipmentComponents_t",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "AssetPortfolioTempCreationDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
+                    "timeout": "0.00:30:00",
                     "retry": 0,
                     "retryIntervalInSeconds": 30,
                     "secureOutput": false,
@@ -690,25 +335,23 @@
                 "userProperties": [],
                 "typeProperties": {
                     "dataset": {
-                        "referenceName": "AssetPortfolio_DeleteCreateTempDataset",
+                        "referenceName": "AssetPortfolio_DeleteTempDataset",
                         "type": "DatasetReference"
                     },
-                    "enableLogging": false,
+                    "fieldList": [
+                        "exists"
+                    ],
                     "storeSettings": {
                         "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
                         "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
                     }
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputUpdateAgingFamilies_temp",
+                        "activity": "CopyAssetPortfolioUpdateEntity_temp",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -716,75 +359,45 @@
                 ]
             },
             {
-                "name": "AssetPortfolioTempDeletionDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
+                "name": "DeletionIfCheck",
+                "type": "IfCondition",
                 "userProperties": [],
                 "typeProperties": {
-                    "dataset": {
-                        "referenceName": "AssetPortfolio_DeleteDeleteTempDataset",
-                        "type": "DatasetReference"
+                    "expression": {
+                        "value": "@activity('CheckAssetPortfolioExistence').output.exists",
+                        "type": "Expression"
                     },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
+                    "ifTrueActivities": [
+                        {
+                            "name": "AssetPortfolioTempDatasetDeletion",
+                            "type": "Delete",
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "AssetPortfolio_DeleteTempDataset",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false
+                                }
+                            }
+                        }
+                    ],
+                    "ifFalseActivities": []
                 },
                 "dependsOn": [
                     {
-                        "activity": "CopyInputUpdateEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputUpdateAgingFamilies_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "AssetPortfolioTempUpdateDatasetDeletion",
-                "type": "Delete",
-                "policy": {
-                    "timeout": "7.00:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
-                "userProperties": [],
-                "typeProperties": {
-                    "dataset": {
-                        "referenceName": "AssetPortfolio_DeleteUpdateTempDataset",
-                        "type": "DatasetReference"
-                    },
-                    "enableLogging": false,
-                    "storeSettings": {
-                        "type": "AzureBlobStorageReadSettings",
-                        "recursive": true,
-                        "enablePartitionDiscovery": false
-                    }
-                },
-                "dependsOn": [
-                    {
-                        "activity": "CopyInputUpdateEquipmentComponents_temp",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "CopyInputUpdateAgingFamilies_temp",
+                        "activity": "CheckAssetPortfolioExistence",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

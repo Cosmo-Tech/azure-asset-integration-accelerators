@@ -18,12 +18,12 @@
                 }
             },
             {
-                "name": "DeleteTeams",
+                "name": "ConditionalDeleteTeams",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "DeleteTeams",
+                        "referenceName": "ConditionalDeleteTeams",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
@@ -38,19 +38,19 @@
                 ]
             },
             {
-                "name": "CreateTeams",
+                "name": "ConditionalCreateTeams",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "CreateTeams",
+                        "referenceName": "ConditionalCreateTeams",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "DeleteTeams",
+                        "activity": "ConditionalDeleteTeams",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -58,19 +58,19 @@
                 ]
             },
             {
-                "name": "UpdateTeams",
+                "name": "ConditionalUpdateTeams",
                 "type": "ExecutePipeline",
                 "userProperties": [],
                 "typeProperties": {
                     "pipeline": {
-                        "referenceName": "UpdateTeams",
+                        "referenceName": "ConditionalUpdateTeams",
                         "type": "PipelineReference"
                     },
                     "waitOnCompletion": true
                 },
                 "dependsOn": [
                     {
-                        "activity": "CreateTeams",
+                        "activity": "ConditionalCreateTeams",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -90,7 +90,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateTeams",
+                        "activity": "ConditionalUpdateTeams",
                         "dependencyConditions": [
                             "Succeeded"
                         ]
@@ -110,7 +110,7 @@
                 },
                 "dependsOn": [
                     {
-                        "activity": "UpdateTeams",
+                        "activity": "ConditionalUpdateTeams",
                         "dependencyConditions": [
                             "Succeeded"
                         ]

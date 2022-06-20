@@ -1,0 +1,53 @@
+{
+    "name": "UpdateSustainmentActionsActionFamiliesStatus",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Status"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "MainStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "ActionFamilySustainmentActionsActionFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "ActionFamilySustainmentActionsActionFamiliesstatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "SustainmentActionSustainmentActionsActionFamiliesstatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "SustainmentActionSustainmentActionsActionFamiliesstatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteSustainmentActionsActionFamiliesStatus"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterActionFamilySustainmentActionsActionFamiliesstatus"
+                },
+                {
+                    "name": "FilterSustainmentActionSustainmentActionsActionFamiliesstatus"
+                }
+            ],
+            "script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> MainStatus\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamilySustainmentActionsActionFamiliesstatus\nMainStatus, ActionFamilySustainmentActionsActionFamiliesstatus exists(MainStatus@SustainmentAction == ActionFamilySustainmentActionsActionFamiliesstatus@SustainmentAction && MainStatus@ActionFamily == ActionFamilySustainmentActionsActionFamiliesstatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterActionFamilySustainmentActionsActionFamiliesstatus\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionSustainmentActionsActionFamiliesstatus\nFilterActionFamilySustainmentActionsActionFamiliesstatus, SustainmentActionSustainmentActionsActionFamiliesstatus exists(MainStatus@SustainmentAction == SustainmentActionSustainmentActionsActionFamiliesstatus@SustainmentAction && MainStatus@ActionFamily == SustainmentActionSustainmentActionsActionFamiliesstatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterSustainmentActionSustainmentActionsActionFamiliesstatus\nFilterSustainmentActionSustainmentActionsActionFamiliesstatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSustainmentActionsActionFamiliesStatus"
+        }
+    }
+}

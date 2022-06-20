@@ -40,7 +40,7 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "UpdateTeams_temp",
+                        "referenceName": "HumanResourcesUpdateEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"

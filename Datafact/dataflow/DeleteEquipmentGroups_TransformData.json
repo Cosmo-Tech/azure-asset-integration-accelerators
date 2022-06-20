@@ -40,28 +40,28 @@
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteEquipmentGroups_temp",
+                        "referenceName": "AssetPortfolioActivitiesManagementDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_EquipmentGroupsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateEquipmentGroupsStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_SustainmentActionsEquipmentGroupsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_EquipmentGroupsEquipmentComponentsStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"

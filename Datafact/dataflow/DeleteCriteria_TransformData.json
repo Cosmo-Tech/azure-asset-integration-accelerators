@@ -27,30 +27,30 @@
                         "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
                         "type": "DatasetReference"
                     },
-                    "name": "ReadTempStatusTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "ReadTempStatusCriterionTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
             "sinks": [
                 {
                     "dataset": {
-                        "referenceName": "DeleteCriteria_temp",
+                        "referenceName": "ActivitiesManagementDeleteEntity_temp",
                         "type": "DatasetReference"
                     },
                     "name": "WriteToTempRepo"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_CriteriaStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
                     "name": "WriteTempStatusStatusUpdateCriteriaStatusEditor"
                 },
                 {
                     "dataset": {
-                        "referenceName": "TempOutput_TechnicalPoliciesCriteriaStatus",
+                        "referenceName": "TempOutput_Status",
                         "type": "DatasetReference"
                     },
-                    "name": "WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "WriteTempStatusStatusUpdateCriterionTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
             "transformations": [
@@ -67,13 +67,13 @@
                     "name": "StatusUpdateCriteriaStatusEditor"
                 },
                 {
-                    "name": "StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "StatusColumnSelectionCriterionTechnicalPoliciesCriteriaStatusEditor"
                 },
                 {
-                    "name": "StatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+                    "name": "StatusUpdateCriterionTechnicalPoliciesCriteriaStatusEditor"
                 }
             ],
-            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteCriteria\nReadDeleteCriteria select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Criterion;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Criteria.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusCriteriaStatusEditor\nReadDeleteCriteria select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionCriteriaStatusEditor\nReadTempStatusCriteriaStatusEditor, StatusColumnSelectionCriteriaStatusEditor exists(ReadTempStatusCriteriaStatusEditor@Name == StatusColumnSelectionCriteriaStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateCriteriaStatusEditor\nStatusUpdateCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Criteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateCriteriaStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesCriteriaStatusEditor\nReadDeleteCriteria select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor exists(Name == Criterion,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesCriteriaStatusEditor\nStatusUpdateTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+            "script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteCriteria\nReadDeleteCriteria select(mapColumn(\n\t\t{$id} = Name),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Criterion;1',\n\t{$entityDelete} = 'true') ~> ModelDefinition\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Criteria.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusCriteriaStatusEditor\nReadDeleteCriteria select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionCriteriaStatusEditor\nReadTempStatusCriteriaStatusEditor, StatusColumnSelectionCriteriaStatusEditor exists(ReadTempStatusCriteriaStatusEditor@Name == StatusColumnSelectionCriteriaStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateCriteriaStatusEditor\nStatusUpdateCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Criteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateCriteriaStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusCriterionTechnicalPoliciesCriteriaStatusEditor\nReadDeleteCriteria select(mapColumn(\n\t\tName),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionCriterionTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusCriterionTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionCriterionTechnicalPoliciesCriteriaStatusEditor exists(Name == Criterion,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateCriterionTechnicalPoliciesCriteriaStatusEditor\nStatusUpdateCriterionTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Criterion_TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateCriterionTechnicalPoliciesCriteriaStatusEditor"
         }
     }
 }

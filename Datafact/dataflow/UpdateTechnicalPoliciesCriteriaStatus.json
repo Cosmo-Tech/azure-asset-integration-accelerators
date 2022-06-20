@@ -1,0 +1,53 @@
+{
+    "name": "UpdateTechnicalPoliciesCriteriaStatus",
+    "properties": {
+        "description": "",
+        "folder": {
+            "name": "2-ActivitiesManagement/Status"
+        },
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "MainStatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "CriterionTechnicalPoliciesCriteriastatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CriterionTechnicalPoliciesCriteriastatus"
+                },
+                {
+                    "dataset": {
+                        "referenceName": "TechnicalPolicyTechnicalPoliciesCriteriastatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "TechnicalPolicyTechnicalPoliciesCriteriastatus"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+                        "type": "DatasetReference"
+                    },
+                    "name": "WriteTechnicalPoliciesCriteriaStatus"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterCriterionTechnicalPoliciesCriteriastatus"
+                },
+                {
+                    "name": "FilterTechnicalPolicyTechnicalPoliciesCriteriastatus"
+                }
+            ],
+            "script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> MainStatus\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CriterionTechnicalPoliciesCriteriastatus\nMainStatus, CriterionTechnicalPoliciesCriteriastatus exists(MainStatus@TechnicalPolicy == CriterionTechnicalPoliciesCriteriastatus@TechnicalPolicy && MainStatus@Criterion == CriterionTechnicalPoliciesCriteriastatus@Criterion,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterCriterionTechnicalPoliciesCriteriastatus\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPolicyTechnicalPoliciesCriteriastatus\nFilterCriterionTechnicalPoliciesCriteriastatus, TechnicalPolicyTechnicalPoliciesCriteriastatus exists(MainStatus@TechnicalPolicy == TechnicalPolicyTechnicalPoliciesCriteriastatus@TechnicalPolicy && MainStatus@Criterion == TechnicalPolicyTechnicalPoliciesCriteriastatus@Criterion,\n\tnegate:false,\n\tbroadcast: 'auto')~> FilterTechnicalPolicyTechnicalPoliciesCriteriastatus\nFilterTechnicalPolicyTechnicalPoliciesCriteriastatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTechnicalPoliciesCriteriaStatus"
+        }
+    }
+}
