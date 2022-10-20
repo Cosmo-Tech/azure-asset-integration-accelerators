@@ -1,0 +1,651 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_11_AssetPortfolioActivitiesManagement_Runtime5')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_11_AssetPortfolioActivitiesManagement_Runtime5",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_12_ActivitiesManagementHumanResources_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_12_ActivitiesManagementHumanResources_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_1_AssetPortfolio_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_1_AssetPortfolio_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_1_AssetPortfolio_Runtime2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_1_AssetPortfolio_Runtime2",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_2_ActivitiesManagement_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_2_ActivitiesManagement_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_2_ActivitiesManagement_Runtime2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_2_ActivitiesManagement_Runtime2",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_2_ActivitiesManagement_Runtime3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_2_ActivitiesManagement_Runtime3",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_2_ActivitiesManagement_Runtime4')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_2_ActivitiesManagement_Runtime4",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_3_Budgets_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_3_Budgets_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_4_HumanResources_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_4_HumanResources_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate_5_Finance_Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Activate_5_Finance_Runtime1",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "activate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementCreateEntity_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagement/Create/Entity",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementCreateRelationship_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagement/Create/Relationship",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementDeleteEntity_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagement/Delete/Entity",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementDeleteRelationship_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagement/Delete/Relationship",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResourcesCreateEntity_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagementHumanResources/Create/Entity",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResourcesCreateRelationship_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagementHumanResources/Create/Relationship",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResourcesDeleteEntity_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagementHumanResources/Delete/Entity",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResourcesDeleteRelationship_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagementHumanResources/Delete/Relationship",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResourcesUpdateEntity_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Temp"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "ActivitiesManagementHumanResources/Update/Entity",
+						"container": "asset-integration-accelerator-temp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		}
+	]
+}

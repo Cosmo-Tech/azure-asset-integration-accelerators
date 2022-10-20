@@ -1,0 +1,3728 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateActionTasks')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateActionTasks",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateActionTasks_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateActionTasks",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateActionTasks",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateAgingFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateAgingFamilies",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateAgingFamilies_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateAgingFamilies",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateAgingFamilies",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateAgingFamily')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateAgingFamily",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateAgingFamily_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateAgingFamily",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateAgingFamily",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "5-Finance/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateBudgets')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateBudgets",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateBudgets_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateBudgets",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateBudgets",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "3-Budgets/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateCriteria')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateCriteria",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateCriteria_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateCriteria",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateCriteria",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateEquipmentComponents')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateEquipmentComponents",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateEquipmentComponents_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateEquipmentComponents",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateEquipmentComponents",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateEquipmentGroups')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateEquipmentGroups",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateEquipmentGroups_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateEquipmentGroups",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateEquipmentGroups",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateSubActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateSubActionFamilies",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateSubActionFamilies_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateSubActionFamilies",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateSubActionFamilies",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateSustainmentActions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateSustainmentActions",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateSustainmentActions_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateSustainmentActions",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateSustainmentActions",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateTeams')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateTeams",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateTeams_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateTeams",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateTeams",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "4-HumanResources/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ConditionalUpdateTechnicalPolicies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CheckFileExistence",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "UpdateTechnicalPolicies",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"exists"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "UpdateTechnicalPolicies_IfCheck",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "CheckFileExistence",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@activity('CheckFileExistence').output.exists",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "ExecuteUpdateTechnicalPolicies",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "UpdateTechnicalPolicies",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagementHumanResources_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ActivitiesManagementHumanResourcesInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementHumanResourcesInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteActionFamiliesActionTasks",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagementHumanResourcesInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteActionFamiliesActionTasks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteActionTasks",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamiliesActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteActionTasks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateActionTasks",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateActionTasks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateActionFamiliesActionTasks",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateActionFamiliesActionTasks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateActionTasks",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamiliesActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateActionTasks",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagementHumanResourcesInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementHumanResourcesInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagementHumanResourcesStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateActionTasks",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementHumanResourcesStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateActionTasks')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ActivitiesManagement_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ActivitiesManagementInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSustainmentActionsActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSustainmentActionsActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteTechnicalPoliciesCriteria",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteTechnicalPoliciesCriteria",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteCriteria",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteCriteria",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSustainmentActions",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSustainmentActions",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteTechnicalPolicies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteTechnicalPolicies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateSustainmentActionsActionFamiliesStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateSustainmentActionsActionFamiliesStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateTechnicalPoliciesCriteriaStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateTechnicalPoliciesCriteriaStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateSustainmentActionsActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesCriteriaStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateCriteria",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateSustainmentActionsActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesCriteriaStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateCriteria",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSustainmentActions",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateSustainmentActionsActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesCriteriaStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSustainmentActions",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateTechnicalPolicies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateSustainmentActionsActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesMainActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesSecondaryActionFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateTechnicalPoliciesCriteriaStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateTechnicalPolicies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSustainmentActionsActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSustainmentActionsActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateTechnicalPoliciesSecondaryActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateTechnicalPoliciesCriteria",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateTechnicalPoliciesCriteria",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateCriteria",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateCriteria",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateSustainmentActions",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateSustainmentActions",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateTechnicalPolicies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSustainmentActionsActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesMainActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesSecondaryActionFamili",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateTechnicalPoliciesCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateTechnicalPolicies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagementInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagementStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateCriteria",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateSustainmentActions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateTechnicalPolicies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateCriteria')]",
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateSustainmentActions')]",
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateTechnicalPolicies')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AssetPortfolioActivitiesManagement_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AssetPortfolioActivitiesManagementInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioActivitiesManagementInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteActionFamiliesSubActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteActionFamiliesSubActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplication",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacement",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSustainmentActionsEquipmentGroups",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioActivitiesManagementInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSustainmentActionsEquipmentGroups",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteSubActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamiliesSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActionsEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteSubActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteEquipmentGroups",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteActionFamiliesSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesApplicat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSubActionFamiliesAgingFamiliesReplacem",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentGroupsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteSustainmentActionsEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteEquipmentGroups",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSubActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSubActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateEquipmentGroups",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateEquipmentGroups",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateActionFamiliesSubActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateActionFamiliesSubActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSubActionFamiliesAgingFamiliesApplication",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacement",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateEquipmentGroupsEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateEquipmentGroupsEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateSustainmentActionsEquipmentGroups",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateSustainmentActionsEquipmentGroups",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateSubActionFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamiliesSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroupsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActionsEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateSubActionFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateEquipmentGroups",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateActionFamiliesSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSubActionFamiliesAgingFamiliesApplicat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSubActionFamiliesAgingFamiliesReplacem",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentGroupsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateSustainmentActionsEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateEquipmentGroups",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "AssetPortfolioActivitiesManagementInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioActivitiesManagementInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "AssetPortfolioActivitiesManagementStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateSubActionFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateEquipmentGroups",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioActivitiesManagementStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateSubActionFamilies')]",
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateEquipmentGroups')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AssetPortfolio_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AssetPortfolioInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteEquipmentComponentsAgingFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteEquipmentComponentsAgingFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteEquipmentComponentsEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolioInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteEquipmentComponentsEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteEquipmentComponentsAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentComponentsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteAgingFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteEquipmentComponentsAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteEquipmentComponentsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteAgingFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateEquipmentComponentsAgingFamiliesStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateEquipmentComponentsAgingFamiliesStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateEquipmentComponentsEquipmentComponentsStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalDeleteAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "UpdateEquipmentComponentsEquipmentComponentsStatus",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateEquipmentComponentsAgingFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateEquipmentComponentsEquipmentComponentsStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateAgingFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateEquipmentComponentsAgingFamiliesStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "UpdateEquipmentComponentsEquipmentComponentsStatus",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateAgingFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateEquipmentComponentsAgingFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateEquipmentComponentsAgingFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateEquipmentComponentsEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateEquipmentComponentsEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateEquipmentComponents",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateEquipmentComponentsAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentComponentsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateEquipmentComponents",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateAgingFamilies",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateEquipmentComponentsAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalCreateEquipmentComponentsEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateAgingFamilies",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "AssetPortfolioInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "AssetPortfolioStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateEquipmentComponents",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ConditionalUpdateAgingFamilies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "1-AssetPortfolio"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateEquipmentComponents')]",
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateAgingFamilies')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Budgets_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "BudgetsInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "BudgetsInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteBudgets",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "BudgetsInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteBudgets",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateBudgets",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteBudgets",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateBudgets",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateBudgets",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateBudgets",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateBudgets",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "BudgetsInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateBudgets",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "BudgetsInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "BudgetsStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateBudgets",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "BudgetsStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "3-Budgets"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateBudgets')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Finance_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "FinanceInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FinanceInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateAgingFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "FinanceInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateAgingFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "FinanceInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateAgingFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FinanceInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "FinanceStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateAgingFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FinanceStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "5-Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateAgingFamily')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/HumanResources_Main')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "HumanResourcesInitialization",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "HumanResourcesInitialization",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalDeleteTeams",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "HumanResourcesInitialization",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalDeleteTeams",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalCreateTeams",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalDeleteTeams",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalCreateTeams",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ConditionalUpdateTeams",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalCreateTeams",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ConditionalUpdateTeams",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "HumanResourcesInjection",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateTeams",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "HumanResourcesInjection",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "HumanResourcesStatusCleaner",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ConditionalUpdateTeams",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "HumanResourcesStatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "4-HumanResources"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ConditionalUpdateTeams')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AssetIntegrationMain')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AssetPortfolio",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolio_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagement",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagement_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Budgets",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Budgets_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "HumanResources",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "HumanResources_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Finance",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolio",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Finance_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "AssetPortfolioActivitiesManagement",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolio",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivitiesManagement",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "AssetPortfolioActivitiesManagement_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivitiesManagementHumanResources",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "ActivitiesManagement",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "HumanResources",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivateIntegrationRuntime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "ActivitiesManagementHumanResources_Main",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "CleanStatus",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "AssetPortfolio",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivitiesManagement",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Budgets",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "HumanResources",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Finance",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "AssetPortfolioActivitiesManagement",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "ActivitiesManagementHumanResources",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "StatusCleaner",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ActivateIntegrationRuntime",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "IntegrationRuntimeActivation",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/AssetPortfolio_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/ActivitiesManagement_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/Budgets_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/HumanResources_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/Finance_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/AssetPortfolioActivitiesManagement_Main')]",
+				"[concat(variables('factoryId'), '/pipelines/ActivitiesManagementHumanResources_Main')]"
+			]
+		}
+	]
+}

@@ -1,0 +1,2362 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-2-ActivitiesManagement-Runtime2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime2",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime2",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_2_ActivitiesManagement_Runtime2'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-2-ActivitiesManagement-Runtime3')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime3",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime3",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_2_ActivitiesManagement_Runtime3'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-2-ActivitiesManagement-Runtime4')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime4",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_2_ActivitiesManagement_Runtime4",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_2_ActivitiesManagement_Runtime4'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-3-Budgets-Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_3_Budgets_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_3_Budgets_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_3_Budgets_Runtime1'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-4-HumanResources-Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_4_HumanResources_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_4_HumanResources_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_4_HumanResources_Runtime1'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Activate-5-Finance-Runtime1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "IntegrationRuntimeActivator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Activate_5_Finance_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "ReadActivationDataset"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Activate_5_Finance_Runtime1",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActivationFile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AddActivationColumn"
+						}
+					],
+					"script": "source(output(\n\t\tactivate as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadActivationDataset\nReadActivationDataset derive(dataset_column = 1) ~> AddActivationColumn\nAddActivationColumn sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tactivate as string\n\t),\n\tpartitionFileNames:['Activate_5_Finance_Runtime1'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActivationFile"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesActionTasks_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamiliesActionTasks",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamiliesActionTasks"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionTasksStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionTasksStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesActionTasksStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesActionTasksStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "12_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionTaskRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionTaskRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingActionFamilyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingActionFamilyInActionFamiliesStatus"
+						},
+						{
+							"name": "ExistingActionTaskInActionTasksStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus"
+						}
+					],
+					"script": "source(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesActionTasks\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionTasksStatus\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesActionTasksStatus\nReadCreateActionFamiliesActionTasks, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nReadCreateActionFamiliesActionTasks, ActionTasksStatus exists(ActionTask == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionTaskInActionTasksStatus\nReadCreateActionFamiliesActionTasks split(isNull(ActionFamily),\n\tisNull(ActionTask),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingActionFamily, MissingActionTask)\nReadCreateActionFamiliesActionTasks, ActionFamiliesActionTasksStatus exists(ReadCreateActionFamiliesActionTasks@ActionFamily == ActionFamiliesActionTasksStatus@ActionFamily && ReadCreateActionFamiliesActionTasks@ActionTask == ActionFamiliesActionTasksStatus@ActionTask,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nExistingActionTaskInActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-NotExistingActionTask.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionTaskRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-211-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nCheckMandatoryData@MissingActionTask sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-211-MissColumnActionTask.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionTaskRows\nStatusActionFamilyActionTaskUniquenessCheckInActionFamiliesActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-210-AlreadyExistActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingActionFamilyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesActionTasks_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamiliesActionTasks",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamiliesActionTasks"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesActionTasksStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusActionFamiliesActionTasksStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementHumanResourcesCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionActionFamiliesActionTasksStatusEditor"
+						},
+						{
+							"name": "StatusUpdateActionFamiliesActionTasksStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesActionTasks\nsource(output(\n\t\tActionFamily as string,\n\t\tActionTask as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesActionTasksStatusEditor\nReadCreateActionFamiliesActionTasks select(mapColumn(\n\t\t{$sourceId} = ActionFamily,\n\t\t{$targetId} = ActionTask\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_ActionTask',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateActionFamiliesActionTasks select(mapColumn(\n\t\tActionFamily,\n\t\tActionTask\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesActionTasksStatusEditor\nReadTempStatusActionFamiliesActionTasksStatusEditor, StatusColumnSelectionActionFamiliesActionTasksStatusEditor union(byName: true)~> StatusUpdateActionFamiliesActionTasksStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamiliesActionTasks.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateActionFamiliesActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesActionTasksStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesSubActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamiliesSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamiliesSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesSubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesSubActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingActionFamilyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingActionFamilyInActionFamiliesStatus"
+						},
+						{
+							"name": "ExistingSubActionFamilyInSubActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusActionFamilySubActionFamilyUniquenessCheckInActionFamiliesSubActionFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesSubActionFamiliesStatus\nReadCreateActionFamiliesSubActionFamilies, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nReadCreateActionFamiliesSubActionFamilies, SubActionFamiliesStatus exists(SubActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSubActionFamilyInSubActionFamiliesStatus\nReadCreateActionFamiliesSubActionFamilies split(isNull(ActionFamily),\n\tisNull(SubActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingActionFamily, MissingSubActionFamily)\nReadCreateActionFamiliesSubActionFamilies, ActionFamiliesSubActionFamiliesStatus exists(ReadCreateActionFamiliesSubActionFamilies@ActionFamily == ActionFamiliesSubActionFamiliesStatus@ActionFamily && ReadCreateActionFamiliesSubActionFamilies@SubActionFamily == ActionFamiliesSubActionFamiliesStatus@SubActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusActionFamilySubActionFamilyUniquenessCheckInActionFamiliesSubActionFamiliesStatus\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-210-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nExistingSubActionFamilyInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-210-NotExistingSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSubActionFamilyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-211-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-211-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nStatusActionFamilySubActionFamilyUniquenessCheckInActionFamiliesSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-210-AlreadyExistActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingActionFamilyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesSubActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamiliesSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamiliesSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesSubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamiliesSubActionFamilies\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor\nReadCreateActionFamiliesSubActionFamilies select(mapColumn(\n\t\t{$sourceId} = ActionFamily,\n\t\t{$targetId} = SubActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_SubActionFamily',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateActionFamiliesSubActionFamilies select(mapColumn(\n\t\tActionFamily,\n\t\tSubActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor\nReadTempStatusActionFamiliesSubActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor union(byName: true)~> StatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamiliesSubActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateActionFamiliesSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesSubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies_MapCostsByRatingLevel",
+								"type": "DatasetReference"
+							},
+							"name": "CreateActionFamiliesMapCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "CreateActionFamiliesMapBudgetCategories"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCostsAreCapitalChargesWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingRatingLevelRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingUnitPropertyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteUnitPropertyCostsByRatingLevelInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteSupplierCostWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteDurationWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsLocalActionWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNeedsOutageWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRowsBudgetCategories"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullCostsAreCapitalCharges"
+						},
+						{
+							"name": "CostsAreCapitalChargesTypeCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelMandatoryCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelExistenceCheck"
+						},
+						{
+							"name": "NonNullEnumUnitPropertyCostsByRatingLevel"
+						},
+						{
+							"name": "UnitPropertyCostsByRatingLevelEnumCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelSplitKeyValues"
+						},
+						{
+							"name": "NonNullSupplierCost"
+						},
+						{
+							"name": "SupplierCostTypeCheck"
+						},
+						{
+							"name": "NonNullDuration"
+						},
+						{
+							"name": "DurationTypeCheck"
+						},
+						{
+							"name": "NonNullIsLocalAction"
+						},
+						{
+							"name": "IsLocalActionTypeCheck"
+						},
+						{
+							"name": "NonNullNeedsOutage"
+						},
+						{
+							"name": "NeedsOutageTypeCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesMandatoryCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesExistenceCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateActionFamiliesMapCostsByRatingLevel\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateActionFamiliesMapBudgetCategories\nReadCreateActionFamilies aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateActionFamilies, ActionFamiliesStatus exists(ReadCreateActionFamilies@Name == ActionFamiliesStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInActionFamiliesStatus\nReadCreateActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateActionFamilies filter(not(isNull(CostsAreCapitalCharges))) ~> NonNullCostsAreCapitalCharges\nNonNullCostsAreCapitalCharges split(not(isBoolean(CostsAreCapitalCharges)),\n\tdisjoint: false) ~> CostsAreCapitalChargesTypeCheck@(CostsAreCapitalChargesWrongType)\nCreateActionFamiliesMapCostsByRatingLevel split(isNull(ActionFamily),\n\tisNull(RatingLevel),\n\tisNull(UnitProperty),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCostsByRatingLevelMandatoryCheck@(MissingActionFamily, MissingRatingLevel, MissingUnitProperty, MissingValue)\nCreateActionFamiliesMapCostsByRatingLevel, ReadCreateActionFamilies exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCostsByRatingLevelExistenceCheck\nCreateActionFamiliesMapCostsByRatingLevel filter(not(isNull(UnitProperty))) ~> NonNullEnumUnitPropertyCostsByRatingLevel\nNonNullEnumUnitPropertyCostsByRatingLevel filter(not(in(['SupplierCost', 'Duration'], UnitProperty))) ~> UnitPropertyCostsByRatingLevelEnumCheck\nCreateActionFamiliesMapCostsByRatingLevel split(UnitProperty == 'SupplierCost',\n\tUnitProperty == 'Duration',\n\tdisjoint: false) ~> MapCostsByRatingLevelSplitKeyValues@(UnitPropertySupplierCost, UnitPropertyDuration)\nMapCostsByRatingLevelSplitKeyValues@UnitPropertySupplierCost filter(not(isNull(Value))) ~> NonNullSupplierCost\nNonNullSupplierCost split(not(isFloat(Value)),\n\tdisjoint: false) ~> SupplierCostTypeCheck@(SupplierCostWrongType)\nMapCostsByRatingLevelSplitKeyValues@UnitPropertyDuration filter(not(isNull(Value))) ~> NonNullDuration\nNonNullDuration split(not(isFloat(Value)),\n\tdisjoint: false) ~> DurationTypeCheck@(DurationWrongType)\nReadCreateActionFamilies filter(not(isNull(IsLocalAction))) ~> NonNullIsLocalAction\nNonNullIsLocalAction split(not(isBoolean(IsLocalAction)),\n\tdisjoint: false) ~> IsLocalActionTypeCheck@(IsLocalActionWrongType)\nReadCreateActionFamilies filter(not(isNull(NeedsOutage))) ~> NonNullNeedsOutage\nNonNullNeedsOutage split(not(isBoolean(NeedsOutage)),\n\tdisjoint: false) ~> NeedsOutageTypeCheck@(NeedsOutageWrongType)\nCreateActionFamiliesMapBudgetCategories split(isNull(ActionFamily),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingActionFamily, MissingIndex, MissingValue)\nCreateActionFamiliesMapBudgetCategories, ReadCreateActionFamilies exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nCostsAreCapitalChargesTypeCheck@CostsAreCapitalChargesWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-112-CostsAreCapitalChargesWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostsAreCapitalChargesWrongTypeRows\nMapCostsByRatingLevelMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingRatingLevel sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnRatingLevelCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingRatingLevelRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingUnitProperty sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnUnitPropertyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingUnitPropertyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnValueCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCostsByRatingLevel\nMapCostsByRatingLevelExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-110-NotExistingActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsCostsByRatingLevel\nUnitPropertyCostsByRatingLevelEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-113-UnitPropertyCostsByRatingLevelInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteUnitPropertyCostsByRatingLevelInvalidRangeRows\nSupplierCostTypeCheck@SupplierCostWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-112-SupplierCostWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSupplierCostWrongTypeRows\nDurationTypeCheck@DurationWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-112-DurationWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteDurationWrongTypeRows\nIsLocalActionTypeCheck@IsLocalActionWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-112-IsLocalActionWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsLocalActionWrongTypeRows\nNeedsOutageTypeCheck@NeedsOutageWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-112-NeedsOutageWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNeedsOutageWrongTypeRows\nMapBudgetCategoriesMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-111-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-110-NotExistingActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsBudgetCategories"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies_MapCostsByRatingLevel",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateActionFamilies_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "MapCostsByRatingLevelKeyUnitPropertySplitByType"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat"
+						},
+						{
+							"name": "MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+						},
+						{
+							"name": "DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyRatingLevel"
+						},
+						{
+							"name": "CostsByRatingLevelCleaning"
+						},
+						{
+							"name": "CostsByRatingLevelUnion"
+						},
+						{
+							"name": "CostsByRatingLevelSelect"
+						},
+						{
+							"name": "AggregateMapBudgetCategoriesKeyIndex"
+						},
+						{
+							"name": "BudgetCategoriesCleaning"
+						},
+						{
+							"name": "BudgetCategoriesUnion"
+						},
+						{
+							"name": "BudgetCategoriesSelect"
+						},
+						{
+							"name": "StatusColumnSelectionActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionFamilies\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCostsByRatingLevel\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesStatusEditor\nReadCreateActionFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionFamily;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapCostsByRatingLevel split(in(['SupplierCost','Duration'], UnitProperty),\n\tdisjoint: false) ~> MapCostsByRatingLevelKeyUnitPropertySplitByType@(MapCostsByRatingLevelKeyUnitPropertySplitByfloat)\nMapCostsByRatingLevelKeyUnitPropertySplitByType@MapCostsByRatingLevelKeyUnitPropertySplitByfloat aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = dropRight(dropLeft(toString(keyValues(collect(toString(UnitProperty)), collect(toFloat(Value)))) ,1), 1)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat\nAggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat union(byName: true)~> MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes\nMapCostsByRatingLevelKeyUnitPropertyUnionAllTypes aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = collect(CostsByRatingLevel)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes\nAggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes derive(CostsByRatingLevel = '{' + concatWS(',', CostsByRatingLevel[1]) + '}') ~> DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes\nDeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes aggregate(groupBy(ActionFamily),\n\tCostsByRatingLevel = toString(keyValues(collect(toString(RatingLevel)), collect(toString(CostsByRatingLevel))))) ~> AggregateMapCostsByRatingLevelKeyRatingLevel\nAggregateMapCostsByRatingLevelKeyRatingLevel derive(CostsByRatingLevel = replace(replace(replace(CostsByRatingLevel, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CostsByRatingLevelCleaning\nModelDefinition, CostsByRatingLevelCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> CostsByRatingLevelUnion\nCostsByRatingLevelUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCostsByRatingLevel\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CostsByRatingLevelSelect\nReadMapBudgetCategories aggregate(groupBy(ActionFamily),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nCostsByRatingLevelSelect, BudgetCategoriesCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCostsByRatingLevel,\n\t\tBudgetCategories\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nReadCreateActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesStatusEditor\nReadTempStatusActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesStatusEditor union(byName: true)~> StatusUpdateActionFamiliesStatusEditor\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionTasks_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionTasks",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionTasks"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionTasksStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionTasksStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "12_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActionDurationPercentageWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteActionDurationPercentageInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteWorkforceFTEWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "12_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteWorkforceFTEInvalidRangeRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInActionTasksStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullActionDurationPercentage"
+						},
+						{
+							"name": "ActionDurationPercentageTypeCheck"
+						},
+						{
+							"name": "ActionDurationPercentageRangeCheck"
+						},
+						{
+							"name": "NonNullWorkforceFTE"
+						},
+						{
+							"name": "WorkforceFTETypeCheck"
+						},
+						{
+							"name": "WorkforceFTERangeCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tSkill as string,\n\t\tActionDurationPercentage as string,\n\t\tWorkforceFTE as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionTasks\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionTasksStatus\nReadCreateActionTasks aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateActionTasks, ActionTasksStatus exists(ReadCreateActionTasks@Name == ActionTasksStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInActionTasksStatus\nReadCreateActionTasks split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateActionTasks filter(not(isNull(ActionDurationPercentage))) ~> NonNullActionDurationPercentage\nNonNullActionDurationPercentage split(not(isInteger(ActionDurationPercentage)),\n\tdisjoint: false) ~> ActionDurationPercentageTypeCheck@(ActionDurationPercentageWrongType, ActionDurationPercentageCorrectType)\nActionDurationPercentageTypeCheck@ActionDurationPercentageCorrectType filter(or(toInteger(ActionDurationPercentage) < 0.0, toInteger(ActionDurationPercentage) > 100.0)) ~> ActionDurationPercentageRangeCheck\nReadCreateActionTasks filter(not(isNull(WorkforceFTE))) ~> NonNullWorkforceFTE\nNonNullWorkforceFTE split(not(isFloat(WorkforceFTE)),\n\tdisjoint: false) ~> WorkforceFTETypeCheck@(WorkforceFTEWrongType, WorkforceFTECorrectType)\nWorkforceFTETypeCheck@WorkforceFTECorrectType filter(toFloat(WorkforceFTE) < 0.0) ~> WorkforceFTERangeCheck\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInActionTasksStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nActionDurationPercentageTypeCheck@ActionDurationPercentageWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-112-ActionDurationPercentageWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActionDurationPercentageWrongTypeRows\nActionDurationPercentageRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-113-ActionDurationPercentageInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteActionDurationPercentageInvalidRangeRows\nWorkforceFTETypeCheck@WorkforceFTEWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-112-WorkforceFTEWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteWorkforceFTEWrongTypeRows\nWorkforceFTERangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['12-113-WorkforceFTEInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteWorkforceFTEInvalidRangeRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionTasks_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateActionTasks",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateActionTasks"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionTasksStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusActionTasksStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementHumanResourcesCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateActionTasksStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionActionTasksStatusEditor"
+						},
+						{
+							"name": "StatusUpdateActionTasksStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tSkill as string,\n\t\tActionDurationPercentage as string,\n\t\tWorkforceFTE as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateActionTasks\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionTasksStatusEditor\nReadCreateActionTasks select(mapColumn(\n\t\t{$id} = Name,\n\t\tSkill,\n\t\tActionDurationPercentage,\n\t\tWorkforceFTE\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionTask;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadCreateActionTasks select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionTasksStatusEditor\nReadTempStatusActionTasksStatusEditor, StatusColumnSelectionActionTasksStatusEditor union(byName: true)~> StatusUpdateActionTasksStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionTasks.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateActionTasksStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionTasks_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionTasksStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateAgingFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_AgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "AgingFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies_MapFamilyPairHillParameters",
+								"type": "DatasetReference"
+							},
+							"name": "CreateAgingFamiliesMapFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies_MapMapReferenceCostOfFailure",
+								"type": "DatasetReference"
+							},
+							"name": "CreateAgingFamiliesMapMapReferenceCostOfFailure"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "1_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_123",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAgingMethodologyInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMinimalAgeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMaximalAgeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteFailureRateAtMinimalAgeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteFailureRateAtMaximalAgeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteExternalFailureRatePerYearWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_123",
+								"type": "DatasetReference"
+							},
+							"name": "WriteExternalFailureRatePerYearInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsQuantityDiscreteWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteGFlagWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAgingFailureDelayWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgingFamilyRowsFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgentAgingFamilyRowsFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingHillParametersRowsFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingAgingFamilyRowsFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_123",
+								"type": "DatasetReference"
+							},
+							"name": "WriteHillParametersFamilyPairHillParametersInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAmplitudeHillWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteOffsetHillWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteSlopeHillWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsFailureTransmittedWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsCouplingActiveWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsAgingAfterDeathWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMaintenanceIfOutOfOrderWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteShapeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteScaleWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteExpectedLifeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteFinancialCostOfFailureWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteEnvironmentalCostOfFailureWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNetworkCostOfFailureWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgingFamilyRowsMapReferenceCostOfFailure"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingHealthIndexRowsMapReferenceCostOfFailure"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsMapReferenceCostOfFailure"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingAgingFamilyRowsMapReferenceCostOfFailure"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMapReferenceCostOfFailureValueWrongTypeRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInAgingFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullEnumAgingMethodology"
+						},
+						{
+							"name": "AgingMethodologyEnumCheck"
+						},
+						{
+							"name": "NonNullMinimalAge"
+						},
+						{
+							"name": "MinimalAgeTypeCheck"
+						},
+						{
+							"name": "NonNullMaximalAge"
+						},
+						{
+							"name": "MaximalAgeTypeCheck"
+						},
+						{
+							"name": "NonNullFailureRateAtMinimalAge"
+						},
+						{
+							"name": "FailureRateAtMinimalAgeTypeCheck"
+						},
+						{
+							"name": "NonNullFailureRateAtMaximalAge"
+						},
+						{
+							"name": "FailureRateAtMaximalAgeTypeCheck"
+						},
+						{
+							"name": "NonNullExternalFailureRatePerYear"
+						},
+						{
+							"name": "ExternalFailureRatePerYearTypeCheck"
+						},
+						{
+							"name": "ExternalFailureRatePerYearRangeCheck"
+						},
+						{
+							"name": "NonNullIsQuantityDiscrete"
+						},
+						{
+							"name": "IsQuantityDiscreteTypeCheck"
+						},
+						{
+							"name": "NonNullGFlag"
+						},
+						{
+							"name": "GFlagTypeCheck"
+						},
+						{
+							"name": "NonNullAgingFailureDelay"
+						},
+						{
+							"name": "AgingFailureDelayTypeCheck"
+						},
+						{
+							"name": "MapFamilyPairHillParametersMandatoryCheck"
+						},
+						{
+							"name": "MapFamilyPairHillParametersExistenceCheck"
+						},
+						{
+							"name": "NonNullEnumHillParametersFamilyPairHillParameters"
+						},
+						{
+							"name": "HillParametersFamilyPairHillParametersEnumCheck"
+						},
+						{
+							"name": "MapFamilyPairHillParametersSplitKeyValues"
+						},
+						{
+							"name": "NonNullAmplitudeHill"
+						},
+						{
+							"name": "AmplitudeHillTypeCheck"
+						},
+						{
+							"name": "NonNullOffsetHill"
+						},
+						{
+							"name": "OffsetHillTypeCheck"
+						},
+						{
+							"name": "NonNullSlopeHill"
+						},
+						{
+							"name": "SlopeHillTypeCheck"
+						},
+						{
+							"name": "NonNullIsFailureTransmitted"
+						},
+						{
+							"name": "IsFailureTransmittedTypeCheck"
+						},
+						{
+							"name": "NonNullIsCouplingActive"
+						},
+						{
+							"name": "IsCouplingActiveTypeCheck"
+						},
+						{
+							"name": "NonNullIsAgingAfterDeath"
+						},
+						{
+							"name": "IsAgingAfterDeathTypeCheck"
+						},
+						{
+							"name": "NonNullMaintenanceIfOutOfOrder"
+						},
+						{
+							"name": "MaintenanceIfOutOfOrderTypeCheck"
+						},
+						{
+							"name": "NonNullShape"
+						},
+						{
+							"name": "ShapeTypeCheck"
+						},
+						{
+							"name": "NonNullScale"
+						},
+						{
+							"name": "ScaleTypeCheck"
+						},
+						{
+							"name": "NonNullExpectedLife"
+						},
+						{
+							"name": "ExpectedLifeTypeCheck"
+						},
+						{
+							"name": "NonNullFinancialCostOfFailure"
+						},
+						{
+							"name": "FinancialCostOfFailureTypeCheck"
+						},
+						{
+							"name": "NonNullEnvironmentalCostOfFailure"
+						},
+						{
+							"name": "EnvironmentalCostOfFailureTypeCheck"
+						},
+						{
+							"name": "NonNullNetworkCostOfFailure"
+						},
+						{
+							"name": "NetworkCostOfFailureTypeCheck"
+						},
+						{
+							"name": "MapMapReferenceCostOfFailureMandatoryCheck"
+						},
+						{
+							"name": "MapMapReferenceCostOfFailureExistenceCheck"
+						},
+						{
+							"name": "NonNullMapReferenceCostOfFailureValue"
+						},
+						{
+							"name": "MapReferenceCostOfFailureValueTypeCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAgingMethodology as string,\n\t\tMinimalAge as string,\n\t\tMaximalAge as string,\n\t\tFailureRateAtMinimalAge as string,\n\t\tFailureRateAtMaximalAge as string,\n\t\tExternalFailureRatePerYear as string,\n\t\tIsQuantityDiscrete as string,\n\t\tGFlag as string,\n\t\tAgingFailureDelay as string,\n\t\tIsAgingAfterDeath as string,\n\t\tMaintenanceIfOutOfOrder as string,\n\t\tShape as string,\n\t\tScale as string,\n\t\tExpectedLife as string,\n\t\tFinancialCostOfFailure as string,\n\t\tEnvironmentalCostOfFailure as string,\n\t\tNetworkCostOfFailure as string,\n\t\tExtraNL as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateAgingFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nsource(output(\n\t\tAgingFamily as string,\n\t\tAgentAgingFamily as string,\n\t\tHillParameters as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateAgingFamiliesMapFamilyPairHillParameters\nsource(output(\n\t\tAgingFamily as string,\n\t\tHealthIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateAgingFamiliesMapMapReferenceCostOfFailure\nReadCreateAgingFamilies aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateAgingFamilies, AgingFamiliesStatus exists(ReadCreateAgingFamilies@Name == AgingFamiliesStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInAgingFamiliesStatus\nReadCreateAgingFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateAgingFamilies filter(not(isNull(AgingMethodology))) ~> NonNullEnumAgingMethodology\nNonNullEnumAgingMethodology filter(not(in(['Weibull', 'Gompertz', 'HealthScore'], AgingMethodology))) ~> AgingMethodologyEnumCheck\nReadCreateAgingFamilies filter(not(isNull(MinimalAge))) ~> NonNullMinimalAge\nNonNullMinimalAge split(not(isInteger(MinimalAge)),\n\tdisjoint: false) ~> MinimalAgeTypeCheck@(MinimalAgeWrongType)\nReadCreateAgingFamilies filter(not(isNull(MaximalAge))) ~> NonNullMaximalAge\nNonNullMaximalAge split(not(isInteger(MaximalAge)),\n\tdisjoint: false) ~> MaximalAgeTypeCheck@(MaximalAgeWrongType)\nReadCreateAgingFamilies filter(not(isNull(FailureRateAtMinimalAge))) ~> NonNullFailureRateAtMinimalAge\nNonNullFailureRateAtMinimalAge split(not(isFloat(FailureRateAtMinimalAge)),\n\tdisjoint: false) ~> FailureRateAtMinimalAgeTypeCheck@(FailureRateAtMinimalAgeWrongType)\nReadCreateAgingFamilies filter(not(isNull(FailureRateAtMaximalAge))) ~> NonNullFailureRateAtMaximalAge\nNonNullFailureRateAtMaximalAge split(not(isFloat(FailureRateAtMaximalAge)),\n\tdisjoint: false) ~> FailureRateAtMaximalAgeTypeCheck@(FailureRateAtMaximalAgeWrongType)\nReadCreateAgingFamilies filter(not(isNull(ExternalFailureRatePerYear))) ~> NonNullExternalFailureRatePerYear\nNonNullExternalFailureRatePerYear split(not(isFloat(ExternalFailureRatePerYear)),\n\tdisjoint: false) ~> ExternalFailureRatePerYearTypeCheck@(ExternalFailureRatePerYearWrongType, ExternalFailureRatePerYearCorrectType)\nExternalFailureRatePerYearTypeCheck@ExternalFailureRatePerYearCorrectType filter(or(toFloat(ExternalFailureRatePerYear) < 0.0, toFloat(ExternalFailureRatePerYear) > 1.0)) ~> ExternalFailureRatePerYearRangeCheck\nReadCreateAgingFamilies filter(not(isNull(IsQuantityDiscrete))) ~> NonNullIsQuantityDiscrete\nNonNullIsQuantityDiscrete split(not(isBoolean(IsQuantityDiscrete)),\n\tdisjoint: false) ~> IsQuantityDiscreteTypeCheck@(IsQuantityDiscreteWrongType)\nReadCreateAgingFamilies filter(not(isNull(GFlag))) ~> NonNullGFlag\nNonNullGFlag split(not(isBoolean(GFlag)),\n\tdisjoint: false) ~> GFlagTypeCheck@(GFlagWrongType)\nReadCreateAgingFamilies filter(not(isNull(AgingFailureDelay))) ~> NonNullAgingFailureDelay\nNonNullAgingFailureDelay split(not(isFloat(AgingFailureDelay)),\n\tdisjoint: false) ~> AgingFailureDelayTypeCheck@(AgingFailureDelayWrongType)\nCreateAgingFamiliesMapFamilyPairHillParameters split(isNull(AgingFamily),\n\tisNull(AgentAgingFamily),\n\tisNull(HillParameters),\n\tisNull(Value),\n\tdisjoint: false) ~> MapFamilyPairHillParametersMandatoryCheck@(MissingAgingFamily, MissingAgentAgingFamily, MissingHillParameters, MissingValue)\nCreateAgingFamiliesMapFamilyPairHillParameters, ReadCreateAgingFamilies exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapFamilyPairHillParametersExistenceCheck\nCreateAgingFamiliesMapFamilyPairHillParameters filter(not(isNull(HillParameters))) ~> NonNullEnumHillParametersFamilyPairHillParameters\nNonNullEnumHillParametersFamilyPairHillParameters filter(not(in(['AmplitudeHill', 'OffsetHill', 'SlopeHill', 'IsFailureTransmitted', 'IsCouplingActive'], HillParameters))) ~> HillParametersFamilyPairHillParametersEnumCheck\nCreateAgingFamiliesMapFamilyPairHillParameters split(HillParameters == 'AmplitudeHill',\n\tHillParameters == 'OffsetHill',\n\tHillParameters == 'SlopeHill',\n\tHillParameters == 'IsFailureTransmitted',\n\tHillParameters == 'IsCouplingActive',\n\tdisjoint: false) ~> MapFamilyPairHillParametersSplitKeyValues@(HillParametersAmplitudeHill, HillParametersOffsetHill, HillParametersSlopeHill, HillParametersIsFailureTransmitted, HillParametersIsCouplingActive)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersAmplitudeHill filter(not(isNull(Value))) ~> NonNullAmplitudeHill\nNonNullAmplitudeHill split(not(isFloat(Value)),\n\tdisjoint: false) ~> AmplitudeHillTypeCheck@(AmplitudeHillWrongType)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersOffsetHill filter(not(isNull(Value))) ~> NonNullOffsetHill\nNonNullOffsetHill split(not(isFloat(Value)),\n\tdisjoint: false) ~> OffsetHillTypeCheck@(OffsetHillWrongType)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersSlopeHill filter(not(isNull(Value))) ~> NonNullSlopeHill\nNonNullSlopeHill split(not(isInteger(Value)),\n\tdisjoint: false) ~> SlopeHillTypeCheck@(SlopeHillWrongType)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersIsFailureTransmitted filter(not(isNull(Value))) ~> NonNullIsFailureTransmitted\nNonNullIsFailureTransmitted split(not(isBoolean(Value)),\n\tdisjoint: false) ~> IsFailureTransmittedTypeCheck@(IsFailureTransmittedWrongType)\nMapFamilyPairHillParametersSplitKeyValues@HillParametersIsCouplingActive filter(not(isNull(Value))) ~> NonNullIsCouplingActive\nNonNullIsCouplingActive split(not(isBoolean(Value)),\n\tdisjoint: false) ~> IsCouplingActiveTypeCheck@(IsCouplingActiveWrongType)\nReadCreateAgingFamilies filter(not(isNull(IsAgingAfterDeath))) ~> NonNullIsAgingAfterDeath\nNonNullIsAgingAfterDeath split(not(isBoolean(IsAgingAfterDeath)),\n\tdisjoint: false) ~> IsAgingAfterDeathTypeCheck@(IsAgingAfterDeathWrongType)\nReadCreateAgingFamilies filter(not(isNull(MaintenanceIfOutOfOrder))) ~> NonNullMaintenanceIfOutOfOrder\nNonNullMaintenanceIfOutOfOrder split(not(isBoolean(MaintenanceIfOutOfOrder)),\n\tdisjoint: false) ~> MaintenanceIfOutOfOrderTypeCheck@(MaintenanceIfOutOfOrderWrongType)\nReadCreateAgingFamilies filter(not(isNull(Shape))) ~> NonNullShape\nNonNullShape split(not(isFloat(Shape)),\n\tdisjoint: false) ~> ShapeTypeCheck@(ShapeWrongType)\nReadCreateAgingFamilies filter(not(isNull(Scale))) ~> NonNullScale\nNonNullScale split(not(isFloat(Scale)),\n\tdisjoint: false) ~> ScaleTypeCheck@(ScaleWrongType)\nReadCreateAgingFamilies filter(not(isNull(ExpectedLife))) ~> NonNullExpectedLife\nNonNullExpectedLife split(not(isInteger(ExpectedLife)),\n\tdisjoint: false) ~> ExpectedLifeTypeCheck@(ExpectedLifeWrongType)\nReadCreateAgingFamilies filter(not(isNull(FinancialCostOfFailure))) ~> NonNullFinancialCostOfFailure\nNonNullFinancialCostOfFailure split(not(isFloat(FinancialCostOfFailure)),\n\tdisjoint: false) ~> FinancialCostOfFailureTypeCheck@(FinancialCostOfFailureWrongType)\nReadCreateAgingFamilies filter(not(isNull(EnvironmentalCostOfFailure))) ~> NonNullEnvironmentalCostOfFailure\nNonNullEnvironmentalCostOfFailure split(not(isFloat(EnvironmentalCostOfFailure)),\n\tdisjoint: false) ~> EnvironmentalCostOfFailureTypeCheck@(EnvironmentalCostOfFailureWrongType)\nReadCreateAgingFamilies filter(not(isNull(NetworkCostOfFailure))) ~> NonNullNetworkCostOfFailure\nNonNullNetworkCostOfFailure split(not(isFloat(NetworkCostOfFailure)),\n\tdisjoint: false) ~> NetworkCostOfFailureTypeCheck@(NetworkCostOfFailureWrongType)\nCreateAgingFamiliesMapMapReferenceCostOfFailure split(isNull(AgingFamily),\n\tisNull(HealthIndex),\n\tisNull(Value),\n\tdisjoint: false) ~> MapMapReferenceCostOfFailureMandatoryCheck@(MissingAgingFamily, MissingHealthIndex, MissingValue)\nCreateAgingFamiliesMapMapReferenceCostOfFailure, ReadCreateAgingFamilies exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapMapReferenceCostOfFailureExistenceCheck\nCreateAgingFamiliesMapMapReferenceCostOfFailure filter(not(isNull(Value))) ~> NonNullMapReferenceCostOfFailureValue\nNonNullMapReferenceCostOfFailureValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> MapReferenceCostOfFailureValueTypeCheck@(MapReferenceCostOfFailureValueWrongType)\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nAgingMethodologyEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-AgingMethodologyInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAgingMethodologyInvalidRangeRows\nMinimalAgeTypeCheck@MinimalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MinimalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMinimalAgeWrongTypeRows\nMaximalAgeTypeCheck@MaximalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MaximalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMaximalAgeWrongTypeRows\nFailureRateAtMinimalAgeTypeCheck@FailureRateAtMinimalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FailureRateAtMinimalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFailureRateAtMinimalAgeWrongTypeRows\nFailureRateAtMaximalAgeTypeCheck@FailureRateAtMaximalAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FailureRateAtMaximalAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFailureRateAtMaximalAgeWrongTypeRows\nExternalFailureRatePerYearTypeCheck@ExternalFailureRatePerYearWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ExternalFailureRatePerYearWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExternalFailureRatePerYearWrongTypeRows\nExternalFailureRatePerYearRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-ExternalFailureRatePerYearInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExternalFailureRatePerYearInvalidRangeRows\nIsQuantityDiscreteTypeCheck@IsQuantityDiscreteWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsQuantityDiscreteWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsQuantityDiscreteWrongTypeRows\nGFlagTypeCheck@GFlagWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-GFlagWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteGFlagWrongTypeRows\nAgingFailureDelayTypeCheck@AgingFailureDelayWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-AgingFailureDelayWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAgingFailureDelayWrongTypeRows\nMapFamilyPairHillParametersMandatoryCheck@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingAgentAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgentAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgentAgingFamilyRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingHillParameters sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnHillParametersFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingHillParametersRowsFamilyPairHillParameters\nMapFamilyPairHillParametersMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnValueFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsFamilyPairHillParameters\nMapFamilyPairHillParametersExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotExistingAgingFamilyFamilyPairHillParameters.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRowsFamilyPairHillParameters\nHillParametersFamilyPairHillParametersEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-123-HillParametersFamilyPairHillParametersInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHillParametersFamilyPairHillParametersInvalidRangeRows\nAmplitudeHillTypeCheck@AmplitudeHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-AmplitudeHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAmplitudeHillWrongTypeRows\nOffsetHillTypeCheck@OffsetHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-OffsetHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteOffsetHillWrongTypeRows\nSlopeHillTypeCheck@SlopeHillWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-SlopeHillWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSlopeHillWrongTypeRows\nIsFailureTransmittedTypeCheck@IsFailureTransmittedWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsFailureTransmittedWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsFailureTransmittedWrongTypeRows\nIsCouplingActiveTypeCheck@IsCouplingActiveWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsCouplingActiveWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsCouplingActiveWrongTypeRows\nIsAgingAfterDeathTypeCheck@IsAgingAfterDeathWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-IsAgingAfterDeathWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsAgingAfterDeathWrongTypeRows\nMaintenanceIfOutOfOrderTypeCheck@MaintenanceIfOutOfOrderWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MaintenanceIfOutOfOrderWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMaintenanceIfOutOfOrderWrongTypeRows\nShapeTypeCheck@ShapeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ShapeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteShapeWrongTypeRows\nScaleTypeCheck@ScaleWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ScaleWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteScaleWrongTypeRows\nExpectedLifeTypeCheck@ExpectedLifeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-ExpectedLifeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteExpectedLifeWrongTypeRows\nFinancialCostOfFailureTypeCheck@FinancialCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-FinancialCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFinancialCostOfFailureWrongTypeRows\nEnvironmentalCostOfFailureTypeCheck@EnvironmentalCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-EnvironmentalCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentalCostOfFailureWrongTypeRows\nNetworkCostOfFailureTypeCheck@NetworkCostOfFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-NetworkCostOfFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNetworkCostOfFailureWrongTypeRows\nMapMapReferenceCostOfFailureMandatoryCheck@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnAgingFamilyMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRowsMapReferenceCostOfFailure\nMapMapReferenceCostOfFailureMandatoryCheck@MissingHealthIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnHealthIndexMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingHealthIndexRowsMapReferenceCostOfFailure\nMapMapReferenceCostOfFailureMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-121-MissColumnValueMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsMapReferenceCostOfFailure\nMapMapReferenceCostOfFailureExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-120-NotExistingAgingFamilyMapReferenceCostOfFailure.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRowsMapReferenceCostOfFailure\nMapReferenceCostOfFailureValueTypeCheck@MapReferenceCostOfFailureValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-122-MapReferenceCostOfFailureValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMapReferenceCostOfFailureValueWrongTypeRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateAgingFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies_MapFamilyPairHillParameters",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapFamilyPairHillParameters"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateAgingFamilies_MapMapReferenceCostOfFailure",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapMapReferenceCostOfFailure"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_AgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusAgingFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateAgingFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "MapFamilyPairHillParametersKeyHillParametersSplitByType"
+						},
+						{
+							"name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat"
+						},
+						{
+							"name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger"
+						},
+						{
+							"name": "AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean"
+						},
+						{
+							"name": "MapFamilyPairHillParametersKeyHillParametersUnionAllTypes"
+						},
+						{
+							"name": "AggregateMapFamilyPairHillParametersKeyHillParametersAllTypes"
+						},
+						{
+							"name": "DeriveMapFamilyPairHillParametersKeyHillParametersAllTypes"
+						},
+						{
+							"name": "AggregateMapFamilyPairHillParametersKeyAgentAgingFamily"
+						},
+						{
+							"name": "FamilyPairHillParametersCleaning"
+						},
+						{
+							"name": "FamilyPairHillParametersUnion"
+						},
+						{
+							"name": "FamilyPairHillParametersSelect"
+						},
+						{
+							"name": "AggregateMapMapReferenceCostOfFailureKeyHealthIndex"
+						},
+						{
+							"name": "MapReferenceCostOfFailureCleaning"
+						},
+						{
+							"name": "MapReferenceCostOfFailureUnion"
+						},
+						{
+							"name": "MapReferenceCostOfFailureSelect"
+						},
+						{
+							"name": "StatusColumnSelectionAgingFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateAgingFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAgingMethodology as string,\n\t\tMinimalAge as string,\n\t\tMaximalAge as string,\n\t\tFailureRateAtMinimalAge as string,\n\t\tFailureRateAtMaximalAge as string,\n\t\tExternalFailureRatePerYear as string,\n\t\tIsQuantityDiscrete as string,\n\t\tGFlag as string,\n\t\tAgingFailureDelay as string,\n\t\tIsAgingAfterDeath as string,\n\t\tMaintenanceIfOutOfOrder as string,\n\t\tShape as string,\n\t\tScale as string,\n\t\tExpectedLife as string,\n\t\tFinancialCostOfFailure as string,\n\t\tEnvironmentalCostOfFailure as string,\n\t\tNetworkCostOfFailure as string,\n\t\tExtraNL as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateAgingFamilies\nsource(output(\n\t\tAgingFamily as string,\n\t\tAgentAgingFamily as string,\n\t\tHillParameters as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapFamilyPairHillParameters\nsource(output(\n\t\tAgingFamily as string,\n\t\tHealthIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapMapReferenceCostOfFailure\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusAgingFamiliesStatusEditor\nReadCreateAgingFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAgingMethodology,\n\t\t{EquipmentAgingLawParameters.MinimalAge} = MinimalAge,\n\t\t{EquipmentAgingLawParameters.MaximalAge} = MaximalAge,\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge} = FailureRateAtMinimalAge,\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge} = FailureRateAtMaximalAge,\n\t\tExternalFailureRatePerYear,\n\t\tIsQuantityDiscrete,\n\t\tGFlag,\n\t\tAgingFailureDelay,\n\t\tIsAgingAfterDeath,\n\t\tMaintenanceIfOutOfOrder,\n\t\t{EquipmentAgingLawParameters.Shape} = Shape,\n\t\t{EquipmentAgingLawParameters.Scale} = Scale,\n\t\tExpectedLife,\n\t\tFinancialCostOfFailure,\n\t\tEnvironmentalCostOfFailure,\n\t\tNetworkCostOfFailure,\n\t\tExtraNL\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:AgingFamily;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapFamilyPairHillParameters split(in(['AmplitudeHill','OffsetHill'], HillParameters),\n\tin(['SlopeHill'], HillParameters),\n\tin(['IsFailureTransmitted','IsCouplingActive'], HillParameters),\n\tdisjoint: false) ~> MapFamilyPairHillParametersKeyHillParametersSplitByType@(MapFamilyPairHillParametersKeyHillParametersSplitByfloat, MapFamilyPairHillParametersKeyHillParametersSplitByinteger, MapFamilyPairHillParametersKeyHillParametersSplitByboolean)\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByfloat aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toFloat(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByinteger aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toInteger(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger\nMapFamilyPairHillParametersKeyHillParametersSplitByType@MapFamilyPairHillParametersKeyHillParametersSplitByboolean aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = dropRight(dropLeft(toString(keyValues(collect(toString(HillParameters)), collect(toBoolean(Value)))) ,1), 1)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean\nAggregateMapFamilyPairHillParametersKeyHillParametersSplitByfloat, AggregateMapFamilyPairHillParametersKeyHillParametersSplitByinteger, AggregateMapFamilyPairHillParametersKeyHillParametersSplitByboolean union(byName: true)~> MapFamilyPairHillParametersKeyHillParametersUnionAllTypes\nMapFamilyPairHillParametersKeyHillParametersUnionAllTypes aggregate(groupBy(AgingFamily,\n\t\tAgentAgingFamily),\n\tFamilyPairHillParameters = collect(FamilyPairHillParameters)) ~> AggregateMapFamilyPairHillParametersKeyHillParametersAllTypes\nAggregateMapFamilyPairHillParametersKeyHillParametersAllTypes derive(FamilyPairHillParameters = '{' + concatWS(',', FamilyPairHillParameters[1], FamilyPairHillParameters[2], FamilyPairHillParameters[3]) + '}') ~> DeriveMapFamilyPairHillParametersKeyHillParametersAllTypes\nDeriveMapFamilyPairHillParametersKeyHillParametersAllTypes aggregate(groupBy(AgingFamily),\n\tFamilyPairHillParameters = toString(keyValues(collect(toString(AgentAgingFamily)), collect(toString(FamilyPairHillParameters))))) ~> AggregateMapFamilyPairHillParametersKeyAgentAgingFamily\nAggregateMapFamilyPairHillParametersKeyAgentAgingFamily derive(FamilyPairHillParameters = replace(replace(replace(FamilyPairHillParameters, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> FamilyPairHillParametersCleaning\nModelDefinition, FamilyPairHillParametersCleaning join({$id} == AgingFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> FamilyPairHillParametersUnion\nFamilyPairHillParametersUnion select(mapColumn(\n\t\t{$id},\n\t\tAgingMethodology,\n\t\t{EquipmentAgingLawParameters.MinimalAge},\n\t\t{EquipmentAgingLawParameters.MaximalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge},\n\t\tExternalFailureRatePerYear,\n\t\tIsQuantityDiscrete,\n\t\tGFlag,\n\t\tAgingFailureDelay,\n\t\tIsAgingAfterDeath,\n\t\tMaintenanceIfOutOfOrder,\n\t\t{EquipmentAgingLawParameters.Shape},\n\t\t{EquipmentAgingLawParameters.Scale},\n\t\tExpectedLife,\n\t\tFinancialCostOfFailure,\n\t\tEnvironmentalCostOfFailure,\n\t\tNetworkCostOfFailure,\n\t\tExtraNL,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tFamilyPairHillParameters\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> FamilyPairHillParametersSelect\nReadMapMapReferenceCostOfFailure aggregate(groupBy(AgingFamily),\n\tMapReferenceCostOfFailure = toString(keyValues(collect(toString(HealthIndex)), collect(toFloat(Value))))) ~> AggregateMapMapReferenceCostOfFailureKeyHealthIndex\nAggregateMapMapReferenceCostOfFailureKeyHealthIndex derive(MapReferenceCostOfFailure = replace(replace(replace(MapReferenceCostOfFailure, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> MapReferenceCostOfFailureCleaning\nFamilyPairHillParametersSelect, MapReferenceCostOfFailureCleaning join({$id} == AgingFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> MapReferenceCostOfFailureUnion\nMapReferenceCostOfFailureUnion select(mapColumn(\n\t\t{$id},\n\t\tAgingMethodology,\n\t\t{EquipmentAgingLawParameters.MinimalAge},\n\t\t{EquipmentAgingLawParameters.MaximalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMinimalAge},\n\t\t{EquipmentAgingLawParameters.FailureRateAtMaximalAge},\n\t\tExternalFailureRatePerYear,\n\t\tIsQuantityDiscrete,\n\t\tGFlag,\n\t\tAgingFailureDelay,\n\t\tIsAgingAfterDeath,\n\t\tMaintenanceIfOutOfOrder,\n\t\t{EquipmentAgingLawParameters.Shape},\n\t\t{EquipmentAgingLawParameters.Scale},\n\t\tExpectedLife,\n\t\tFinancialCostOfFailure,\n\t\tEnvironmentalCostOfFailure,\n\t\tNetworkCostOfFailure,\n\t\tExtraNL,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tFamilyPairHillParameters,\n\t\tMapReferenceCostOfFailure\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MapReferenceCostOfFailureSelect\nReadCreateAgingFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionAgingFamiliesStatusEditor\nReadTempStatusAgingFamiliesStatusEditor, StatusColumnSelectionAgingFamiliesStatusEditor union(byName: true)~> StatusUpdateAgingFamiliesStatusEditor\nMapReferenceCostOfFailureSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_AgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateAgingFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['AgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateAgingFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateBudgets"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_BudgetsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "BudgetsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapCatKeyLabels",
+								"type": "DatasetReference"
+							},
+							"name": "CreateBudgetsMapCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapAvailableQuantityByYear",
+								"type": "DatasetReference"
+							},
+							"name": "CreateBudgetsMapAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapMinimalQuantityLevelByYear",
+								"type": "DatasetReference"
+							},
+							"name": "CreateBudgetsMapMinimalQuantityLevelByYear"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "3_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCostTypeInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteConstrainedWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingBudgetRowsCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingBudgetRowsCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingBudgetRowsAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingYearRowsAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingBudgetRowsAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAvailableQuantityByYearValueWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingBudgetRowsMinimalQuantityLevelByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingYearRowsMinimalQuantityLevelByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsMinimalQuantityLevelByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingBudgetRowsMinimalQuantityLevelByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMinimalQuantityLevelByYearValueWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCostRateWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "3_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteRankWrongTypeRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInBudgetsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullEnumCostType"
+						},
+						{
+							"name": "CostTypeEnumCheck"
+						},
+						{
+							"name": "NonNullConstrained"
+						},
+						{
+							"name": "ConstrainedTypeCheck"
+						},
+						{
+							"name": "MapCatKeyLabelsMandatoryCheck"
+						},
+						{
+							"name": "MapCatKeyLabelsExistenceCheck"
+						},
+						{
+							"name": "MapAvailableQuantityByYearMandatoryCheck"
+						},
+						{
+							"name": "MapAvailableQuantityByYearExistenceCheck"
+						},
+						{
+							"name": "NonNullAvailableQuantityByYearValue"
+						},
+						{
+							"name": "AvailableQuantityByYearValueTypeCheck"
+						},
+						{
+							"name": "MapMinimalQuantityLevelByYearMandatoryCheck"
+						},
+						{
+							"name": "MapMinimalQuantityLevelByYearExistenceCheck"
+						},
+						{
+							"name": "NonNullMinimalQuantityLevelByYearValue"
+						},
+						{
+							"name": "MinimalQuantityLevelByYearValueTypeCheck"
+						},
+						{
+							"name": "NonNullCostRate"
+						},
+						{
+							"name": "CostRateTypeCheck"
+						},
+						{
+							"name": "NonNullRank"
+						},
+						{
+							"name": "RankTypeCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tCostType as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tRank as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateBudgets\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> BudgetsStatus\nsource(output(\n\t\tBudget as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapCatKeyLabels\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapAvailableQuantityByYear\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateBudgetsMapMinimalQuantityLevelByYear\nReadCreateBudgets aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateBudgets, BudgetsStatus exists(ReadCreateBudgets@Name == BudgetsStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInBudgetsStatus\nReadCreateBudgets split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateBudgets filter(not(isNull(CostType))) ~> NonNullEnumCostType\nNonNullEnumCostType filter(not(in(['Suppliers', 'Workforce'], CostType))) ~> CostTypeEnumCheck\nReadCreateBudgets filter(not(isNull(Constrained))) ~> NonNullConstrained\nNonNullConstrained split(not(isBoolean(Constrained)),\n\tdisjoint: false) ~> ConstrainedTypeCheck@(ConstrainedWrongType)\nCreateBudgetsMapCatKeyLabels split(isNull(Budget),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCatKeyLabelsMandatoryCheck@(MissingBudget, MissingIndex, MissingValue)\nCreateBudgetsMapCatKeyLabels, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCatKeyLabelsExistenceCheck\nCreateBudgetsMapAvailableQuantityByYear split(isNull(Budget),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapAvailableQuantityByYearMandatoryCheck@(MissingBudget, MissingYear, MissingValue)\nCreateBudgetsMapAvailableQuantityByYear, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapAvailableQuantityByYearExistenceCheck\nCreateBudgetsMapAvailableQuantityByYear filter(not(isNull(Value))) ~> NonNullAvailableQuantityByYearValue\nNonNullAvailableQuantityByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> AvailableQuantityByYearValueTypeCheck@(AvailableQuantityByYearValueWrongType)\nCreateBudgetsMapMinimalQuantityLevelByYear split(isNull(Budget),\n\tisNull(Year),\n\tisNull(Value),\n\tdisjoint: false) ~> MapMinimalQuantityLevelByYearMandatoryCheck@(MissingBudget, MissingYear, MissingValue)\nCreateBudgetsMapMinimalQuantityLevelByYear, ReadCreateBudgets exists(Budget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapMinimalQuantityLevelByYearExistenceCheck\nCreateBudgetsMapMinimalQuantityLevelByYear filter(not(isNull(Value))) ~> NonNullMinimalQuantityLevelByYearValue\nNonNullMinimalQuantityLevelByYearValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> MinimalQuantityLevelByYearValueTypeCheck@(MinimalQuantityLevelByYearValueWrongType)\nReadCreateBudgets filter(not(isNull(CostRate))) ~> NonNullCostRate\nNonNullCostRate split(not(isFloat(CostRate)),\n\tdisjoint: false) ~> CostRateTypeCheck@(CostRateWrongType)\nReadCreateBudgets filter(not(isNull(Rank))) ~> NonNullRank\nNonNullRank split(not(isInteger(Rank)),\n\tdisjoint: false) ~> RankTypeCheck@(RankWrongType)\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInBudgetsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nCostTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-113-CostTypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostTypeInvalidRangeRows\nConstrainedTypeCheck@ConstrainedWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-ConstrainedWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteConstrainedWrongTypeRows\nMapCatKeyLabelsMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnIndexCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsCatKeyLabels\nMapCatKeyLabelsMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCatKeyLabels\nMapCatKeyLabelsExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetCatKeyLabels.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsCatKeyLabels\nMapAvailableQuantityByYearMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnYearAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsAvailableQuantityByYear\nMapAvailableQuantityByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsAvailableQuantityByYear\nMapAvailableQuantityByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetAvailableQuantityByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsAvailableQuantityByYear\nAvailableQuantityByYearValueTypeCheck@AvailableQuantityByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-AvailableQuantityByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAvailableQuantityByYearValueWrongTypeRows\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingBudget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnBudgetMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingBudgetRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingYear sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnYearMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingYearRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-111-MissColumnValueMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsMinimalQuantityLevelByYear\nMapMinimalQuantityLevelByYearExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-110-NotExistingBudgetMinimalQuantityLevelByYear.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingBudgetRowsMinimalQuantityLevelByYear\nMinimalQuantityLevelByYearValueTypeCheck@MinimalQuantityLevelByYearValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-MinimalQuantityLevelByYearValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMinimalQuantityLevelByYearValueWrongTypeRows\nCostRateTypeCheck@CostRateWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-CostRateWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostRateWrongTypeRows\nRankTypeCheck@RankWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['3-112-RankWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteRankWrongTypeRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateBudgets"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapCatKeyLabels",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapCatKeyLabels"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapAvailableQuantityByYear",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapAvailableQuantityByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateBudgets_MapMinimalQuantityLevelByYear",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapMinimalQuantityLevelByYear"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_BudgetsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusBudgetsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "BudgetsCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateBudgetsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "AggregateMapCatKeyLabelsKeyIndex"
+						},
+						{
+							"name": "CatKeyLabelsCleaning"
+						},
+						{
+							"name": "CatKeyLabelsUnion"
+						},
+						{
+							"name": "CatKeyLabelsSelect"
+						},
+						{
+							"name": "AggregateMapAvailableQuantityByYearKeyYear"
+						},
+						{
+							"name": "AvailableQuantityByYearCleaning"
+						},
+						{
+							"name": "AvailableQuantityByYearUnion"
+						},
+						{
+							"name": "AvailableQuantityByYearSelect"
+						},
+						{
+							"name": "AggregateMapMinimalQuantityLevelByYearKeyYear"
+						},
+						{
+							"name": "MinimalQuantityLevelByYearCleaning"
+						},
+						{
+							"name": "MinimalQuantityLevelByYearUnion"
+						},
+						{
+							"name": "MinimalQuantityLevelByYearSelect"
+						},
+						{
+							"name": "StatusColumnSelectionBudgetsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateBudgetsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tCostType as string,\n\t\tConstrained as string,\n\t\tCostRate as string,\n\t\tRank as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateBudgets\nsource(output(\n\t\tBudget as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCatKeyLabels\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapAvailableQuantityByYear\nsource(output(\n\t\tBudget as string,\n\t\tYear as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapMinimalQuantityLevelByYear\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusBudgetsStatusEditor\nReadCreateBudgets select(mapColumn(\n\t\t{$id} = Name,\n\t\tCostType,\n\t\tConstrained,\n\t\tCostRate,\n\t\tRank\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Budget;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapCatKeyLabels aggregate(groupBy(Budget),\n\tCatKeyLabels = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapCatKeyLabelsKeyIndex\nAggregateMapCatKeyLabelsKeyIndex derive(CatKeyLabels = replace(replace(replace(CatKeyLabels, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CatKeyLabelsCleaning\nModelDefinition, CatKeyLabelsCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> CatKeyLabelsUnion\nCatKeyLabelsUnion select(mapColumn(\n\t\t{$id},\n\t\tCostType,\n\t\tConstrained,\n\t\tCostRate,\n\t\tRank,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCatKeyLabels\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CatKeyLabelsSelect\nReadMapAvailableQuantityByYear aggregate(groupBy(Budget),\n\tAvailableQuantityByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapAvailableQuantityByYearKeyYear\nAggregateMapAvailableQuantityByYearKeyYear derive(AvailableQuantityByYear = replace(replace(replace(AvailableQuantityByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> AvailableQuantityByYearCleaning\nCatKeyLabelsSelect, AvailableQuantityByYearCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> AvailableQuantityByYearUnion\nAvailableQuantityByYearUnion select(mapColumn(\n\t\t{$id},\n\t\tCostType,\n\t\tConstrained,\n\t\tCostRate,\n\t\tRank,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCatKeyLabels,\n\t\tAvailableQuantityByYear\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> AvailableQuantityByYearSelect\nReadMapMinimalQuantityLevelByYear aggregate(groupBy(Budget),\n\tMinimalQuantityLevelByYear = toString(keyValues(collect(toString(Year)), collect(toFloat(Value))))) ~> AggregateMapMinimalQuantityLevelByYearKeyYear\nAggregateMapMinimalQuantityLevelByYearKeyYear derive(MinimalQuantityLevelByYear = replace(replace(replace(MinimalQuantityLevelByYear, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> MinimalQuantityLevelByYearCleaning\nAvailableQuantityByYearSelect, MinimalQuantityLevelByYearCleaning join({$id} == Budget,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> MinimalQuantityLevelByYearUnion\nMinimalQuantityLevelByYearUnion select(mapColumn(\n\t\t{$id},\n\t\tCostType,\n\t\tConstrained,\n\t\tCostRate,\n\t\tRank,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCatKeyLabels,\n\t\tAvailableQuantityByYear,\n\t\tMinimalQuantityLevelByYear\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> MinimalQuantityLevelByYearSelect\nReadCreateBudgets select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionBudgetsStatusEditor\nReadTempStatusBudgetsStatusEditor, StatusColumnSelectionBudgetsStatusEditor union(byName: true)~> StatusUpdateBudgetsStatusEditor\nMinimalQuantityLevelByYearSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Budgets.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateBudgetsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Budgets_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateBudgetsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateCriteria_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateCriteria"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_CriteriaStatus",
+								"type": "DatasetReference"
+							},
+							"name": "CriteriaStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria_MapTargetedAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "CreateCriteriaMapTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria_MapValueAsString",
+								"type": "DatasetReference"
+							},
+							"name": "CreateCriteriaMapValueAsString"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingCriterionRowsTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingCriterionRowsTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_123",
+								"type": "DatasetReference"
+							},
+							"name": "WriteOperatorInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteThresholdWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteValueWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingCriterionRowsValueAsString"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsValueAsString"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsValueAsString"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingCriterionRowsValueAsString"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInCriteriaStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "MapTargetedAgingFamiliesMandatoryCheck"
+						},
+						{
+							"name": "MapTargetedAgingFamiliesExistenceCheck"
+						},
+						{
+							"name": "NonNullEnumOperator"
+						},
+						{
+							"name": "OperatorEnumCheck"
+						},
+						{
+							"name": "NonNullThreshold"
+						},
+						{
+							"name": "ThresholdTypeCheck"
+						},
+						{
+							"name": "NonNullValue"
+						},
+						{
+							"name": "ValueTypeCheck"
+						},
+						{
+							"name": "MapValueAsStringMandatoryCheck"
+						},
+						{
+							"name": "MapValueAsStringExistenceCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tEquipmentComponentAttribute as string,\n\t\tOperator as string,\n\t\tThreshold as string,\n\t\tReferenceAttribute as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateCriteria\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CriteriaStatus\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateCriteriaMapTargetedAgingFamilies\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateCriteriaMapValueAsString\nReadCreateCriteria aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateCriteria, CriteriaStatus exists(ReadCreateCriteria@Name == CriteriaStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInCriteriaStatus\nReadCreateCriteria split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nCreateCriteriaMapTargetedAgingFamilies split(isNull(Criterion),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapTargetedAgingFamiliesMandatoryCheck@(MissingCriterion, MissingIndex, MissingValue)\nCreateCriteriaMapTargetedAgingFamilies, ReadCreateCriteria exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapTargetedAgingFamiliesExistenceCheck\nReadCreateCriteria filter(not(isNull(Operator))) ~> NonNullEnumOperator\nNonNullEnumOperator filter(not(in(['None', 'LT', 'GT', 'LEQ', 'GEQ'], Operator))) ~> OperatorEnumCheck\nReadCreateCriteria filter(not(isNull(Threshold))) ~> NonNullThreshold\nNonNullThreshold split(not(isFloat(Threshold)),\n\tdisjoint: false) ~> ThresholdTypeCheck@(ThresholdWrongType)\nReadCreateCriteria filter(not(isNull(Value))) ~> NonNullValue\nNonNullValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> ValueTypeCheck@(ValueWrongType)\nCreateCriteriaMapValueAsString split(isNull(Criterion),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapValueAsStringMandatoryCheck@(MissingCriterion, MissingIndex, MissingValue)\nCreateCriteriaMapValueAsString, ReadCreateCriteria exists(Criterion == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapValueAsStringExistenceCheck\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nMapTargetedAgingFamiliesMandatoryCheck@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnCriterionTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRowsTargetedAgingFamilies\nMapTargetedAgingFamiliesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnIndexTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsTargetedAgingFamilies\nMapTargetedAgingFamiliesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnValueTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsTargetedAgingFamilies\nMapTargetedAgingFamiliesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotExistingCriterionTargetedAgingFamilies.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRowsTargetedAgingFamilies\nOperatorEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-123-OperatorInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteOperatorInvalidRangeRows\nThresholdTypeCheck@ThresholdWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-122-ThresholdWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteThresholdWrongTypeRows\nValueTypeCheck@ValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-122-ValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteValueWrongTypeRows\nMapValueAsStringMandatoryCheck@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnIndexValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsValueAsString\nMapValueAsStringMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-121-MissColumnValueValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsValueAsString\nMapValueAsStringExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-120-NotExistingCriterionValueAsString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingCriterionRowsValueAsString"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateCriteria_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateCriteria"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria_MapTargetedAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapTargetedAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateCriteria_MapValueAsString",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapValueAsString"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_CriteriaStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusCriteriaStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateCriteriaStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "AggregateMapTargetedAgingFamiliesKeyIndex"
+						},
+						{
+							"name": "TargetedAgingFamiliesCleaning"
+						},
+						{
+							"name": "TargetedAgingFamiliesUnion"
+						},
+						{
+							"name": "TargetedAgingFamiliesSelect"
+						},
+						{
+							"name": "AggregateMapValueAsStringKeyIndex"
+						},
+						{
+							"name": "ValueAsStringCleaning"
+						},
+						{
+							"name": "ValueAsStringUnion"
+						},
+						{
+							"name": "ValueAsStringSelect"
+						},
+						{
+							"name": "StatusColumnSelectionCriteriaStatusEditor"
+						},
+						{
+							"name": "StatusUpdateCriteriaStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tEquipmentComponentAttribute as string,\n\t\tOperator as string,\n\t\tThreshold as string,\n\t\tReferenceAttribute as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateCriteria\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapTargetedAgingFamilies\nsource(output(\n\t\tCriterion as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapValueAsString\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusCriteriaStatusEditor\nReadCreateCriteria select(mapColumn(\n\t\t{$id} = Name,\n\t\tEquipmentComponentAttribute,\n\t\tOperator,\n\t\tThreshold,\n\t\tReferenceAttribute,\n\t\tValue\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Criterion;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapTargetedAgingFamilies aggregate(groupBy(Criterion),\n\tTargetedAgingFamilies = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapTargetedAgingFamiliesKeyIndex\nAggregateMapTargetedAgingFamiliesKeyIndex derive(TargetedAgingFamilies = replace(replace(replace(TargetedAgingFamilies, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> TargetedAgingFamiliesCleaning\nModelDefinition, TargetedAgingFamiliesCleaning join({$id} == Criterion,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> TargetedAgingFamiliesUnion\nTargetedAgingFamiliesUnion select(mapColumn(\n\t\t{$id},\n\t\tEquipmentComponentAttribute,\n\t\tOperator,\n\t\tThreshold,\n\t\tReferenceAttribute,\n\t\tValue,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tTargetedAgingFamilies\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> TargetedAgingFamiliesSelect\nReadMapValueAsString aggregate(groupBy(Criterion),\n\tValueAsString = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapValueAsStringKeyIndex\nAggregateMapValueAsStringKeyIndex derive(ValueAsString = replace(replace(replace(ValueAsString, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> ValueAsStringCleaning\nTargetedAgingFamiliesSelect, ValueAsStringCleaning join({$id} == Criterion,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> ValueAsStringUnion\nValueAsStringUnion select(mapColumn(\n\t\t{$id},\n\t\tEquipmentComponentAttribute,\n\t\tOperator,\n\t\tThreshold,\n\t\tReferenceAttribute,\n\t\tValue,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tTargetedAgingFamilies,\n\t\tValueAsString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> ValueAsStringSelect\nReadCreateCriteria select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionCriteriaStatusEditor\nReadTempStatusCriteriaStatusEditor, StatusColumnSelectionCriteriaStatusEditor union(byName: true)~> StatusUpdateCriteriaStatusEditor\nValueAsStringSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Criteria.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Criteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateCriteriaStatusEditor"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

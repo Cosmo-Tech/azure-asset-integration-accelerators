@@ -1,0 +1,5424 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteEquipmentComponentsEquipmentComponents')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentComponentsEquipmentComponents": {},
+									"EquipmentComponentsEquipmentComponentsStatus": {},
+									"WriteMissingEquipmentComponentSourceRows": {},
+									"WriteMissingEquipmentComponentTargetRows": {},
+									"WriteNotExistingEquipmentComponentSourceRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "1-421-MissColumnEquipmentComponentSource",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-421-MissColumnEquipmentComponentSource",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-421-MissColumnEquipmentComponentTarget",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-421-MissColumnEquipmentComponentTarget",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-420-NotExistingEquipmentComponentSource",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentComponentsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-420-NotExistingEquipmentComponentSource",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteEquipmentComponentsEquipmentComponents_TransformD",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "1-421-MissColumnEquipmentComponentSource",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-421-MissColumnEquipmentComponentTarget",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-420-NotExistingEquipmentComponentSource",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentComponentsEquipmentComponents_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentComponentsEquipmentComponents": {},
+									"ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteEquipmentGroups')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteEquipmentGroups_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentGroups_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentGroups": {},
+									"EquipmentGroupsStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-320-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentGroups_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-320-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-321-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentGroups_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-321-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteEquipmentGroups_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-320-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-321-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentGroups_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentGroups": {},
+									"ReadTempStatusEquipmentGroupsStatusEditor": {},
+									"ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor": {},
+									"ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateEquipmentGroupsStatusEditor": {},
+									"WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor": {},
+									"WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteEquipmentGroupsEquipmentComponents')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentGroupsEquipmentComponents": {},
+									"EquipmentGroupsEquipmentComponentsStatus": {},
+									"WriteMissingEquipmentGroupRows": {},
+									"WriteMissingEquipmentComponentRows": {},
+									"WriteNotExistingEquipmentGroupRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-441-MissColumnEquipmentGroup",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-441-MissColumnEquipmentGroup",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-441-MissColumnEquipmentComponent",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-441-MissColumnEquipmentComponent",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-440-NotExistingEquipmentGroup",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteEquipmentGroupsEquipmentComponents_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-440-NotExistingEquipmentGroup",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteEquipmentGroupsEquipmentComponents_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-441-MissColumnEquipmentGroup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-441-MissColumnEquipmentComponent",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-440-NotExistingEquipmentGroup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteEquipmentGroupsEquipmentComponents_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteEquipmentGroupsEquipmentComponents": {},
+									"ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSubActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSubActionFamilies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamilies": {},
+									"SubActionFamiliesStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-310-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-310-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-311-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-311-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSubActionFamilies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-310-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-311-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamilies": {},
+									"ReadTempStatusSubActionFamiliesStatusEditor": {},
+									"ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor": {},
+									"ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor": {},
+									"ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor": {},
+									"WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor": {},
+									"WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor": {},
+									"WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSubActionFamiliesAgingFamiliesApplication')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckDa",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamiliesAgingFamiliesApplication": {},
+									"SubActionFamiliesAgingFamiliesApplicationStatus": {},
+									"WriteMissingSubActionFamilyRows": {},
+									"WriteMissingAgingFamilyRows": {},
+									"WriteNotExistingSubActionFamilyRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-421-MissColumnSubActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-421-MissColumnSubActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-421-MissColumnAgingFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-421-MissColumnAgingFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-420-NotExistingSubActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesApplication_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-420-NotExistingSubActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSubActionFamiliesAgingFamiliesApplication_Transfo",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-421-MissColumnSubActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-421-MissColumnAgingFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-420-NotExistingSubActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamiliesAgingFamiliesApplication_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamiliesAgingFamiliesApplication": {},
+									"ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSubActionFamiliesAgingFamiliesReplacement')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSubActionFamiliesAgingFamiliesReplacement_CheckDa",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamiliesAgingFamiliesReplacement_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamiliesAgingFamiliesReplacement": {},
+									"SubActionFamiliesAgingFamiliesReplacementStatus": {},
+									"WriteMissingSubActionFamilyRows": {},
+									"WriteMissingAgingFamilyRows": {},
+									"WriteNotExistingSubActionFamilyRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-431-MissColumnSubActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesReplacement_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-431-MissColumnSubActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-431-MissColumnAgingFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesReplacement_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-431-MissColumnAgingFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-430-NotExistingSubActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSubActionFamiliesAgingFamiliesReplacement_CheckDa",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-430-NotExistingSubActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSubActionFamiliesAgingFamiliesReplacement_Transfo",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-431-MissColumnSubActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-431-MissColumnAgingFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-430-NotExistingSubActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSubActionFamiliesAgingFamiliesReplacement_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSubActionFamiliesAgingFamiliesReplacement": {},
+									"ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSustainmentActions_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActions_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActions": {},
+									"SustainmentActionsStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-330-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActions_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-330-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-331-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActions_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-331-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSustainmentActions_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-330-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-331-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActions_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActions": {},
+									"ReadTempStatusSustainmentActionsStatusEditor": {},
+									"ReadTempStatusSustainmentActionSustainmentActionsActionFamiliesStatusEditor": {},
+									"ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSustainmentActionsStatusEditor": {},
+									"WriteTempStatusStatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor": {},
+									"WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSustainmentActionsActionFamilies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActionsActionFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActionsActionFamilies": {},
+									"SustainmentActionsActionFamiliesStatus": {},
+									"WriteMissingSustainmentActionRows": {},
+									"WriteMissingActionFamilyRows": {},
+									"WriteNotExistingSustainmentActionRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-411-MissColumnSustainmentAction",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-411-MissColumnSustainmentAction",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-411-MissColumnActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-411-MissColumnActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-410-NotExistingSustainmentAction",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-410-NotExistingSustainmentAction",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSustainmentActionsActionFamilies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-411-MissColumnSustainmentAction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-411-MissColumnActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-410-NotExistingSustainmentAction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActionsActionFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActionsActionFamilies": {},
+									"ReadTempStatusSustainmentActionsActionFamiliesStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsEquipmentGroups')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActionsEquipmentGroups": {},
+									"SustainmentActionsEquipmentGroupsStatus": {},
+									"WriteMissingSustainmentActionRows": {},
+									"WriteMissingEquipmentGroupRows": {},
+									"WriteNotExistingSustainmentActionRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime5",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "11-451-MissColumnSustainmentAction",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-451-MissColumnSustainmentAction",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-451-MissColumnEquipmentGroup",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-451-MissColumnEquipmentGroup",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "11-450-NotExistingSustainmentAction",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteSustainmentActionsEquipmentGroups_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "11-450-NotExistingSustainmentAction",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteSustainmentActionsEquipmentGroups_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "11-451-MissColumnSustainmentAction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-451-MissColumnEquipmentGroup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "11-450-NotExistingSustainmentAction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteSustainmentActionsEquipmentGroups_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteSustainmentActionsEquipmentGroups": {},
+									"ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime5",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTeams')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteTeams_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTeams_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTeams": {},
+									"TeamsStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "4-HumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "4-310-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTeams_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "4-310-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "4-311-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTeams_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "4-311-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteTeams_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "4-310-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "4-311-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTeams_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTeams": {},
+									"ReadTempStatusTeamsStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateTeamsStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "4-HumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "4-HumanResources/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPolicies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteTechnicalPolicies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPolicies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPolicies": {},
+									"TechnicalPoliciesStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-340-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPolicies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-340-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-341-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPolicies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-341-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteTechnicalPolicies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-340-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-341-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPolicies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPolicies": {},
+									"ReadTempStatusTechnicalPoliciesStatusEditor": {},
+									"ReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor": {},
+									"ReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor": {},
+									"ReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor": {},
+									"WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor": {},
+									"WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor": {},
+									"WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesCriteria')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteTechnicalPoliciesCriteria_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesCriteria_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesCriteria": {},
+									"TechnicalPoliciesCriteriaStatus": {},
+									"WriteMissingTechnicalPolicyRows": {},
+									"WriteMissingCriterionRows": {},
+									"WriteNotExistingTechnicalPolicyRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-441-MissColumnTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesCriteria_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-441-MissColumnTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-441-MissColumnCriterion",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesCriteria_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-441-MissColumnCriterion",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-440-NotExistingTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesCriteria_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-440-NotExistingTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteTechnicalPoliciesCriteria_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-441-MissColumnTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-441-MissColumnCriterion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-440-NotExistingTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesCriteria_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesCriteria": {},
+									"ReadTempStatusTechnicalPoliciesCriteriaStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesMainActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesMainActionFamilies": {},
+									"TechnicalPoliciesMainActionFamiliesStatus": {},
+									"WriteMissingTechnicalPolicyRows": {},
+									"WriteMissingActionFamilyRows": {},
+									"WriteNotExistingTechnicalPolicyRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-421-MissColumnTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-421-MissColumnTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-421-MissColumnActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-421-MissColumnActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-420-NotExistingTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesMainActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-420-NotExistingTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteTechnicalPoliciesMainActionFamilies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-421-MissColumnTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-421-MissColumnActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-420-NotExistingTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesMainActionFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesMainActionFamilies": {},
+									"ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesSecondaryActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckDat",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesSecondaryActionFamilies": {},
+									"TechnicalPoliciesSecondaryActionFamiliesStatus": {},
+									"WriteMissingTechnicalPolicyRows": {},
+									"WriteMissingActionFamilyRows": {},
+									"WriteNotExistingTechnicalPolicyRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-431-MissColumnTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckDat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-431-MissColumnTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-431-MissColumnActionFamily",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckDat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-431-MissColumnActionFamily",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-430-NotExistingTechnicalPolicy",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DeleteTechnicalPoliciesSecondaryActionFamilies_CheckDat",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-430-NotExistingTechnicalPolicy",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DeleteTechnicalPoliciesSecondaryActionFamilies_Transfor",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-431-MissColumnTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-431-MissColumnActionFamily",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-430-NotExistingTechnicalPolicy",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadDeleteTechnicalPoliciesSecondaryActionFamilies": {},
+									"ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor": {},
+									"WriteToTempRepo": {},
+									"WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IntegrationRuntimeActivation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Activate1-AssetPortfolio-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-1-AssetPortfolio-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate1-AssetPortfolio-Runtime2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-1-AssetPortfolio-Runtime2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate2-ActivitiesManagement-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-2-ActivitiesManagement-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate2-ActivitiesManagement-Runtime2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-2-ActivitiesManagement-Runtime2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate2-ActivitiesManagement-Runtime3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-2-ActivitiesManagement-Runtime3",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate2-ActivitiesManagement-Runtime4",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-2-ActivitiesManagement-Runtime4",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate3-Budgets-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-3-Budgets-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "3-Budgets-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate4-HumanResources-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-4-HumanResources-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "4-HumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate5-Finance-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-5-Finance-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "5-Finance-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate11-AssetPortfolioActivitiesManagement-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-11-AssetPortfolioActivitiesManagement-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate11-AssetPortfolioActivitiesManagement-Runtime2",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate11-AssetPortfolioActivitiesManagement-Runtime3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-11-AssetPortfolioActivitiesManagement-Runtime3",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime3",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate11-AssetPortfolioActivitiesManagement-Runtime4",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-11-AssetPortfolioActivitiesManagement-Runtime4",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime4",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate11-AssetPortfolioActivitiesManagement-Runtime5",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-11-AssetPortfolioActivitiesManagement-Runtime5",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "11-AssetPortfolioActivitiesManagement-Runtime5",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Activate12-ActivitiesManagementHumanResources-Runtime1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Activate-12-ActivitiesManagementHumanResources-Runtime1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadActivationDataset": {},
+									"WriteActivationFile": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "12-ActivitiesManagementHumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateActionFamilies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateActionFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateActionFamilies": {},
+									"ActionFamiliesStatus": {},
+									"UpdateActionFamiliesMapCostsByRatingLevel": {},
+									"UpdateActionFamiliesMapBudgetCategories": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {},
+									"WriteCostsAreCapitalChargesWrongTypeRows": {},
+									"WriteMissingActionFamilyRowsCostsByRatingLevel": {},
+									"WriteMissingRatingLevelRowsCostsByRatingLevel": {},
+									"WriteMissingUnitPropertyRowsCostsByRatingLevel": {},
+									"WriteMissingValueRowsCostsByRatingLevel": {},
+									"WriteNotExistingActionFamilyRowsCostsByRatingLevel": {},
+									"WriteUnitPropertyCostsByRatingLevelInvalidRangeRows": {},
+									"WriteSupplierCostWrongTypeRows": {},
+									"WriteDurationWrongTypeRows": {},
+									"WriteIsLocalActionWrongTypeRows": {},
+									"WriteNeedsOutageWrongTypeRows": {},
+									"WriteMissingActionFamilyRowsBudgetCategories": {},
+									"WriteMissingIndexRowsBudgetCategories": {},
+									"WriteMissingValueRowsBudgetCategories": {},
+									"WriteNotExistingActionFamilyRowsBudgetCategories": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "2-510-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-510-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-512-CostsAreCapitalChargesWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-512-CostsAreCapitalChargesWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnActionFamilyCostsByRatingLevel",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnActionFamilyCostsByRatingLevel",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnRatingLevelCostsByRatingLevel",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnRatingLevelCostsByRatingLevel",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnUnitPropertyCostsByRatingLevel",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnUnitPropertyCostsByRatingLevel",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnValueCostsByRatingLevel",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnValueCostsByRatingLevel",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-510-NotExistingActionFamilyCostsByRatingLevel",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-510-NotExistingActionFamilyCostsByRatingLevel",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-513-UnitPropertyCostsByRatingLevelInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-513-UnitPropertyCostsByRatingLevelInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-512-SupplierCostWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-512-SupplierCostWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-512-DurationWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-512-DurationWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-512-IsLocalActionWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-512-IsLocalActionWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-512-NeedsOutageWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-512-NeedsOutageWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnActionFamilyBudgetCategories",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnActionFamilyBudgetCategories",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnIndexBudgetCategories",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnIndexBudgetCategories",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-511-MissColumnValueBudgetCategories",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-511-MissColumnValueBudgetCategories",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "2-510-NotExistingActionFamilyBudgetCategories",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "2-510-NotExistingActionFamilyBudgetCategories",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateActionFamilies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "2-510-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-512-CostsAreCapitalChargesWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnActionFamilyCostsByRatingLevel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnRatingLevelCostsByRatingLevel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnUnitPropertyCostsByRatingLevel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnValueCostsByRatingLevel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-510-NotExistingActionFamilyCostsByRatingLevel",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-513-UnitPropertyCostsByRatingLevelInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-512-SupplierCostWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-512-DurationWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-512-IsLocalActionWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-512-NeedsOutageWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnActionFamilyBudgetCategories",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnIndexBudgetCategories",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-511-MissColumnValueBudgetCategories",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "2-510-NotExistingActionFamilyBudgetCategories",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateActionFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateActionFamilies": {},
+									"ReadMapCostsByRatingLevel": {},
+									"ReadMapBudgetCategories": {},
+									"WriteToTempRepo": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "2-ActivitiesManagement-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateActionTasks')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateActionTasks_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateActionTasks_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateActionTasks": {},
+									"ActionTasksStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {},
+									"WriteActionDurationPercentageWrongTypeRows": {},
+									"WriteActionDurationPercentageInvalidRangeRows": {},
+									"WriteWorkforceFTEWrongTypeRows": {},
+									"WriteWorkforceFTEInvalidRangeRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "12-ActivitiesManagementHumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "12-510-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-510-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "12-511-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-511-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "12-512-ActionDurationPercentageWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-512-ActionDurationPercentageWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "12-513-ActionDurationPercentageInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-513-ActionDurationPercentageInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "12-512-WorkforceFTEWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-512-WorkforceFTEWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "12-513-WorkforceFTEInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateActionTasks_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "12-513-WorkforceFTEInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateActionTasks_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "12-510-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "12-511-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "12-512-ActionDurationPercentageWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "12-513-ActionDurationPercentageInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "12-512-WorkforceFTEWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "12-513-WorkforceFTEInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateActionTasks_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateActionTasks": {},
+									"WriteToTempRepo": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "12-ActivitiesManagementHumanResources-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateAgingFamilies')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateAgingFamilies_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateAgingFamilies_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateAgingFamilies": {},
+									"AgingFamiliesStatus": {},
+									"UpdateAgingFamiliesMapFamilyPairHillParameters": {},
+									"UpdateAgingFamiliesMapMapReferenceCostOfFailure": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {},
+									"WriteAgingMethodologyInvalidRangeRows": {},
+									"WriteMinimalAgeWrongTypeRows": {},
+									"WriteMaximalAgeWrongTypeRows": {},
+									"WriteFailureRateAtMinimalAgeWrongTypeRows": {},
+									"WriteFailureRateAtMaximalAgeWrongTypeRows": {},
+									"WriteExternalFailureRatePerYearWrongTypeRows": {},
+									"WriteExternalFailureRatePerYearInvalidRangeRows": {},
+									"WriteIsQuantityDiscreteWrongTypeRows": {},
+									"WriteGFlagWrongTypeRows": {},
+									"WriteAgingFailureDelayWrongTypeRows": {},
+									"WriteMissingAgingFamilyRowsFamilyPairHillParameters": {},
+									"WriteMissingAgentAgingFamilyRowsFamilyPairHillParameters": {},
+									"WriteMissingHillParametersRowsFamilyPairHillParameters": {},
+									"WriteMissingValueRowsFamilyPairHillParameters": {},
+									"WriteNotExistingAgingFamilyRowsFamilyPairHillParameters": {},
+									"WriteHillParametersFamilyPairHillParametersInvalidRangeRows": {},
+									"WriteAmplitudeHillWrongTypeRows": {},
+									"WriteOffsetHillWrongTypeRows": {},
+									"WriteSlopeHillWrongTypeRows": {},
+									"WriteIsFailureTransmittedWrongTypeRows": {},
+									"WriteIsCouplingActiveWrongTypeRows": {},
+									"WriteIsAgingAfterDeathWrongTypeRows": {},
+									"WriteMaintenanceIfOutOfOrderWrongTypeRows": {},
+									"WriteShapeWrongTypeRows": {},
+									"WriteScaleWrongTypeRows": {},
+									"WriteExpectedLifeWrongTypeRows": {},
+									"WriteFinancialCostOfFailureWrongTypeRows": {},
+									"WriteEnvironmentalCostOfFailureWrongTypeRows": {},
+									"WriteNetworkCostOfFailureWrongTypeRows": {},
+									"WriteMissingAgingFamilyRowsMapReferenceCostOfFailure": {},
+									"WriteMissingHealthIndexRowsMapReferenceCostOfFailure": {},
+									"WriteMissingValueRowsMapReferenceCostOfFailure": {},
+									"WriteNotExistingAgingFamilyRowsMapReferenceCostOfFailure": {},
+									"WriteMapReferenceCostOfFailureValueWrongTypeRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "1-520-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-520-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-523-AgingMethodologyInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-523-AgingMethodologyInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-MinimalAgeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-MinimalAgeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-MaximalAgeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-MaximalAgeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-FailureRateAtMinimalAgeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-FailureRateAtMinimalAgeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-FailureRateAtMaximalAgeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-FailureRateAtMaximalAgeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-ExternalFailureRatePerYearWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-ExternalFailureRatePerYearWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-523-ExternalFailureRatePerYearInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-523-ExternalFailureRatePerYearInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-IsQuantityDiscreteWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-IsQuantityDiscreteWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-GFlagWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-GFlagWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-AgingFailureDelayWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-AgingFailureDelayWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnAgingFamilyFamilyPairHillParameters",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnAgingFamilyFamilyPairHillParameters",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnAgentAgingFamilyFamilyPairHillParameter",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnAgentAgingFamilyFamilyPairHillParameters",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnHillParametersFamilyPairHillParameters",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnHillParametersFamilyPairHillParameters",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnValueFamilyPairHillParameters",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnValueFamilyPairHillParameters",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-520-NotExistingAgingFamilyFamilyPairHillParameters",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-520-NotExistingAgingFamilyFamilyPairHillParameters",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-523-HillParametersFamilyPairHillParametersInvalidRang",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-523-HillParametersFamilyPairHillParametersInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-AmplitudeHillWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-AmplitudeHillWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-OffsetHillWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-OffsetHillWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-SlopeHillWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-SlopeHillWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-IsFailureTransmittedWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-IsFailureTransmittedWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-IsCouplingActiveWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-IsCouplingActiveWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-IsAgingAfterDeathWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-IsAgingAfterDeathWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-MaintenanceIfOutOfOrderWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-MaintenanceIfOutOfOrderWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-ShapeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-ShapeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-ScaleWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-ScaleWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-ExpectedLifeWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-ExpectedLifeWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-FinancialCostOfFailureWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-FinancialCostOfFailureWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-EnvironmentalCostOfFailureWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-EnvironmentalCostOfFailureWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-NetworkCostOfFailureWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-NetworkCostOfFailureWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnAgingFamilyMapReferenceCostOfFailure",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnAgingFamilyMapReferenceCostOfFailure",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnHealthIndexMapReferenceCostOfFailure",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnHealthIndexMapReferenceCostOfFailure",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-521-MissColumnValueMapReferenceCostOfFailure",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-521-MissColumnValueMapReferenceCostOfFailure",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-520-NotExistingAgingFamilyMapReferenceCostOfFailure",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-520-NotExistingAgingFamilyMapReferenceCostOfFailure",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "1-522-MapReferenceCostOfFailureValueWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamilies_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "1-522-MapReferenceCostOfFailureValueWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateAgingFamilies_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "1-520-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-523-AgingMethodologyInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-MinimalAgeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-MaximalAgeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-FailureRateAtMinimalAgeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-FailureRateAtMaximalAgeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-ExternalFailureRatePerYearWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-523-ExternalFailureRatePerYearInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-IsQuantityDiscreteWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-GFlagWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-AgingFailureDelayWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnAgingFamilyFamilyPairHillParameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnAgentAgingFamilyFamilyPairHillParameter",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnHillParametersFamilyPairHillParameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnValueFamilyPairHillParameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-520-NotExistingAgingFamilyFamilyPairHillParameters",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-523-HillParametersFamilyPairHillParametersInvalidRang",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-AmplitudeHillWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-OffsetHillWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-SlopeHillWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-IsFailureTransmittedWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-IsCouplingActiveWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-IsAgingAfterDeathWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-MaintenanceIfOutOfOrderWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-ShapeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-ScaleWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-ExpectedLifeWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-FinancialCostOfFailureWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-EnvironmentalCostOfFailureWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-NetworkCostOfFailureWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnAgingFamilyMapReferenceCostOfFailure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnHealthIndexMapReferenceCostOfFailure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-521-MissColumnValueMapReferenceCostOfFailure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-520-NotExistingAgingFamilyMapReferenceCostOfFailure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "1-522-MapReferenceCostOfFailureValueWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateAgingFamilies_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateAgingFamilies": {},
+									"ReadMapFamilyPairHillParameters": {},
+									"ReadMapMapReferenceCostOfFailure": {},
+									"WriteToTempRepo": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "1-AssetPortfolio-Runtime2",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateAgingFamily')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateAgingFamily_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateAgingFamily_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateAgingFamily": {},
+									"AgingFamiliesStatus": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {},
+									"WriteRawInvestmentWrongTypeRows": {},
+									"WriteLifeSpanWrongTypeRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "5-Finance-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "5-510-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamily_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "5-510-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "5-511-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamily_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "5-511-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "5-512-RawInvestmentWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamily_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "5-512-RawInvestmentWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "5-512-LifeSpanWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateAgingFamily_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "5-512-LifeSpanWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateAgingFamily_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "5-510-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "5-511-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "5-512-RawInvestmentWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "5-512-LifeSpanWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateAgingFamily_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateAgingFamily": {},
+									"WriteToTempRepo": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "5-Finance-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "5-Finance/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateBudgets')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "UpdateBudgets_CheckData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateBudgets_CheckData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateBudgets": {},
+									"BudgetsStatus": {},
+									"UpdateBudgetsMapCatKeyLabels": {},
+									"UpdateBudgetsMapAvailableQuantityByYear": {},
+									"UpdateBudgetsMapMinimalQuantityLevelByYear": {},
+									"WriteNotExistingNameRows": {},
+									"WriteMissingNameRows": {},
+									"WriteCostTypeInvalidRangeRows": {},
+									"WriteConstrainedWrongTypeRows": {},
+									"WriteMissingBudgetRowsCatKeyLabels": {},
+									"WriteMissingIndexRowsCatKeyLabels": {},
+									"WriteMissingValueRowsCatKeyLabels": {},
+									"WriteNotExistingBudgetRowsCatKeyLabels": {},
+									"WriteMissingBudgetRowsAvailableQuantityByYear": {},
+									"WriteMissingYearRowsAvailableQuantityByYear": {},
+									"WriteMissingValueRowsAvailableQuantityByYear": {},
+									"WriteNotExistingBudgetRowsAvailableQuantityByYear": {},
+									"WriteAvailableQuantityByYearValueWrongTypeRows": {},
+									"WriteMissingBudgetRowsMinimalQuantityLevelByYear": {},
+									"WriteMissingYearRowsMinimalQuantityLevelByYear": {},
+									"WriteMissingValueRowsMinimalQuantityLevelByYear": {},
+									"WriteNotExistingBudgetRowsMinimalQuantityLevelByYear": {},
+									"WriteMinimalQuantityLevelByYearValueWrongTypeRows": {},
+									"WriteCostRateWrongTypeRows": {},
+									"WriteRankWrongTypeRows": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "3-Budgets-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "3-510-NotExistingName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-510-NotExistingName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnName",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnName",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-513-CostTypeInvalidRange",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-513-CostTypeInvalidRange",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-512-ConstrainedWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-512-ConstrainedWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnBudgetCatKeyLabels",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnBudgetCatKeyLabels",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnIndexCatKeyLabels",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnIndexCatKeyLabels",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnValueCatKeyLabels",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnValueCatKeyLabels",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-510-NotExistingBudgetCatKeyLabels",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-510-NotExistingBudgetCatKeyLabels",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnBudgetAvailableQuantityByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnBudgetAvailableQuantityByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnYearAvailableQuantityByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnYearAvailableQuantityByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnValueAvailableQuantityByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnValueAvailableQuantityByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-510-NotExistingBudgetAvailableQuantityByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-510-NotExistingBudgetAvailableQuantityByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-512-AvailableQuantityByYearValueWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-512-AvailableQuantityByYearValueWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnBudgetMinimalQuantityLevelByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnBudgetMinimalQuantityLevelByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnYearMinimalQuantityLevelByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnYearMinimalQuantityLevelByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-511-MissColumnValueMinimalQuantityLevelByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-511-MissColumnValueMinimalQuantityLevelByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-510-NotExistingBudgetMinimalQuantityLevelByYear",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-510-NotExistingBudgetMinimalQuantityLevelByYear",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-512-MinimalQuantityLevelByYearValueWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-512-MinimalQuantityLevelByYearValueWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-512-CostRateWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-512-CostRateWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "3-512-RankWrongType",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "UpdateBudgets_CheckData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "3-512-RankWrongType",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "UpdateBudgets_TransformData",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "3-510-NotExistingName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-513-CostTypeInvalidRange",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-512-ConstrainedWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnBudgetCatKeyLabels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnIndexCatKeyLabels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnValueCatKeyLabels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-510-NotExistingBudgetCatKeyLabels",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnBudgetAvailableQuantityByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnYearAvailableQuantityByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnValueAvailableQuantityByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-510-NotExistingBudgetAvailableQuantityByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-512-AvailableQuantityByYearValueWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnBudgetMinimalQuantityLevelByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnYearMinimalQuantityLevelByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-511-MissColumnValueMinimalQuantityLevelByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-510-NotExistingBudgetMinimalQuantityLevelByYear",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-512-MinimalQuantityLevelByYearValueWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-512-CostRateWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "3-512-RankWrongType",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "UpdateBudgets_TransformData",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"ReadUpdateBudgets": {},
+									"ReadMapCatKeyLabels": {},
+									"ReadMapAvailableQuantityByYear": {},
+									"ReadMapMinimalQuantityLevelByYear": {},
+									"WriteToTempRepo": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "3-Budgets-Runtime1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "3-Budgets/Update"
+				},
+				"annotations": [],
+				"lastPublishTime": ""
+			},
+			"dependsOn": []
+		}
+	]
+}

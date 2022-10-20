@@ -1,0 +1,1973 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsAgingFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponentsAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponentsAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_AgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "AgingFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsAgingFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "1_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingEquipmentComponentRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingEquipmentComponentInEquipmentComponentsStatus"
+						},
+						{
+							"name": "ExistingAgingFamilyInAgingFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsAgingFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsAgingFamiliesStatus\nReadCreateEquipmentComponentsAgingFamilies, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentInEquipmentComponentsStatus\nReadCreateEquipmentComponentsAgingFamilies, AgingFamiliesStatus exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingAgingFamilyInAgingFamiliesStatus\nReadCreateEquipmentComponentsAgingFamilies split(isNull(EquipmentComponent),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentComponent, MissingAgingFamily)\nReadCreateEquipmentComponentsAgingFamilies, EquipmentComponentsAgingFamiliesStatus exists(ReadCreateEquipmentComponentsAgingFamilies@EquipmentComponent == EquipmentComponentsAgingFamiliesStatus@EquipmentComponent && ReadCreateEquipmentComponentsAgingFamilies@AgingFamily == EquipmentComponentsAgingFamiliesStatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus\nExistingEquipmentComponentInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-NotExistingEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRows\nExistingAgingFamilyInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-NotExistingAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRows\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-211-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-211-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nStatusEquipmentComponentAgingFamilyUniquenessCheckInEquipmentComponentsAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-210-AlreadyExistEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingEquipmentComponentRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsAgingFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponentsAgingFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponentsAgingFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsAgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsAgingFamilies\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor\nReadCreateEquipmentComponentsAgingFamilies select(mapColumn(\n\t\t{$sourceId} = EquipmentComponent,\n\t\t{$targetId} = AgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'AgingLaw',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateEquipmentComponentsAgingFamilies select(mapColumn(\n\t\tEquipmentComponent,\n\t\tAgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor\nReadTempStatusEquipmentComponentsAgingFamiliesStatusEditor, StatusColumnSelectionEquipmentComponentsAgingFamiliesStatusEditor union(byName: true)~> StatusUpdateEquipmentComponentsAgingFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponentsAgingFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponentsAgingFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsAgingFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsEquipmentComponents_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponentsEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponentsEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsEquipmentComponentsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "1_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentSourceRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentTargetRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_221",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentSourceRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_221",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentTargetRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingEquipmentComponentSourceRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingEquipmentComponentSourceInEquipmentComponentsStatus"
+						},
+						{
+							"name": "ExistingEquipmentComponentTargetInEquipmentComponentsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusEquipmentComponentSourceEquipmentComponentTargetUniquenessCheckInEquipmentComponentsEquipmentComponentsStatus"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsEquipmentComponentsStatus\nReadCreateEquipmentComponentsEquipmentComponents, EquipmentComponentsStatus exists(EquipmentComponentSource == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentSourceInEquipmentComponentsStatus\nReadCreateEquipmentComponentsEquipmentComponents, EquipmentComponentsStatus exists(EquipmentComponentTarget == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentTargetInEquipmentComponentsStatus\nReadCreateEquipmentComponentsEquipmentComponents split(isNull(EquipmentComponentSource),\n\tisNull(EquipmentComponentTarget),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentComponentSource, MissingEquipmentComponentTarget)\nReadCreateEquipmentComponentsEquipmentComponents, EquipmentComponentsEquipmentComponentsStatus exists(ReadCreateEquipmentComponentsEquipmentComponents@EquipmentComponentSource == EquipmentComponentsEquipmentComponentsStatus@EquipmentComponentSource && ReadCreateEquipmentComponentsEquipmentComponents@EquipmentComponentTarget == EquipmentComponentsEquipmentComponentsStatus@EquipmentComponentTarget,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusEquipmentComponentSourceEquipmentComponentTargetUniquenessCheckInEquipmentComponentsEquipmentComponentsStatus\nExistingEquipmentComponentSourceInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-220-NotExistingEquipmentComponentSource.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentSourceRows\nExistingEquipmentComponentTargetInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-220-NotExistingEquipmentComponentTarget.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentTargetRows\nCheckMandatoryData@MissingEquipmentComponentSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-221-MissColumnEquipmentComponentSource.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentSourceRows\nCheckMandatoryData@MissingEquipmentComponentTarget sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-221-MissColumnEquipmentComponentTarget.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentTargetRows\nStatusEquipmentComponentSourceEquipmentComponentTargetUniquenessCheckInEquipmentComponentsEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-220-AlreadyExistEquipmentComponentSource.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingEquipmentComponentSourceRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsEquipmentComponents_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponentsEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponentsEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsEquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponentsEquipmentComponents\nsource(output(\n\t\tEquipmentComponentSource as string,\n\t\tEquipmentComponentTarget as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor\nReadCreateEquipmentComponentsEquipmentComponents select(mapColumn(\n\t\t{$sourceId} = EquipmentComponentSource,\n\t\t{$targetId} = EquipmentComponentTarget\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'AgingInteraction',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateEquipmentComponentsEquipmentComponents select(mapColumn(\n\t\tEquipmentComponentSource,\n\t\tEquipmentComponentTarget\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor\nReadTempStatusEquipmentComponentsEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentComponentsEquipmentComponentsStatusEditor union(byName: true)~> StatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponentsEquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponentsEquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsEquipmentComponentsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponents_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents_MapCustomDataString",
+								"type": "DatasetReference"
+							},
+							"name": "CreateEquipmentComponentsMapCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents_MapCustomDataNumber",
+								"type": "DatasetReference"
+							},
+							"name": "CreateEquipmentComponentsMapCustomDataNumber"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "1_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteInstallationYearWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteEnvironmentAgingRateWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteQuantityWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteHealthScoreWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteHealthScoreInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteFinancialConsequencesFactorWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteEnvironmentalConsequencesFactorWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNetworkConsequencesFactorWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteKnownApparentAgeWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteKnownApparentAgeInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCriticalityLevelFailureWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCriticalityLevelNetworkConstraintWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentRowsCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingCustomDataRowsCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentRowsCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentRowsCustomDataNumber"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingCustomDataRowsCustomDataNumber"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsCustomDataNumber"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentRowsCustomDataNumber"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCustomDataNumberValueWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "1_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteSAIDI15minWrongTypeRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInEquipmentComponentsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullInstallationYear"
+						},
+						{
+							"name": "InstallationYearTypeCheck"
+						},
+						{
+							"name": "NonNullEnvironmentAgingRate"
+						},
+						{
+							"name": "EnvironmentAgingRateTypeCheck"
+						},
+						{
+							"name": "NonNullQuantity"
+						},
+						{
+							"name": "QuantityTypeCheck"
+						},
+						{
+							"name": "NonNullHealthScore"
+						},
+						{
+							"name": "HealthScoreTypeCheck"
+						},
+						{
+							"name": "HealthScoreRangeCheck"
+						},
+						{
+							"name": "NonNullFinancialConsequencesFactor"
+						},
+						{
+							"name": "FinancialConsequencesFactorTypeCheck"
+						},
+						{
+							"name": "NonNullEnvironmentalConsequencesFactor"
+						},
+						{
+							"name": "EnvironmentalConsequencesFactorTypeCheck"
+						},
+						{
+							"name": "NonNullNetworkConsequencesFactor"
+						},
+						{
+							"name": "NetworkConsequencesFactorTypeCheck"
+						},
+						{
+							"name": "NonNullKnownApparentAge"
+						},
+						{
+							"name": "KnownApparentAgeTypeCheck"
+						},
+						{
+							"name": "KnownApparentAgeRangeCheck"
+						},
+						{
+							"name": "NonNullCriticalityLevelFailure"
+						},
+						{
+							"name": "CriticalityLevelFailureTypeCheck"
+						},
+						{
+							"name": "NonNullCriticalityLevelNetworkConstraint"
+						},
+						{
+							"name": "CriticalityLevelNetworkConstraintTypeCheck"
+						},
+						{
+							"name": "MapCustomDataStringMandatoryCheck"
+						},
+						{
+							"name": "MapCustomDataStringExistenceCheck"
+						},
+						{
+							"name": "MapCustomDataNumberMandatoryCheck"
+						},
+						{
+							"name": "MapCustomDataNumberExistenceCheck"
+						},
+						{
+							"name": "NonNullCustomDataNumberValue"
+						},
+						{
+							"name": "CustomDataNumberValueTypeCheck"
+						},
+						{
+							"name": "NonNullSAIDI15min"
+						},
+						{
+							"name": "SAIDI15minTypeCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tInstallationYear as string,\n\t\tEnvironmentAgingRate as string,\n\t\tQuantity as string,\n\t\tHealthScore as string,\n\t\tFinancialConsequencesFactor as string,\n\t\tEnvironmentalConsequencesFactor as string,\n\t\tNetworkConsequencesFactor as string,\n\t\tExtraArea as string,\n\t\tDateOfLastSpecificAction as string,\n\t\tDateOfLastStateRecording as string,\n\t\tKnownApparentAge as string,\n\t\tCriticalityLevelFailure as string,\n\t\tCriticalityLevelNetworkConstraint as string,\n\t\tExtraAreaLevel2 as string,\n\t\tSAIDI15min as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateEquipmentComponentsMapCustomDataString\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateEquipmentComponentsMapCustomDataNumber\nReadCreateEquipmentComponents aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateEquipmentComponents, EquipmentComponentsStatus exists(ReadCreateEquipmentComponents@Name == EquipmentComponentsStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInEquipmentComponentsStatus\nReadCreateEquipmentComponents split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateEquipmentComponents filter(not(isNull(InstallationYear))) ~> NonNullInstallationYear\nNonNullInstallationYear split(not(isInteger(InstallationYear)),\n\tdisjoint: false) ~> InstallationYearTypeCheck@(InstallationYearWrongType)\nReadCreateEquipmentComponents filter(not(isNull(EnvironmentAgingRate))) ~> NonNullEnvironmentAgingRate\nNonNullEnvironmentAgingRate split(not(isFloat(EnvironmentAgingRate)),\n\tdisjoint: false) ~> EnvironmentAgingRateTypeCheck@(EnvironmentAgingRateWrongType)\nReadCreateEquipmentComponents filter(not(isNull(Quantity))) ~> NonNullQuantity\nNonNullQuantity split(not(isFloat(Quantity)),\n\tdisjoint: false) ~> QuantityTypeCheck@(QuantityWrongType)\nReadCreateEquipmentComponents filter(not(isNull(HealthScore))) ~> NonNullHealthScore\nNonNullHealthScore split(not(isFloat(HealthScore)),\n\tdisjoint: false) ~> HealthScoreTypeCheck@(HealthScoreWrongType, HealthScoreCorrectType)\nHealthScoreTypeCheck@HealthScoreCorrectType filter(toFloat(HealthScore) < 0.0) ~> HealthScoreRangeCheck\nReadCreateEquipmentComponents filter(not(isNull(FinancialConsequencesFactor))) ~> NonNullFinancialConsequencesFactor\nNonNullFinancialConsequencesFactor split(not(isFloat(FinancialConsequencesFactor)),\n\tdisjoint: false) ~> FinancialConsequencesFactorTypeCheck@(FinancialConsequencesFactorWrongType)\nReadCreateEquipmentComponents filter(not(isNull(EnvironmentalConsequencesFactor))) ~> NonNullEnvironmentalConsequencesFactor\nNonNullEnvironmentalConsequencesFactor split(not(isFloat(EnvironmentalConsequencesFactor)),\n\tdisjoint: false) ~> EnvironmentalConsequencesFactorTypeCheck@(EnvironmentalConsequencesFactorWrongType)\nReadCreateEquipmentComponents filter(not(isNull(NetworkConsequencesFactor))) ~> NonNullNetworkConsequencesFactor\nNonNullNetworkConsequencesFactor split(not(isFloat(NetworkConsequencesFactor)),\n\tdisjoint: false) ~> NetworkConsequencesFactorTypeCheck@(NetworkConsequencesFactorWrongType)\nReadCreateEquipmentComponents filter(not(isNull(KnownApparentAge))) ~> NonNullKnownApparentAge\nNonNullKnownApparentAge split(not(isFloat(KnownApparentAge)),\n\tdisjoint: false) ~> KnownApparentAgeTypeCheck@(KnownApparentAgeWrongType, KnownApparentAgeCorrectType)\nKnownApparentAgeTypeCheck@KnownApparentAgeCorrectType filter(toFloat(KnownApparentAge) < 0.0) ~> KnownApparentAgeRangeCheck\nReadCreateEquipmentComponents filter(not(isNull(CriticalityLevelFailure))) ~> NonNullCriticalityLevelFailure\nNonNullCriticalityLevelFailure split(not(isFloat(CriticalityLevelFailure)),\n\tdisjoint: false) ~> CriticalityLevelFailureTypeCheck@(CriticalityLevelFailureWrongType)\nReadCreateEquipmentComponents filter(not(isNull(CriticalityLevelNetworkConstraint))) ~> NonNullCriticalityLevelNetworkConstraint\nNonNullCriticalityLevelNetworkConstraint split(not(isFloat(CriticalityLevelNetworkConstraint)),\n\tdisjoint: false) ~> CriticalityLevelNetworkConstraintTypeCheck@(CriticalityLevelNetworkConstraintWrongType)\nCreateEquipmentComponentsMapCustomDataString split(isNull(EquipmentComponent),\n\tisNull(CustomData),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCustomDataStringMandatoryCheck@(MissingEquipmentComponent, MissingCustomData, MissingValue)\nCreateEquipmentComponentsMapCustomDataString, ReadCreateEquipmentComponents exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCustomDataStringExistenceCheck\nCreateEquipmentComponentsMapCustomDataNumber split(isNull(EquipmentComponent),\n\tisNull(CustomData),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCustomDataNumberMandatoryCheck@(MissingEquipmentComponent, MissingCustomData, MissingValue)\nCreateEquipmentComponentsMapCustomDataNumber, ReadCreateEquipmentComponents exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCustomDataNumberExistenceCheck\nCreateEquipmentComponentsMapCustomDataNumber filter(not(isNull(Value))) ~> NonNullCustomDataNumberValue\nNonNullCustomDataNumberValue split(not(isFloat(Value)),\n\tdisjoint: false) ~> CustomDataNumberValueTypeCheck@(CustomDataNumberValueWrongType)\nReadCreateEquipmentComponents filter(not(isNull(SAIDI15min))) ~> NonNullSAIDI15min\nNonNullSAIDI15min split(not(isFloat(SAIDI15min)),\n\tdisjoint: false) ~> SAIDI15minTypeCheck@(SAIDI15minWrongType)\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nInstallationYearTypeCheck@InstallationYearWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-InstallationYearWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteInstallationYearWrongTypeRows\nEnvironmentAgingRateTypeCheck@EnvironmentAgingRateWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-EnvironmentAgingRateWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentAgingRateWrongTypeRows\nQuantityTypeCheck@QuantityWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-QuantityWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteQuantityWrongTypeRows\nHealthScoreTypeCheck@HealthScoreWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-HealthScoreWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHealthScoreWrongTypeRows\nHealthScoreRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-113-HealthScoreInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteHealthScoreInvalidRangeRows\nFinancialConsequencesFactorTypeCheck@FinancialConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-FinancialConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteFinancialConsequencesFactorWrongTypeRows\nEnvironmentalConsequencesFactorTypeCheck@EnvironmentalConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-EnvironmentalConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteEnvironmentalConsequencesFactorWrongTypeRows\nNetworkConsequencesFactorTypeCheck@NetworkConsequencesFactorWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-NetworkConsequencesFactorWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNetworkConsequencesFactorWrongTypeRows\nKnownApparentAgeTypeCheck@KnownApparentAgeWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-KnownApparentAgeWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteKnownApparentAgeWrongTypeRows\nKnownApparentAgeRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-113-KnownApparentAgeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteKnownApparentAgeInvalidRangeRows\nCriticalityLevelFailureTypeCheck@CriticalityLevelFailureWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-CriticalityLevelFailureWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCriticalityLevelFailureWrongTypeRows\nCriticalityLevelNetworkConstraintTypeCheck@CriticalityLevelNetworkConstraintWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-CriticalityLevelNetworkConstraintWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCriticalityLevelNetworkConstraintWrongTypeRows\nMapCustomDataStringMandatoryCheck@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnEquipmentComponentCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRowsCustomDataString\nMapCustomDataStringMandatoryCheck@MissingCustomData sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnCustomDataCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCustomDataRowsCustomDataString\nMapCustomDataStringMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnValueCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCustomDataString\nMapCustomDataStringExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-110-NotExistingEquipmentComponentCustomDataString.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRowsCustomDataString\nMapCustomDataNumberMandatoryCheck@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnEquipmentComponentCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRowsCustomDataNumber\nMapCustomDataNumberMandatoryCheck@MissingCustomData sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnCustomDataCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCustomDataRowsCustomDataNumber\nMapCustomDataNumberMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-111-MissColumnValueCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCustomDataNumber\nMapCustomDataNumberExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-110-NotExistingEquipmentComponentCustomDataNumber.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRowsCustomDataNumber\nCustomDataNumberValueTypeCheck@CustomDataNumberValueWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-CustomDataNumberValueWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCustomDataNumberValueWrongTypeRows\nSAIDI15minTypeCheck@SAIDI15minWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['1-112-SAIDI15minWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSAIDI15minWrongTypeRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponents_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents_MapCustomDataString",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapCustomDataString"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentComponents_MapCustomDataNumber",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapCustomDataNumber"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusEquipmentComponentsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateEquipmentComponentsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "AggregateMapCustomDataStringKeyCustomData"
+						},
+						{
+							"name": "CustomDataStringCleaning"
+						},
+						{
+							"name": "CustomDataStringUnion"
+						},
+						{
+							"name": "CustomDataStringSelect"
+						},
+						{
+							"name": "AggregateMapCustomDataNumberKeyCustomData"
+						},
+						{
+							"name": "CustomDataNumberCleaning"
+						},
+						{
+							"name": "CustomDataNumberUnion"
+						},
+						{
+							"name": "CustomDataNumberSelect"
+						},
+						{
+							"name": "StatusColumnSelectionEquipmentComponentsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateEquipmentComponentsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tInstallationYear as string,\n\t\tEnvironmentAgingRate as string,\n\t\tQuantity as string,\n\t\tHealthScore as string,\n\t\tFinancialConsequencesFactor as string,\n\t\tEnvironmentalConsequencesFactor as string,\n\t\tNetworkConsequencesFactor as string,\n\t\tExtraArea as string,\n\t\tDateOfLastSpecificAction as string,\n\t\tDateOfLastStateRecording as string,\n\t\tKnownApparentAge as string,\n\t\tCriticalityLevelFailure as string,\n\t\tCriticalityLevelNetworkConstraint as string,\n\t\tExtraAreaLevel2 as string,\n\t\tSAIDI15min as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentComponents\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCustomDataString\nsource(output(\n\t\tEquipmentComponent as string,\n\t\tCustomData as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCustomDataNumber\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentComponentsStatusEditor\nReadCreateEquipmentComponents select(mapColumn(\n\t\t{$id} = Name,\n\t\tInstallationYear,\n\t\tEnvironmentAgingRate,\n\t\tQuantity,\n\t\tHealthScore,\n\t\tFinancialConsequencesFactor,\n\t\tEnvironmentalConsequencesFactor,\n\t\tNetworkConsequencesFactor,\n\t\tExtraArea,\n\t\tDateOfLastSpecificAction,\n\t\tDateOfLastStateRecording,\n\t\tKnownApparentAge,\n\t\tCriticalityLevelFailure,\n\t\tCriticalityLevelNetworkConstraint,\n\t\tExtraAreaLevel2,\n\t\tSAIDI15min\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:EquipmentComponent;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapCustomDataString aggregate(groupBy(EquipmentComponent),\n\tCustomDataString = toString(keyValues(collect(toString(CustomData)), collect(toString(Value))))) ~> AggregateMapCustomDataStringKeyCustomData\nAggregateMapCustomDataStringKeyCustomData derive(CustomDataString = replace(replace(replace(CustomDataString, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CustomDataStringCleaning\nModelDefinition, CustomDataStringCleaning join({$id} == EquipmentComponent,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> CustomDataStringUnion\nCustomDataStringUnion select(mapColumn(\n\t\t{$id},\n\t\tInstallationYear,\n\t\tEnvironmentAgingRate,\n\t\tQuantity,\n\t\tHealthScore,\n\t\tFinancialConsequencesFactor,\n\t\tEnvironmentalConsequencesFactor,\n\t\tNetworkConsequencesFactor,\n\t\tExtraArea,\n\t\tDateOfLastSpecificAction,\n\t\tDateOfLastStateRecording,\n\t\tKnownApparentAge,\n\t\tCriticalityLevelFailure,\n\t\tCriticalityLevelNetworkConstraint,\n\t\tExtraAreaLevel2,\n\t\tSAIDI15min,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCustomData_String = CustomDataString\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CustomDataStringSelect\nReadMapCustomDataNumber aggregate(groupBy(EquipmentComponent),\n\tCustomDataNumber = toString(keyValues(collect(toString(CustomData)), collect(toFloat(Value))))) ~> AggregateMapCustomDataNumberKeyCustomData\nAggregateMapCustomDataNumberKeyCustomData derive(CustomDataNumber = replace(replace(replace(CustomDataNumber, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CustomDataNumberCleaning\nCustomDataStringSelect, CustomDataNumberCleaning join({$id} == EquipmentComponent,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> CustomDataNumberUnion\nCustomDataNumberUnion select(mapColumn(\n\t\t{$id},\n\t\tInstallationYear,\n\t\tEnvironmentAgingRate,\n\t\tQuantity,\n\t\tHealthScore,\n\t\tFinancialConsequencesFactor,\n\t\tEnvironmentalConsequencesFactor,\n\t\tNetworkConsequencesFactor,\n\t\tExtraArea,\n\t\tDateOfLastSpecificAction,\n\t\tDateOfLastStateRecording,\n\t\tKnownApparentAge,\n\t\tCriticalityLevelFailure,\n\t\tCriticalityLevelNetworkConstraint,\n\t\tExtraAreaLevel2,\n\t\tSAIDI15min,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCustomData_String,\n\t\tCustomData_Number = CustomDataNumber\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CustomDataNumberSelect\nReadCreateEquipmentComponents select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentComponentsStatusEditor\nReadTempStatusEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentComponentsStatusEditor union(byName: true)~> StatusUpdateEquipmentComponentsStatusEditor\nCustomDataNumberSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentComponentsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentGroupsEquipmentComponents_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroupsEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentGroupsEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentGroupsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentComponentsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsEquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentGroupsEquipmentComponentsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_240",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentGroupRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_240",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentComponentRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_241",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentGroupRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_241",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentComponentRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_240",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingEquipmentGroupRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingEquipmentGroupInEquipmentGroupsStatus"
+						},
+						{
+							"name": "ExistingEquipmentComponentInEquipmentComponentsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroupsEquipmentComponents\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentComponentsStatus\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsEquipmentComponentsStatus\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentGroupInEquipmentGroupsStatus\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentComponentsStatus exists(EquipmentComponent == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentComponentInEquipmentComponentsStatus\nReadCreateEquipmentGroupsEquipmentComponents split(isNull(EquipmentGroup),\n\tisNull(EquipmentComponent),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingEquipmentGroup, MissingEquipmentComponent)\nReadCreateEquipmentGroupsEquipmentComponents, EquipmentGroupsEquipmentComponentsStatus exists(ReadCreateEquipmentGroupsEquipmentComponents@EquipmentGroup == EquipmentGroupsEquipmentComponentsStatus@EquipmentGroup && ReadCreateEquipmentGroupsEquipmentComponents@EquipmentComponent == EquipmentGroupsEquipmentComponentsStatus@EquipmentComponent,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus\nExistingEquipmentGroupInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-NotExistingEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRows\nExistingEquipmentComponentInEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-NotExistingEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentComponentRows\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-241-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nCheckMandatoryData@MissingEquipmentComponent sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-241-MissColumnEquipmentComponent.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentComponentRows\nStatusEquipmentGroupEquipmentComponentUniquenessCheckInEquipmentGroupsEquipmentComponentsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-240-AlreadyExistEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingEquipmentGroupRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentGroupsEquipmentComponents_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroupsEquipmentComponents",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentGroupsEquipmentComponents"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsEquipmentComponentsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroupsEquipmentComponents\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tEquipmentComponent as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor\nReadCreateEquipmentGroupsEquipmentComponents select(mapColumn(\n\t\t{$sourceId} = EquipmentGroup,\n\t\t{$targetId} = EquipmentComponent\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'Group_contains_EquipmentComponent',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateEquipmentGroupsEquipmentComponents select(mapColumn(\n\t\tEquipmentGroup,\n\t\tEquipmentComponent\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor\nReadTempStatusEquipmentGroupsEquipmentComponentsStatusEditor, StatusColumnSelectionEquipmentGroupsEquipmentComponentsStatusEditor union(byName: true)~> StatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentGroupsEquipmentComponents.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentGroupsEquipmentComponents_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentGroupsEquipmentComponentsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentGroups_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentGroupsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "CreateEquipmentGroupsMapBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups_MapHRCategories",
+								"type": "DatasetReference"
+							},
+							"name": "CreateEquipmentGroupsMapHRCategories"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_122",
+								"type": "DatasetReference"
+							},
+							"name": "WriteQuantityWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentGroupRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentGroupRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentGroupRowsHRCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsHRCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_121",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsHRCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_120",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentGroupRowsHRCategories"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInEquipmentGroupsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullQuantity"
+						},
+						{
+							"name": "QuantityTypeCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesMandatoryCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesExistenceCheck"
+						},
+						{
+							"name": "MapHRCategoriesMandatoryCheck"
+						},
+						{
+							"name": "MapHRCategoriesExistenceCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tQuantity as string,\n\t\tRatingLevel as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroups\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateEquipmentGroupsMapBudgetCategories\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> CreateEquipmentGroupsMapHRCategories\nReadCreateEquipmentGroups aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateEquipmentGroups, EquipmentGroupsStatus exists(ReadCreateEquipmentGroups@Name == EquipmentGroupsStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInEquipmentGroupsStatus\nReadCreateEquipmentGroups split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateEquipmentGroups filter(not(isNull(Quantity))) ~> NonNullQuantity\nNonNullQuantity split(not(isFloat(Quantity)),\n\tdisjoint: false) ~> QuantityTypeCheck@(QuantityWrongType)\nCreateEquipmentGroupsMapBudgetCategories split(isNull(EquipmentGroup),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingEquipmentGroup, MissingIndex, MissingValue)\nCreateEquipmentGroupsMapBudgetCategories, ReadCreateEquipmentGroups exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nCreateEquipmentGroupsMapHRCategories split(isNull(EquipmentGroup),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapHRCategoriesMandatoryCheck@(MissingEquipmentGroup, MissingIndex, MissingValue)\nCreateEquipmentGroupsMapHRCategories, ReadCreateEquipmentGroups exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapHRCategoriesExistenceCheck\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-120-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-120-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nQuantityTypeCheck@QuantityWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-122-QuantityWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteQuantityWrongTypeRows\nMapBudgetCategoriesMandatoryCheck@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnEquipmentGroupBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-120-NotExistingEquipmentGroupBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRowsBudgetCategories\nMapHRCategoriesMandatoryCheck@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnEquipmentGroupHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRowsHRCategories\nMapHRCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnIndexHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsHRCategories\nMapHRCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-121-MissColumnValueHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsHRCategories\nMapHRCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-120-NotExistingEquipmentGroupHRCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRowsHRCategories"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentGroups_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "CreateEquipmentGroups_MapHRCategories",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapHRCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusEquipmentGroupsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateEquipmentGroupsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "AggregateMapBudgetCategoriesKeyIndex"
+						},
+						{
+							"name": "BudgetCategoriesCleaning"
+						},
+						{
+							"name": "BudgetCategoriesUnion"
+						},
+						{
+							"name": "BudgetCategoriesSelect"
+						},
+						{
+							"name": "AggregateMapHRCategoriesKeyIndex"
+						},
+						{
+							"name": "HRCategoriesCleaning"
+						},
+						{
+							"name": "HRCategoriesUnion"
+						},
+						{
+							"name": "HRCategoriesSelect"
+						},
+						{
+							"name": "StatusColumnSelectionEquipmentGroupsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateEquipmentGroupsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tQuantity as string,\n\t\tRatingLevel as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateEquipmentGroups\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nsource(output(\n\t\tEquipmentGroup as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapHRCategories\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusEquipmentGroupsStatusEditor\nReadCreateEquipmentGroups select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tQuantity,\n\t\tRatingLevel\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:EquipmentGroup;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapBudgetCategories aggregate(groupBy(EquipmentGroup),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nModelDefinition, BudgetCategoriesCleaning join({$id} == EquipmentGroup,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tQuantity,\n\t\tRatingLevel,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nReadMapHRCategories aggregate(groupBy(EquipmentGroup),\n\tHRCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapHRCategoriesKeyIndex\nAggregateMapHRCategoriesKeyIndex derive(HRCategories = replace(replace(replace(HRCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> HRCategoriesCleaning\nBudgetCategoriesSelect, HRCategoriesCleaning join({$id} == EquipmentGroup,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> HRCategoriesUnion\nHRCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tQuantity,\n\t\tRatingLevel,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tBudgetCategories,\n\t\tHRCategories\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> HRCategoriesSelect\nReadCreateEquipmentGroups select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionEquipmentGroupsStatusEditor\nReadTempStatusEquipmentGroupsStatusEditor, StatusColumnSelectionEquipmentGroupsStatusEditor union(byName: true)~> StatusUpdateEquipmentGroupsStatusEditor\nHRCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_EquipmentGroups.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateEquipmentGroupsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['EquipmentGroups_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateEquipmentGroupsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamiliesAgingFamiliesApplication_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamiliesAgingFamiliesApplication",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamiliesAgingFamiliesApplication"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_AgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "AgingFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesAgingFamiliesApplicationStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_221",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_221",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_220",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingSubActionFamilyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingSubActionFamilyInSubActionFamiliesStatus"
+						},
+						{
+							"name": "ExistingAgingFamilyInAgingFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesApplication\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesAgingFamiliesApplicationStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication, SubActionFamiliesStatus exists(SubActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSubActionFamilyInSubActionFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication, AgingFamiliesStatus exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingAgingFamilyInAgingFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesApplication split(isNull(SubActionFamily),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSubActionFamily, MissingAgingFamily)\nReadCreateSubActionFamiliesAgingFamiliesApplication, SubActionFamiliesAgingFamiliesApplicationStatus exists(ReadCreateSubActionFamiliesAgingFamiliesApplication@SubActionFamily == SubActionFamiliesAgingFamiliesApplicationStatus@SubActionFamily && ReadCreateSubActionFamiliesAgingFamiliesApplication@AgingFamily == SubActionFamiliesAgingFamiliesApplicationStatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus\nExistingSubActionFamilyInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-NotExistingSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSubActionFamilyRows\nExistingAgingFamilyInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-NotExistingAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRows\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-221-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-221-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nStatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesApplicationStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-220-AlreadyExistSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSubActionFamilyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamiliesAgingFamiliesApplication_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamiliesAgingFamiliesApplication",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamiliesAgingFamiliesApplication"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesApplication\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadCreateSubActionFamiliesAgingFamiliesApplication select(mapColumn(\n\t\t{$sourceId} = SubActionFamily,\n\t\t{$targetId} = AgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'apply_to_AgingFamily',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateSubActionFamiliesAgingFamiliesApplication select(mapColumn(\n\t\tSubActionFamily,\n\t\tAgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor union(byName: true)~> StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SubActionFamiliesAgingFamiliesApplication.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesApplication_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamiliesAgingFamiliesReplacement_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamiliesAgingFamiliesReplacement",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamiliesAgingFamiliesReplacement"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_AgingFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "AgingFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesReplacementStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesAgingFamiliesReplacementStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_230",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_230",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_231",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSubActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_231",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingAgingFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_230",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingSubActionFamilyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingSubActionFamilyInSubActionFamiliesStatus"
+						},
+						{
+							"name": "ExistingAgingFamilyInAgingFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesReplacementStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesReplacement\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> AgingFamiliesStatus\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesAgingFamiliesReplacementStatus\nReadCreateSubActionFamiliesAgingFamiliesReplacement, SubActionFamiliesStatus exists(SubActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSubActionFamilyInSubActionFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesReplacement, AgingFamiliesStatus exists(AgingFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingAgingFamilyInAgingFamiliesStatus\nReadCreateSubActionFamiliesAgingFamiliesReplacement split(isNull(SubActionFamily),\n\tisNull(AgingFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSubActionFamily, MissingAgingFamily)\nReadCreateSubActionFamiliesAgingFamiliesReplacement, SubActionFamiliesAgingFamiliesReplacementStatus exists(ReadCreateSubActionFamiliesAgingFamiliesReplacement@SubActionFamily == SubActionFamiliesAgingFamiliesReplacementStatus@SubActionFamily && ReadCreateSubActionFamiliesAgingFamiliesReplacement@AgingFamily == SubActionFamiliesAgingFamiliesReplacementStatus@AgingFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesReplacementStatus\nExistingSubActionFamilyInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-230-NotExistingSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSubActionFamilyRows\nExistingAgingFamilyInAgingFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-230-NotExistingAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingAgingFamilyRows\nCheckMandatoryData@MissingSubActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-231-MissColumnSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSubActionFamilyRows\nCheckMandatoryData@MissingAgingFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-231-MissColumnAgingFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingAgingFamilyRows\nStatusSubActionFamilyAgingFamilyUniquenessCheckInSubActionFamiliesAgingFamiliesReplacementStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-230-AlreadyExistSubActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSubActionFamilyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamiliesAgingFamiliesReplacement_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamiliesAgingFamiliesReplacement",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamiliesAgingFamiliesReplacement"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesReplacementStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamiliesAgingFamiliesReplacement\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadCreateSubActionFamiliesAgingFamiliesReplacement select(mapColumn(\n\t\t{$sourceId} = SubActionFamily,\n\t\t{$targetId} = AgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'replace_with_RetrofitAgingFamily',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateSubActionFamiliesAgingFamiliesReplacement select(mapColumn(\n\t\tSubActionFamily,\n\t\tAgingFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor union(byName: true)~> StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SuBActionFamiliesAgingFamiliesReplacement.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesReplacement_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotUniqueNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_110",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_111",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTypeInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteImpactModeInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_112",
+								"type": "DatasetReference"
+							},
+							"name": "WriteImpactOnEquipmentWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_113",
+								"type": "DatasetReference"
+							},
+							"name": "WriteImpactOnEquipmentInvalidRangeRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "InternalNameUniquenessCheckAggregate"
+						},
+						{
+							"name": "InternalNameUniquenessCheckFilter"
+						},
+						{
+							"name": "StatusNameUniquenessCheckInSubActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullEnumType"
+						},
+						{
+							"name": "TypeEnumCheck"
+						},
+						{
+							"name": "NonNullEnumImpactMode"
+						},
+						{
+							"name": "ImpactModeEnumCheck"
+						},
+						{
+							"name": "NonNullImpactOnEquipment"
+						},
+						{
+							"name": "ImpactOnEquipmentTypeCheck"
+						},
+						{
+							"name": "ImpactOnEquipmentRangeCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tType as string,\n\t\tImpactMode as string,\n\t\tImpactOnEquipment as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nReadCreateSubActionFamilies aggregate(groupBy(Name),\n\tCount = count(Name)) ~> InternalNameUniquenessCheckAggregate\nInternalNameUniquenessCheckAggregate filter(Count > 1) ~> InternalNameUniquenessCheckFilter\nReadCreateSubActionFamilies, SubActionFamiliesStatus exists(ReadCreateSubActionFamilies@Name == SubActionFamiliesStatus@Name,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusNameUniquenessCheckInSubActionFamiliesStatus\nReadCreateSubActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadCreateSubActionFamilies filter(not(isNull(Type))) ~> NonNullEnumType\nNonNullEnumType filter(not(in(['NoAction', 'Repairs', 'Replacement', 'Inspection', 'Activation', 'Deactivation', 'RepairsWithoutInspection'], Type))) ~> TypeEnumCheck\nReadCreateSubActionFamilies filter(not(isNull(ImpactMode))) ~> NonNullEnumImpactMode\nNonNullEnumImpactMode filter(not(in(['ApparentAgeBased'], ImpactMode))) ~> ImpactModeEnumCheck\nReadCreateSubActionFamilies filter(not(isNull(ImpactOnEquipment))) ~> NonNullImpactOnEquipment\nNonNullImpactOnEquipment split(not(isFloat(ImpactOnEquipment)),\n\tdisjoint: false) ~> ImpactOnEquipmentTypeCheck@(ImpactOnEquipmentWrongType, ImpactOnEquipmentCorrectType)\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentCorrectType filter(or(toFloat(ImpactOnEquipment) < 0.0, toFloat(ImpactOnEquipment) > 1.0)) ~> ImpactOnEquipmentRangeCheck\nInternalNameUniquenessCheckFilter sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-110-NotUniqueName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotUniqueNameRows\nStatusNameUniquenessCheckInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-110-AlreadyExistName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-111-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nTypeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-TypeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTypeInvalidRangeRows\nImpactModeEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-ImpactModeInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactModeInvalidRangeRows\nImpactOnEquipmentTypeCheck@ImpactOnEquipmentWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-112-ImpactOnEquipmentWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentWrongTypeRows\nImpactOnEquipmentRangeCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-113-ImpactOnEquipmentInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteImpactOnEquipmentInvalidRangeRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSubActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tType as string,\n\t\tImpactMode as string,\n\t\tImpactOnEquipment as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesStatusEditor\nReadCreateSubActionFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tType,\n\t\tImpactMode,\n\t\tImpactOnEquipment\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SubActionFamily;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadCreateSubActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesStatusEditor\nReadTempStatusSubActionFamiliesStatusEditor, StatusColumnSelectionSubActionFamiliesStatusEditor union(byName: true)~> StatusUpdateSubActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SubActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSustainmentActionsActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSustainmentActionsActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSustainmentActionsActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_211",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_210",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingSustainmentActionRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingSustainmentActionInSustainmentActionsStatus"
+						},
+						{
+							"name": "ExistingActionFamilyInActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsActionFamiliesStatus\nReadCreateSustainmentActionsActionFamilies, SustainmentActionsStatus exists(SustainmentAction == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSustainmentActionInSustainmentActionsStatus\nReadCreateSustainmentActionsActionFamilies, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingActionFamilyInActionFamiliesStatus\nReadCreateSustainmentActionsActionFamilies split(isNull(SustainmentAction),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingActionFamily)\nReadCreateSustainmentActionsActionFamilies, SustainmentActionsActionFamiliesStatus exists(ReadCreateSustainmentActionsActionFamilies@SustainmentAction == SustainmentActionsActionFamiliesStatus@SustainmentAction && ReadCreateSustainmentActionsActionFamilies@ActionFamily == SustainmentActionsActionFamiliesStatus@ActionFamily,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus\nExistingSustainmentActionInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows\nExistingActionFamilyInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-NotExistingActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRows\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-211-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-211-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nStatusSustainmentActionActionFamilyUniquenessCheckInSustainmentActionsActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-210-AlreadyExistSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSustainmentActionRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSustainmentActionsActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSustainmentActionsActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSustainmentActionsActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsActionFamilies\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsActionFamiliesStatusEditor\nReadCreateSustainmentActionsActionFamilies select(mapColumn(\n\t\t{$sourceId} = SustainmentAction,\n\t\t{$targetId} = ActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'has_type_ActionFamily',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateSustainmentActionsActionFamilies select(mapColumn(\n\t\tSustainmentAction,\n\t\tActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor union(byName: true)~> StatusUpdateSustainmentActionsActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActionsActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSustainmentActionsEquipmentGroups_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSustainmentActionsEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSustainmentActionsEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_EquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "EquipmentGroupsStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsEquipmentGroupsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_250",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_250",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingEquipmentGroupRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_251",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_251",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentGroupRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_250",
+								"type": "DatasetReference"
+							},
+							"name": "WriteAlreadyExistingSustainmentActionRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingSustainmentActionInSustainmentActionsStatus"
+						},
+						{
+							"name": "ExistingEquipmentGroupInEquipmentGroupsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsEquipmentGroups\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> EquipmentGroupsStatus\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsEquipmentGroupsStatus\nReadCreateSustainmentActionsEquipmentGroups, SustainmentActionsStatus exists(SustainmentAction == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingSustainmentActionInSustainmentActionsStatus\nReadCreateSustainmentActionsEquipmentGroups, EquipmentGroupsStatus exists(EquipmentGroup == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingEquipmentGroupInEquipmentGroupsStatus\nReadCreateSustainmentActionsEquipmentGroups split(isNull(SustainmentAction),\n\tisNull(EquipmentGroup),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingEquipmentGroup)\nReadCreateSustainmentActionsEquipmentGroups, SustainmentActionsEquipmentGroupsStatus exists(ReadCreateSustainmentActionsEquipmentGroups@SustainmentAction == SustainmentActionsEquipmentGroupsStatus@SustainmentAction && ReadCreateSustainmentActionsEquipmentGroups@EquipmentGroup == SustainmentActionsEquipmentGroupsStatus@EquipmentGroup,\n\tnegate:false,\n\tbroadcast: 'auto')~> StatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus\nExistingSustainmentActionInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows\nExistingEquipmentGroupInEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-NotExistingEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingEquipmentGroupRows\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-251-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-251-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nStatusSustainmentActionEquipmentGroupUniquenessCheckInSustainmentActionsEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-250-AlreadyExistSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteAlreadyExistingSustainmentActionRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateSustainmentActionsEquipmentGroups_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CreateSustainmentActionsEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadCreateSustainmentActionsEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementCreateRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadCreateSustainmentActionsEquipmentGroups\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor\nReadCreateSustainmentActionsEquipmentGroups select(mapColumn(\n\t\t{$sourceId} = SustainmentAction,\n\t\t{$targetId} = EquipmentGroup\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'is_on_EquipmentGroup',\n\t\t{$relationshipDelete} = 'false',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadCreateSustainmentActionsEquipmentGroups select(mapColumn(\n\t\tSustainmentAction,\n\t\tEquipmentGroup\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor\nReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor, StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor union(byName: true)~> StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActionsEquipmentGroups.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsEquipmentGroups_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

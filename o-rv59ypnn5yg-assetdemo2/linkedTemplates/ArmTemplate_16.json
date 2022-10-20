@@ -1,0 +1,1008 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesActionTasks')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ActionFamiliesActionTasks.csv",
+						"folderPath": "ActivitiesManagementHumanResources/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ActionFamily",
+						"type": "String"
+					},
+					{
+						"name": "ActionTask",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamiliesSubActionFamilies')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ActionFamiliesSubActionFamilies.csv",
+						"folderPath": "AssetPortfolioActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ActionFamily",
+						"type": "String"
+					},
+					{
+						"name": "SubActionFamily",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamilies_MapBudgetCategories')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ActionFamilies_MapBudgetCategories.csv",
+						"folderPath": "ActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ActionFamily",
+						"type": "String"
+					},
+					{
+						"name": "Index",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionFamilies_MapCostsByRatingLevel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ActionFamilies_MapCostsByRatingLevel.csv",
+						"folderPath": "ActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ActionFamily",
+						"type": "String"
+					},
+					{
+						"name": "RatingLevel",
+						"type": "String"
+					},
+					{
+						"name": "UnitProperty",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateActionTasks')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "12-ActivitiesManagementHumanResources/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ActionTasks.csv",
+						"folderPath": "ActivitiesManagementHumanResources/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Skill",
+						"type": "String"
+					},
+					{
+						"name": "ActionDurationPercentage",
+						"type": "String"
+					},
+					{
+						"name": "WorkforceFTE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateAgingFamilies')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "AgingFamilies.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "AgingMethodology",
+						"type": "String"
+					},
+					{
+						"name": "MinimalAge",
+						"type": "String"
+					},
+					{
+						"name": "MaximalAge",
+						"type": "String"
+					},
+					{
+						"name": "FailureRateAtMinimalAge",
+						"type": "String"
+					},
+					{
+						"name": "FailureRateAtMaximalAge",
+						"type": "String"
+					},
+					{
+						"name": "ExternalFailureRatePerYear",
+						"type": "String"
+					},
+					{
+						"name": "IsQuantityDiscrete",
+						"type": "String"
+					},
+					{
+						"name": "GFlag",
+						"type": "String"
+					},
+					{
+						"name": "AgingFailureDelay",
+						"type": "String"
+					},
+					{
+						"name": "IsAgingAfterDeath",
+						"type": "String"
+					},
+					{
+						"name": "MaintenanceIfOutOfOrder",
+						"type": "String"
+					},
+					{
+						"name": "Shape",
+						"type": "String"
+					},
+					{
+						"name": "Scale",
+						"type": "String"
+					},
+					{
+						"name": "ExpectedLife",
+						"type": "String"
+					},
+					{
+						"name": "FinancialCostOfFailure",
+						"type": "String"
+					},
+					{
+						"name": "EnvironmentalCostOfFailure",
+						"type": "String"
+					},
+					{
+						"name": "NetworkCostOfFailure",
+						"type": "String"
+					},
+					{
+						"name": "ExtraNL",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateAgingFamilies_MapFamilyPairHillParameters')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "AgingFamilies_MapFamilyPairHillParameters.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "AgingFamily",
+						"type": "String"
+					},
+					{
+						"name": "AgentAgingFamily",
+						"type": "String"
+					},
+					{
+						"name": "HillParameters",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateAgingFamilies_MapMapReferenceCostOfFailure')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "AgingFamilies_MapReferenceCostOfFailure.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "AgingFamily",
+						"type": "String"
+					},
+					{
+						"name": "HealthIndex",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Budgets.csv",
+						"folderPath": "Budgets/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "CostType",
+						"type": "String"
+					},
+					{
+						"name": "Constrained",
+						"type": "String"
+					},
+					{
+						"name": "CostRate",
+						"type": "String"
+					},
+					{
+						"name": "Rank",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets_MapAvailableQuantityByYear')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Budgets_MapAvailableQuantityByYear.csv",
+						"folderPath": "Budgets/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Budget",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets_MapCatKeyLabels')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Budgets_MapCatKeyLabels.csv",
+						"folderPath": "Budgets/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Budget",
+						"type": "String"
+					},
+					{
+						"name": "Index",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateBudgets_MapMinimalQuantityLevelByYear')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "3-Budgets/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Budgets_MapMinimalQuantityLevelByYear.csv",
+						"folderPath": "Budgets/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Budget",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateCriteria')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Criteria.csv",
+						"folderPath": "ActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "EquipmentComponentAttribute",
+						"type": "String"
+					},
+					{
+						"name": "Operator",
+						"type": "String"
+					},
+					{
+						"name": "Threshold",
+						"type": "String"
+					},
+					{
+						"name": "ReferenceAttribute",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateCriteria_MapTargetedAgingFamilies')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Criteria_MapTargetedAgingFamilies.csv",
+						"folderPath": "ActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Criterion",
+						"type": "String"
+					},
+					{
+						"name": "Index",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateCriteria_MapValueAsString')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "2-ActivitiesManagement/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Criteria_MapValueAsString.csv",
+						"folderPath": "ActivitiesManagement/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Criterion",
+						"type": "String"
+					},
+					{
+						"name": "Index",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponents')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "EquipmentComponents.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "InstallationYear",
+						"type": "String"
+					},
+					{
+						"name": "EnvironmentAgingRate",
+						"type": "String"
+					},
+					{
+						"name": "Quantity",
+						"type": "String"
+					},
+					{
+						"name": "HealthScore",
+						"type": "String"
+					},
+					{
+						"name": "FinancialConsequencesFactor",
+						"type": "String"
+					},
+					{
+						"name": "EnvironmentalConsequencesFactor",
+						"type": "String"
+					},
+					{
+						"name": "NetworkConsequencesFactor",
+						"type": "String"
+					},
+					{
+						"name": "ExtraArea",
+						"type": "String"
+					},
+					{
+						"name": "DateOfLastSpecificAction",
+						"type": "String"
+					},
+					{
+						"name": "DateOfLastStateRecording",
+						"type": "String"
+					},
+					{
+						"name": "KnownApparentAge",
+						"type": "String"
+					},
+					{
+						"name": "CriticalityLevelFailure",
+						"type": "String"
+					},
+					{
+						"name": "CriticalityLevelNetworkConstraint",
+						"type": "String"
+					},
+					{
+						"name": "ExtraAreaLevel2",
+						"type": "String"
+					},
+					{
+						"name": "SAIDI15min",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsAgingFamilies')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "EquipmentComponentsAgingFamilies.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EquipmentComponent",
+						"type": "String"
+					},
+					{
+						"name": "AgingFamily",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponentsEquipmentComponents')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "EquipmentComponentsEquipmentComponents.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EquipmentComponentSource",
+						"type": "String"
+					},
+					{
+						"name": "EquipmentComponentTarget",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponents_MapCustomDataNumber')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "EquipmentComponents_MapCustomData_Number.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EquipmentComponent",
+						"type": "String"
+					},
+					{
+						"name": "CustomData",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CreateEquipmentComponents_MapCustomDataString')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AcceleratorStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "1-AssetPortfolio/Create"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "EquipmentComponents_MapCustomData_String.csv",
+						"folderPath": "AssetPortfolio/Create",
+						"container": "asset-integration-accelerator-input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "EquipmentComponent",
+						"type": "String"
+					},
+					{
+						"name": "CustomData",
+						"type": "String"
+					},
+					{
+						"name": "Value",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		}
+	]
+}

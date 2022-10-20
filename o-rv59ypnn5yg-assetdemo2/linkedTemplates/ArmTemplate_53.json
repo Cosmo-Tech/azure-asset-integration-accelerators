@@ -1,0 +1,1574 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "o-rv59ypnn5yg-assetdemo2"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSubActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SubActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_310",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_311",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingNameInSubActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SubActionFamiliesStatus\nReadDeleteSubActionFamilies, SubActionFamiliesStatus exists(ReadDeleteSubActionFamilies@Name == SubActionFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInSubActionFamiliesStatus\nReadDeleteSubActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nExistingNameInSubActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-310-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-311-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSubActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSubActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSubActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesSubActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesApplicationStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SubActionFamiliesAgingFamiliesReplacementStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementDeleteEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateActionFamiliesSubActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSubActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesStatusEditor\nsource(output(\n\t\tActionFamily as string,\n\t\tSubActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusActionFamiliesSubActionFamiliesStatusEditor\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor\nsource(output(\n\t\tSubActionFamily as string,\n\t\tAgingFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadDeleteSubActionFamilies select(mapColumn(\n\t\t{$id} = Name\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SubActionFamily;1',\n\t\t{$entityDelete} = 'true') ~> ModelDefinition\nReadDeleteSubActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesStatusEditor\nReadTempStatusSubActionFamiliesStatusEditor, StatusColumnSelectionSubActionFamiliesStatusEditor exists(ReadTempStatusSubActionFamiliesStatusEditor@Name == StatusColumnSelectionSubActionFamiliesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSubActionFamiliesStatusEditor\nReadDeleteSubActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor\nReadTempStatusActionFamiliesSubActionFamiliesStatusEditor, StatusColumnSelectionActionFamiliesSubActionFamiliesStatusEditor exists(Name == SubActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nReadDeleteSubActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesApplicationStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesApplicationStatusEditor exists(Name == SubActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor\nReadDeleteSubActionFamilies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor\nReadTempStatusSubActionFamiliesAgingFamiliesReplacementStatusEditor, StatusColumnSelectionSubActionFamiliesAgingFamiliesReplacementStatusEditor exists(Name == SubActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SubActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesStatusEditor\nStatusUpdateActionFamiliesSubActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['ActionFamiliesSubActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateActionFamiliesSubActionFamiliesStatusEditor\nStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesApplication_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesApplicationStatusEditor\nStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SubActionFamiliesAgingFamiliesReplacement_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSubActionFamiliesAgingFamiliesReplacementStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActionsActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActionsActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_411",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_411",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_410",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSustainmentActionRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsActionFamilies\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsActionFamiliesStatus\nReadDeleteSustainmentActionsActionFamilies split(isNull(SustainmentAction),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingActionFamily)\nReadDeleteSustainmentActionsActionFamilies, SustainmentActionsActionFamiliesStatus exists(ReadDeleteSustainmentActionsActionFamilies@SustainmentAction == SustainmentActionsActionFamiliesStatus@SustainmentAction && ReadDeleteSustainmentActionsActionFamilies@ActionFamily == SustainmentActionsActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-411-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-411-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nStatusSustainmentActionActionFamilyExistenceCheckInSustainmentActionsActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-410-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActionsActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActionsActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsActionFamilies\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsActionFamiliesStatusEditor\nReadDeleteSustainmentActionsActionFamilies select(mapColumn(\n\t\t{$sourceId} = SustainmentAction,\n\t\t{$targetId} = ActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'has_type_ActionFamily',\n\t\t{$relationshipDelete} = 'true',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadDeleteSustainmentActionsActionFamilies select(mapColumn(\n\t\tSustainmentAction,\n\t\tActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor exists(ReadTempStatusSustainmentActionsActionFamiliesStatusEditor@SustainmentAction == StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor@SustainmentAction && ReadTempStatusSustainmentActionsActionFamiliesStatusEditor@ActionFamily == StatusColumnSelectionSustainmentActionsActionFamiliesStatusEditor@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActionsActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsEquipmentGroups_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActionsEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActionsEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsEquipmentGroupsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "11_451",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingSustainmentActionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_451",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingEquipmentGroupRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "11_450",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingSustainmentActionRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsEquipmentGroups\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsEquipmentGroupsStatus\nReadDeleteSustainmentActionsEquipmentGroups split(isNull(SustainmentAction),\n\tisNull(EquipmentGroup),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingSustainmentAction, MissingEquipmentGroup)\nReadDeleteSustainmentActionsEquipmentGroups, SustainmentActionsEquipmentGroupsStatus exists(ReadDeleteSustainmentActionsEquipmentGroups@SustainmentAction == SustainmentActionsEquipmentGroupsStatus@SustainmentAction && ReadDeleteSustainmentActionsEquipmentGroups@EquipmentGroup == SustainmentActionsEquipmentGroupsStatus@EquipmentGroup,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus\nCheckMandatoryData@MissingSustainmentAction sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-451-MissColumnSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingSustainmentActionRows\nCheckMandatoryData@MissingEquipmentGroup sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-451-MissColumnEquipmentGroup.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingEquipmentGroupRows\nStatusSustainmentActionEquipmentGroupExistenceCheckInSustainmentActionsEquipmentGroupsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['11-450-NotExistingSustainmentAction.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingSustainmentActionRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActionsEquipmentGroups_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "11-AssetPortfolioActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActionsEquipmentGroups",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActionsEquipmentGroups"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AssetPortfolioActivitiesManagementDeleteRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActionsEquipmentGroups\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor\nReadDeleteSustainmentActionsEquipmentGroups select(mapColumn(\n\t\t{$sourceId} = SustainmentAction,\n\t\t{$targetId} = EquipmentGroup\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'is_on_EquipmentGroup',\n\t\t{$relationshipDelete} = 'true',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadDeleteSustainmentActionsEquipmentGroups select(mapColumn(\n\t\tSustainmentAction,\n\t\tEquipmentGroup\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor\nReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor, StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor exists(ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor@SustainmentAction == StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor@SustainmentAction && ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor@EquipmentGroup == StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor@EquipmentGroup,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActionsEquipmentGroups.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsEquipmentGroups_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActions_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActions",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActions"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "SustainmentActionsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_330",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_331",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingNameInSustainmentActionsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActions\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> SustainmentActionsStatus\nReadDeleteSustainmentActions, SustainmentActionsStatus exists(ReadDeleteSustainmentActions@Name == SustainmentActionsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInSustainmentActionsStatus\nReadDeleteSustainmentActions split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nExistingNameInSustainmentActionsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-330-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-331-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteSustainmentActions_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteSustainmentActions",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteSustainmentActions"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_SustainmentActionsEquipmentGroupsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteSustainmentActions\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionSustainmentActionsActionFamiliesStatusEditor\nsource(output(\n\t\tSustainmentAction as string,\n\t\tEquipmentGroup as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\t{$id} = Name\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:SustainmentAction;1',\n\t\t{$entityDelete} = 'true') ~> ModelDefinition\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsStatusEditor\nReadTempStatusSustainmentActionsStatusEditor, StatusColumnSelectionSustainmentActionsStatusEditor exists(ReadTempStatusSustainmentActionsStatusEditor@Name == StatusColumnSelectionSustainmentActionsStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionSustainmentActionsActionFamiliesStatusEditor\nReadTempStatusSustainmentActionSustainmentActionsActionFamiliesStatusEditor, StatusColumnSelectionSustainmentActionSustainmentActionsActionFamiliesStatusEditor exists(Name == SustainmentAction,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor\nReadDeleteSustainmentActions select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor\nReadTempStatusSustainmentActionsEquipmentGroupsStatusEditor, StatusColumnSelectionSustainmentActionsEquipmentGroupsStatusEditor exists(Name == SustainmentAction,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateSustainmentActionsEquipmentGroupsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_SustainmentActions.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateSustainmentActionsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActions_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsStatusEditor\nStatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentAction_SustainmentActionsActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionSustainmentActionsActionFamiliesStatusEditor\nStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['SustainmentActionsEquipmentGroups_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateSustainmentActionsEquipmentGroupsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTeams_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "4-HumanResources/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTeams",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTeams"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TeamsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "TeamsStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "4_310",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "4_311",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingNameInTeamsStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTeams\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TeamsStatus\nReadDeleteTeams, TeamsStatus exists(ReadDeleteTeams@Name == TeamsStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInTeamsStatus\nReadDeleteTeams split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nExistingNameInTeamsStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-310-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['4-311-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTeams_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "4-HumanResources/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTeams",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTeams"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TeamsStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTeamsStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "HumanResourcesDeleteEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTeamsStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionTeamsStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTeamsStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTeams\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTeamsStatusEditor\nReadDeleteTeams select(mapColumn(\n\t\t{$id} = Name\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:Team;1',\n\t\t{$entityDelete} = 'true') ~> ModelDefinition\nReadDeleteTeams select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTeamsStatusEditor\nReadTempStatusTeamsStatusEditor, StatusColumnSelectionTeamsStatusEditor exists(ReadTempStatusTeamsStatusEditor@Name == StatusColumnSelectionTeamsStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTeamsStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_Teams.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateTeamsStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Teams_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTeamsStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesCriteria_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesCriteria",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesCriteria"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+								"type": "DatasetReference"
+							},
+							"name": "TechnicalPoliciesCriteriaStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_441",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingTechnicalPolicyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_441",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingCriterionRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_440",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingTechnicalPolicyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesCriteria\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesCriteriaStatus\nReadDeleteTechnicalPoliciesCriteria split(isNull(TechnicalPolicy),\n\tisNull(Criterion),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingCriterion)\nReadDeleteTechnicalPoliciesCriteria, TechnicalPoliciesCriteriaStatus exists(ReadDeleteTechnicalPoliciesCriteria@TechnicalPolicy == TechnicalPoliciesCriteriaStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesCriteria@Criterion == TechnicalPoliciesCriteriaStatus@Criterion,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-441-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingCriterion sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-441-MissColumnCriterion.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingCriterionRows\nStatusTechnicalPolicyCriterionExistenceCheckInTechnicalPoliciesCriteriaStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-440-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesCriteria_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesCriteria",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesCriteria"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesCriteria\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesCriteriaStatusEditor\nReadDeleteTechnicalPoliciesCriteria select(mapColumn(\n\t\t{$sourceId} = TechnicalPolicy,\n\t\t{$targetId} = Criterion\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'Policy_contains_Criterion',\n\t\t{$relationshipDelete} = 'true',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadDeleteTechnicalPoliciesCriteria select(mapColumn(\n\t\tTechnicalPolicy,\n\t\tCriterion\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor exists(ReadTempStatusTechnicalPoliciesCriteriaStatusEditor@TechnicalPolicy == StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor@TechnicalPolicy && ReadTempStatusTechnicalPoliciesCriteriaStatusEditor@Criterion == StatusColumnSelectionTechnicalPoliciesCriteriaStatusEditor@Criterion,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesCriteriaStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPoliciesCriteria.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesCriteriaStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesMainActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesMainActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesMainActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "TechnicalPoliciesMainActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_421",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingTechnicalPolicyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_421",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_420",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingTechnicalPolicyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesMainActionFamilies\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesMainActionFamiliesStatus\nReadDeleteTechnicalPoliciesMainActionFamilies split(isNull(TechnicalPolicy),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingActionFamily)\nReadDeleteTechnicalPoliciesMainActionFamilies, TechnicalPoliciesMainActionFamiliesStatus exists(ReadDeleteTechnicalPoliciesMainActionFamilies@TechnicalPolicy == TechnicalPoliciesMainActionFamiliesStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesMainActionFamilies@ActionFamily == TechnicalPoliciesMainActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-421-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-421-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nStatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesMainActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-420-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesMainActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesMainActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesMainActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesMainActionFamilies\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteTechnicalPoliciesMainActionFamilies select(mapColumn(\n\t\t{$sourceId} = TechnicalPolicy,\n\t\t{$targetId} = ActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_Action1',\n\t\t{$relationshipDelete} = 'true',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadDeleteTechnicalPoliciesMainActionFamilies select(mapColumn(\n\t\tTechnicalPolicy,\n\t\tActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor exists(ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor@TechnicalPolicy == StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor@TechnicalPolicy && ReadTempStatusTechnicalPoliciesMainActionFamiliesStatusEditor@ActionFamily == StatusColumnSelectionTechnicalPoliciesMainActionFamiliesStatusEditor@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPoliciesMainActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesMainActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesSecondaryActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesSecondaryActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "TechnicalPoliciesSecondaryActionFamiliesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_431",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingTechnicalPolicyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_431",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_430",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingTechnicalPolicyRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesSecondaryActionFamilies\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesSecondaryActionFamiliesStatus\nReadDeleteTechnicalPoliciesSecondaryActionFamilies split(isNull(TechnicalPolicy),\n\tisNull(ActionFamily),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingTechnicalPolicy, MissingActionFamily)\nReadDeleteTechnicalPoliciesSecondaryActionFamilies, TechnicalPoliciesSecondaryActionFamiliesStatus exists(ReadDeleteTechnicalPoliciesSecondaryActionFamilies@TechnicalPolicy == TechnicalPoliciesSecondaryActionFamiliesStatus@TechnicalPolicy && ReadDeleteTechnicalPoliciesSecondaryActionFamilies@ActionFamily == TechnicalPoliciesSecondaryActionFamiliesStatus@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus\nCheckMandatoryData@MissingTechnicalPolicy sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-431-MissColumnTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingTechnicalPolicyRows\nCheckMandatoryData@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-431-MissColumnActionFamily.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRows\nStatusTechnicalPolicyActionFamilyExistenceCheckInTechnicalPoliciesSecondaryActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-430-NotExistingTechnicalPolicy.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingTechnicalPolicyRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPoliciesSecondaryActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPoliciesSecondaryActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPoliciesSecondaryActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteRelationship_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPoliciesSecondaryActionFamilies\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteTechnicalPoliciesSecondaryActionFamilies select(mapColumn(\n\t\t{$sourceId} = TechnicalPolicy,\n\t\t{$targetId} = ActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$relationshipName} = 'contains_Action2',\n\t\t{$relationshipDelete} = 'true',\n\t\t{$relationshipId} = {$sourceId} + 'to' + {$targetId}) ~> ModelDefinition\nReadDeleteTechnicalPoliciesSecondaryActionFamilies select(mapColumn(\n\t\tTechnicalPolicy,\n\t\tActionFamily\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor@TechnicalPolicy == StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor@TechnicalPolicy && ReadTempStatusTechnicalPoliciesSecondaryActionFamiliesStatusEditor@ActionFamily == StatusColumnSelectionTechnicalPoliciesSecondaryActionFamiliesStatusEditor@ActionFamily,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPoliciesSecondaryActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPolicies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPolicies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPolicies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "TechnicalPoliciesStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_340",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_341",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingNameInTechnicalPoliciesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPolicies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> TechnicalPoliciesStatus\nReadDeleteTechnicalPolicies, TechnicalPoliciesStatus exists(ReadDeleteTechnicalPolicies@Name == TechnicalPoliciesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInTechnicalPoliciesStatus\nReadDeleteTechnicalPolicies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nExistingNameInTechnicalPoliciesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-340-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-341-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleteTechnicalPolicies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Delete"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DeleteTechnicalPolicies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadDeleteTechnicalPolicies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPoliciesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesMainActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesSecondaryActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_TechnicalPoliciesCriteriaStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementDeleteEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempOutput_Status",
+								"type": "DatasetReference"
+							},
+							"name": "WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPoliciesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPoliciesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor"
+						},
+						{
+							"name": "StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
+						},
+						{
+							"name": "StatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
+						}
+					],
+					"script": "source(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadDeleteTechnicalPolicies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPoliciesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tActionFamily as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nsource(output(\n\t\tTechnicalPolicy as string,\n\t\tCriterion as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\t{$id} = Name\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:TechnicalPolicy;1',\n\t\t{$entityDelete} = 'true') ~> ModelDefinition\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPoliciesStatusEditor\nReadTempStatusTechnicalPoliciesStatusEditor, StatusColumnSelectionTechnicalPoliciesStatusEditor exists(ReadTempStatusTechnicalPoliciesStatusEditor@Name == StatusColumnSelectionTechnicalPoliciesStatusEditor@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPoliciesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nReadDeleteTechnicalPolicies select(mapColumn(\n\t\tName\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nReadTempStatusTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor, StatusColumnSelectionTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor exists(Name == TechnicalPolicy,\n\tnegate:true,\n\tbroadcast: 'auto')~> StatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor\nModelDefinition sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_TechnicalPolicies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo\nStatusUpdateTechnicalPoliciesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPoliciesStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesMainActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesMainActionFamiliesStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesSecondaryActionFamilies_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesSecondaryActionFamiliesStatusEditor\nStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['TechnicalPolicy_TechnicalPoliciesCriteria_status.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteTempStatusStatusUpdateTechnicalPolicyTechnicalPoliciesCriteriaStatusEditor"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateActionFamilies_CheckData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadUpdateActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "TempInput_ActionFamiliesStatus",
+								"type": "DatasetReference"
+							},
+							"name": "ActionFamiliesStatus"
+						},
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies_MapCostsByRatingLevel",
+								"type": "DatasetReference"
+							},
+							"name": "UpdateActionFamiliesMapCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "UpdateActionFamiliesMapBudgetCategories"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "2_510",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingNameRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_512",
+								"type": "DatasetReference"
+							},
+							"name": "WriteCostsAreCapitalChargesWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingRatingLevelRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingUnitPropertyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_510",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRowsCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_513",
+								"type": "DatasetReference"
+							},
+							"name": "WriteUnitPropertyCostsByRatingLevelInvalidRangeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_512",
+								"type": "DatasetReference"
+							},
+							"name": "WriteSupplierCostWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_512",
+								"type": "DatasetReference"
+							},
+							"name": "WriteDurationWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_512",
+								"type": "DatasetReference"
+							},
+							"name": "WriteIsLocalActionWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_512",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNeedsOutageWrongTypeRows"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingActionFamilyRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingIndexRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_511",
+								"type": "DatasetReference"
+							},
+							"name": "WriteMissingValueRowsBudgetCategories"
+						},
+						{
+							"dataset": {
+								"referenceName": "2_510",
+								"type": "DatasetReference"
+							},
+							"name": "WriteNotExistingActionFamilyRowsBudgetCategories"
+						}
+					],
+					"transformations": [
+						{
+							"name": "ExistingNameInActionFamiliesStatus"
+						},
+						{
+							"name": "CheckMandatoryData"
+						},
+						{
+							"name": "NonNullCostsAreCapitalCharges"
+						},
+						{
+							"name": "CostsAreCapitalChargesTypeCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelMandatoryCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelExistenceCheck"
+						},
+						{
+							"name": "NonNullEnumUnitPropertyCostsByRatingLevel"
+						},
+						{
+							"name": "UnitPropertyCostsByRatingLevelEnumCheck"
+						},
+						{
+							"name": "MapCostsByRatingLevelSplitKeyValues"
+						},
+						{
+							"name": "NonNullSupplierCost"
+						},
+						{
+							"name": "SupplierCostTypeCheck"
+						},
+						{
+							"name": "NonNullDuration"
+						},
+						{
+							"name": "DurationTypeCheck"
+						},
+						{
+							"name": "NonNullIsLocalAction"
+						},
+						{
+							"name": "IsLocalActionTypeCheck"
+						},
+						{
+							"name": "NonNullNeedsOutage"
+						},
+						{
+							"name": "NeedsOutageTypeCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesMandatoryCheck"
+						},
+						{
+							"name": "MapBudgetCategoriesExistenceCheck"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateActionFamilies\nsource(output(\n\t\tName as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ActionFamiliesStatus\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateActionFamiliesMapCostsByRatingLevel\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> UpdateActionFamiliesMapBudgetCategories\nReadUpdateActionFamilies, ActionFamiliesStatus exists(ReadUpdateActionFamilies@Name == ActionFamiliesStatus@Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> ExistingNameInActionFamiliesStatus\nReadUpdateActionFamilies split(isNull(Name),\n\tdisjoint: false) ~> CheckMandatoryData@(MissingName)\nReadUpdateActionFamilies filter(not(isNull(CostsAreCapitalCharges))) ~> NonNullCostsAreCapitalCharges\nNonNullCostsAreCapitalCharges split(not(isBoolean(CostsAreCapitalCharges)),\n\tdisjoint: false) ~> CostsAreCapitalChargesTypeCheck@(CostsAreCapitalChargesWrongType)\nUpdateActionFamiliesMapCostsByRatingLevel split(isNull(ActionFamily),\n\tisNull(RatingLevel),\n\tisNull(UnitProperty),\n\tisNull(Value),\n\tdisjoint: false) ~> MapCostsByRatingLevelMandatoryCheck@(MissingActionFamily, MissingRatingLevel, MissingUnitProperty, MissingValue)\nUpdateActionFamiliesMapCostsByRatingLevel, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapCostsByRatingLevelExistenceCheck\nUpdateActionFamiliesMapCostsByRatingLevel filter(not(isNull(UnitProperty))) ~> NonNullEnumUnitPropertyCostsByRatingLevel\nNonNullEnumUnitPropertyCostsByRatingLevel filter(not(in(['SupplierCost', 'Duration'], UnitProperty))) ~> UnitPropertyCostsByRatingLevelEnumCheck\nUpdateActionFamiliesMapCostsByRatingLevel split(UnitProperty == 'SupplierCost',\n\tUnitProperty == 'Duration',\n\tdisjoint: false) ~> MapCostsByRatingLevelSplitKeyValues@(UnitPropertySupplierCost, UnitPropertyDuration)\nMapCostsByRatingLevelSplitKeyValues@UnitPropertySupplierCost filter(not(isNull(Value))) ~> NonNullSupplierCost\nNonNullSupplierCost split(not(isFloat(Value)),\n\tdisjoint: false) ~> SupplierCostTypeCheck@(SupplierCostWrongType)\nMapCostsByRatingLevelSplitKeyValues@UnitPropertyDuration filter(not(isNull(Value))) ~> NonNullDuration\nNonNullDuration split(not(isFloat(Value)),\n\tdisjoint: false) ~> DurationTypeCheck@(DurationWrongType)\nReadUpdateActionFamilies filter(not(isNull(IsLocalAction))) ~> NonNullIsLocalAction\nNonNullIsLocalAction split(not(isBoolean(IsLocalAction)),\n\tdisjoint: false) ~> IsLocalActionTypeCheck@(IsLocalActionWrongType)\nReadUpdateActionFamilies filter(not(isNull(NeedsOutage))) ~> NonNullNeedsOutage\nNonNullNeedsOutage split(not(isBoolean(NeedsOutage)),\n\tdisjoint: false) ~> NeedsOutageTypeCheck@(NeedsOutageWrongType)\nUpdateActionFamiliesMapBudgetCategories split(isNull(ActionFamily),\n\tisNull(Index),\n\tisNull(Value),\n\tdisjoint: false) ~> MapBudgetCategoriesMandatoryCheck@(MissingActionFamily, MissingIndex, MissingValue)\nUpdateActionFamiliesMapBudgetCategories, ActionFamiliesStatus exists(ActionFamily == Name,\n\tnegate:true,\n\tbroadcast: 'auto')~> MapBudgetCategoriesExistenceCheck\nExistingNameInActionFamiliesStatus sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingNameRows\nCheckMandatoryData@MissingName sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnName.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingNameRows\nCostsAreCapitalChargesTypeCheck@CostsAreCapitalChargesWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-CostsAreCapitalChargesWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteCostsAreCapitalChargesWrongTypeRows\nMapCostsByRatingLevelMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingRatingLevel sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnRatingLevelCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingRatingLevelRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingUnitProperty sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnUnitPropertyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingUnitPropertyRowsCostsByRatingLevel\nMapCostsByRatingLevelMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnValueCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsCostsByRatingLevel\nMapCostsByRatingLevelExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingActionFamilyCostsByRatingLevel.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsCostsByRatingLevel\nUnitPropertyCostsByRatingLevelEnumCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-513-UnitPropertyCostsByRatingLevelInvalidRange.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteUnitPropertyCostsByRatingLevelInvalidRangeRows\nSupplierCostTypeCheck@SupplierCostWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-SupplierCostWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteSupplierCostWrongTypeRows\nDurationTypeCheck@DurationWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-DurationWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteDurationWrongTypeRows\nIsLocalActionTypeCheck@IsLocalActionWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-IsLocalActionWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteIsLocalActionWrongTypeRows\nNeedsOutageTypeCheck@NeedsOutageWrongType sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-512-NeedsOutageWrongType.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNeedsOutageWrongTypeRows\nMapBudgetCategoriesMandatoryCheck@MissingActionFamily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingActionFamilyRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingIndex sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnIndexBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingIndexRowsBudgetCategories\nMapBudgetCategoriesMandatoryCheck@MissingValue sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-511-MissColumnValueBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteMissingValueRowsBudgetCategories\nMapBudgetCategoriesExistenceCheck sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['2-510-NotExistingActionFamilyBudgetCategories.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteNotExistingActionFamilyRowsBudgetCategories"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/UpdateActionFamilies_TransformData')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "2-ActivitiesManagement/Update"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies",
+								"type": "DatasetReference"
+							},
+							"name": "ReadUpdateActionFamilies"
+						},
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies_MapCostsByRatingLevel",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapCostsByRatingLevel"
+						},
+						{
+							"dataset": {
+								"referenceName": "UpdateActionFamilies_MapBudgetCategories",
+								"type": "DatasetReference"
+							},
+							"name": "ReadMapBudgetCategories"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ActivitiesManagementUpdateEntity_temp",
+								"type": "DatasetReference"
+							},
+							"name": "WriteToTempRepo"
+						}
+					],
+					"transformations": [
+						{
+							"name": "IdSelection"
+						},
+						{
+							"name": "ModelDefinition"
+						},
+						{
+							"name": "MapCostsByRatingLevelKeyUnitPropertySplitByType"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat"
+						},
+						{
+							"name": "MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+						},
+						{
+							"name": "DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes"
+						},
+						{
+							"name": "AggregateMapCostsByRatingLevelKeyRatingLevel"
+						},
+						{
+							"name": "CostsByRatingLevelCleaning"
+						},
+						{
+							"name": "CostsByRatingLevelUnion"
+						},
+						{
+							"name": "CostsByRatingLevelSelect"
+						},
+						{
+							"name": "AggregateMapBudgetCategoriesKeyIndex"
+						},
+						{
+							"name": "BudgetCategoriesCleaning"
+						},
+						{
+							"name": "BudgetCategoriesUnion"
+						},
+						{
+							"name": "BudgetCategoriesSelect"
+						}
+					],
+					"script": "source(output(\n\t\tName as string,\n\t\tAssetClass as string,\n\t\tCostsAreCapitalCharges as string,\n\t\tIsLocalAction as string,\n\t\tNeedsOutage as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadUpdateActionFamilies\nsource(output(\n\t\tActionFamily as string,\n\t\tRatingLevel as string,\n\t\tUnitProperty as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapCostsByRatingLevel\nsource(output(\n\t\tActionFamily as string,\n\t\tIndex as string,\n\t\tValue as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: true) ~> ReadMapBudgetCategories\nReadUpdateActionFamilies select(mapColumn(\n\t\t{$id} = Name,\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> IdSelection\nIdSelection derive({$metadata.$model} = 'dtmi:ActionFamily;1',\n\t\t{$entityDelete} = 'false') ~> ModelDefinition\nReadMapCostsByRatingLevel split(in(['SupplierCost','Duration'], UnitProperty),\n\tdisjoint: false) ~> MapCostsByRatingLevelKeyUnitPropertySplitByType@(MapCostsByRatingLevelKeyUnitPropertySplitByfloat)\nMapCostsByRatingLevelKeyUnitPropertySplitByType@MapCostsByRatingLevelKeyUnitPropertySplitByfloat aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = dropRight(dropLeft(toString(keyValues(collect(toString(UnitProperty)), collect(toFloat(Value)))) ,1), 1)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat\nAggregateMapCostsByRatingLevelKeyUnitPropertySplitByfloat union(byName: true)~> MapCostsByRatingLevelKeyUnitPropertyUnionAllTypes\nMapCostsByRatingLevelKeyUnitPropertyUnionAllTypes aggregate(groupBy(ActionFamily,\n\t\tRatingLevel),\n\tCostsByRatingLevel = collect(CostsByRatingLevel)) ~> AggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes\nAggregateMapCostsByRatingLevelKeyUnitPropertyAllTypes derive(CostsByRatingLevel = '{' + concatWS(',', CostsByRatingLevel[1]) + '}') ~> DeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes\nDeriveMapCostsByRatingLevelKeyUnitPropertyAllTypes aggregate(groupBy(ActionFamily),\n\tCostsByRatingLevel = toString(keyValues(collect(toString(RatingLevel)), collect(toString(CostsByRatingLevel))))) ~> AggregateMapCostsByRatingLevelKeyRatingLevel\nAggregateMapCostsByRatingLevelKeyRatingLevel derive(CostsByRatingLevel = replace(replace(replace(CostsByRatingLevel, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> CostsByRatingLevelCleaning\nModelDefinition, CostsByRatingLevelCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> CostsByRatingLevelUnion\nCostsByRatingLevelUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCostsByRatingLevel\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> CostsByRatingLevelSelect\nReadMapBudgetCategories aggregate(groupBy(ActionFamily),\n\tBudgetCategories = toString(keyValues(collect(toString(Index)), collect(toString(Value))))) ~> AggregateMapBudgetCategoriesKeyIndex\nAggregateMapBudgetCategoriesKeyIndex derive(BudgetCategories = replace(replace(replace(BudgetCategories, '\"{', '{'), '}\"', '}'), '\\\\', '')) ~> BudgetCategoriesCleaning\nCostsByRatingLevelSelect, BudgetCategoriesCleaning join({$id} == ActionFamily,\n\tjoinType:'left',\n\tmatchType:'exact',\n\tignoreSpaces: false,\n\tbroadcast: 'auto')~> BudgetCategoriesUnion\nBudgetCategoriesUnion select(mapColumn(\n\t\t{$id},\n\t\tAssetClass,\n\t\tCostsAreCapitalCharges,\n\t\tIsLocalAction,\n\t\tNeedsOutage,\n\t\t{$metadata.$model},\n\t\t{$entityDelete},\n\t\tCostsByRatingLevel,\n\t\tBudgetCategories\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> BudgetCategoriesSelect\nBudgetCategoriesSelect sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['tmp_ActionFamilies.v1.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WriteToTempRepo"
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
