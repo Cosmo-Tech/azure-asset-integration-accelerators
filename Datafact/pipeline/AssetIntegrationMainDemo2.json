@@ -1,251 +1,249 @@
 {
-    "name": "AssetIntegrationMain",
-    "properties": {
-        "folder": {
-            "name": ""
-        },
-        "activities": [
-            {
-                "name": "AssetPortfolio",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "AssetPortfolio_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "ActivitiesManagement",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "ActivitiesManagement_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Budgets",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "Budgets_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "HumanResources",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "HumanResources_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Finance",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "Finance_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "AssetPortfolio",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "AssetPortfolioActivitiesManagement",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "AssetPortfolioActivitiesManagement_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "AssetPortfolio",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivitiesManagement",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "ActivitiesManagementHumanResources",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "ActivitiesManagementHumanResources_Main",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "ActivitiesManagement",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "HumanResources",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivateIntegrationRuntime",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "CleanStatus",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "StatusCleaner",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                },
-                "dependsOn": [
-                    {
-                        "activity": "AssetPortfolio",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivitiesManagement",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Budgets",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "HumanResources",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "Finance",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "AssetPortfolioActivitiesManagement",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    },
-                    {
-                        "activity": "ActivitiesManagementHumanResources",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "ActivateIntegrationRuntime",
-                "type": "ExecutePipeline",
-                "userProperties": [],
-                "typeProperties": {
-                    "pipeline": {
-                        "referenceName": "IntegrationRuntimeActivation",
-                        "type": "PipelineReference"
-                    },
-                    "waitOnCompletion": true
-                }
-            }
-        ],
-        "annotations": [],
-        "lastPublishTime": ""
-    },
-    "type": "Microsoft.DataFactory/factories/pipelines"
+	"name": "AssetIntegrationMainDemo2",
+	"properties": {
+		"activities": [
+			{
+				"name": "AssetPortfolio",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "AssetPortfolio_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ActivitiesManagement",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "ActivitiesManagement_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Budgets",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Budgets_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "HumanResources",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "HumanResources_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Finance",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "AssetPortfolio",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Finance_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "AssetPortfolioActivitiesManagement",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "AssetPortfolio",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivitiesManagement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "AssetPortfolioActivitiesManagement_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ActivitiesManagementHumanResources",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ActivitiesManagement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "HumanResources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivateIntegrationRuntime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "ActivitiesManagementHumanResources_Main",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "CleanStatus",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "AssetPortfolio",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivitiesManagement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Budgets",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "HumanResources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Finance",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "AssetPortfolioActivitiesManagement",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ActivitiesManagementHumanResources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "StatusCleaner",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ActivateIntegrationRuntime",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "IntegrationRuntimeActivation",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": ""
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
